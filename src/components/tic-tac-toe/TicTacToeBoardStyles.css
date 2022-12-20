@@ -2,3 +2,34 @@
 .boardRow {
     display: flex;
 }
+
+.boardCell {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    font-size: 60px;
+    user-select: none;
+}
+
+.cellEmptyHover:hover {
+    background-color: #eee;
+    cursor: pointer;
+}
+
+.boardContainer {
+    width: 290px;
+    height: 290px;
+    margin: auto;
+}
+
+.rowDivider {
+    width: 290px;
+    height: 10px;
+    background-color: #666;
+}
+
+.colDivider {
+    width: 10px;
+    height: 90px;
+    background-color: #666;
+}

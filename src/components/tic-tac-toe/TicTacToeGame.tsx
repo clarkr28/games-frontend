@@ -4,6 +4,7 @@ import { CellStates } from './resources';
 
 export const TicTacToeGame: React.FC<{}> = props => {
     const [boardState, setBoardState] = useState<CellStates[]>(Array(9).fill(CellStates.Empty));
+    const [nextMove, setNextMove] = useState<CellStates>(CellStates.X);
 
     /**
      * Make a move on the board
@@ -16,9 +17,11 @@ export const TicTacToeGame: React.FC<{}> = props => {
             newValues[index] = value;
             return newValues;
         });
+
+        setNextMove(value === CellStates.X ? CellStates.O : CellStates.X);
     }
     
     return (
-        <TicTacToeBoard boardState={boardState} performMove={performMove}/>
+        <TicTacToeBoard boardState={boardState} performMove={performMove} nextMove={nextMove}/>
     );
 }
