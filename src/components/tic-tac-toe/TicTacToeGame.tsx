@@ -1,27 +1,27 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TicTacToeBoard } from './TicTacToeBoard';
-import { CellStates } from './resources';
+import { CellStates, boardFull, getNextMove, makeEmptyBoard } from '../../assets/TicTacToeResources';
 
 export const TicTacToeGame: React.FC<{}> = props => {
-    const [boardState, setBoardState] = useState<CellStates[]>(Array(9).fill(CellStates.Empty));
-    const [nextMove, setNextMove] = useState<CellStates>(CellStates.X);
+    const [boardState, setBoardState] = useState<CellStates[]>(makeEmptyBoard());
 
     /**
      * Make a move on the board
      * @param index the index of the value to set
      * @param value the value to set on the board
      */
-    const performMove = (index: number, value: CellStates): void => {
-        setBoardState(currValues => {
-            let newValues = [...currValues];
-            newValues[index] = value;
-            return newValues;
-        });
+    const performMove = useCallback(async (index: number, value: CellStates): Promise<void> => {
+        let newBoard: CellStates[] = [...boardState];
+        newBoard[index] = value;
 
-        setNextMove(value === CellStates.X ? CellStates.O : CellStates.X);
-    }
+        if (!boardFull(newBoard)) {
+            // get the move from the opponent
+            newBoard = await getNextMove(newBoard, CellStates.O);
+        }
+        setBoardState(newBoard);
+    },[boardState]);
     
     return (
-        <TicTacToeBoard boardState={boardState} performMove={performMove} nextMove={nextMove}/>
+        <TicTacToeBoard boardState={boardState} performMove={performMove}/>
     );
 }

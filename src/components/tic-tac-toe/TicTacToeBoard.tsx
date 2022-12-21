@@ -1,23 +1,22 @@
 import React, { useCallback } from 'react';
 import './TicTacToeBoardStyles.css';
-import { CellStates } from './resources';
+import { CellStates } from '../../assets/TicTacToeResources';
 
 export interface ITicTacToeBoardProps {
     boardState: CellStates[];
-    performMove: (index: number, value: CellStates) => void;
-    nextMove: CellStates;
+    performMove: (index: number, value: CellStates) => Promise<void>;
 }
 
 export const TicTacToeBoard: React.FC<ITicTacToeBoardProps> = (props) => {
-    const {boardState, performMove, nextMove} = props;
+    const {boardState, performMove} = props;
 
     return (
         <div className='boardContainer'>
-            <TicTacToeBoardRow startIndex={0} boardState={boardState} performMove={performMove} nextMove={nextMove}/>
+            <TicTacToeBoardRow startIndex={0} boardState={boardState} performMove={performMove}/>
             <div className='rowDivider'/>
-            <TicTacToeBoardRow startIndex={3} boardState={boardState} performMove={performMove} nextMove={nextMove}/>
+            <TicTacToeBoardRow startIndex={3} boardState={boardState} performMove={performMove}/>
             <div className='rowDivider'/>
-            <TicTacToeBoardRow startIndex={6} boardState={boardState} performMove={performMove} nextMove={nextMove}/>
+            <TicTacToeBoardRow startIndex={6} boardState={boardState} performMove={performMove}/>
         </div>
     );
 }
@@ -27,26 +26,24 @@ export const TicTacToeBoard: React.FC<ITicTacToeBoardProps> = (props) => {
 interface ITicTacToeBoardRowProps {
     startIndex: number;
     boardState: CellStates[];
-    performMove: (index: number, value: CellStates) => void;
-    nextMove: CellStates;
+    performMove: (index: number, value: CellStates) => Promise<void>;
 }
 
 const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
-    const {startIndex, boardState, performMove, nextMove} = props;
+    const {startIndex, boardState, performMove} = props;
     const rowCells = boardState.slice(startIndex, startIndex + 3);
 
     return (
         <div className='boardRow'>
             {rowCells.map((cell: CellStates, index: number) => 
-                <>
+                <div key={index} style={{display: 'flex'}}>
                     <TicTacToeBoardCell
                         cellValue={cell}
                         cellIndex={startIndex + index}
                         performMove={performMove}
-                        nextMove={nextMove}
                     />
                     {index < 2 && <div className='colDivider'/>}
-                </>
+                </div>
             )}
         </div>
     )
@@ -57,21 +54,20 @@ const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
 interface ITicTacToeBoardCellProps {
     cellValue: CellStates;
     cellIndex: number;
-    performMove: (index: number, value: CellStates) => void;
-    nextMove: CellStates;
+    performMove: (index: number, value: CellStates) => Promise<void>;
 }
 
 const TicTacToeBoardCell: React.FC<ITicTacToeBoardCellProps> = (props) => {
-    const {cellValue, cellIndex, performMove, nextMove} = props;
+    const {cellValue, cellIndex, performMove } = props;
 
     /**
      * Handle the user clicking a cell on the board
      */
     const clickHandler = useCallback(() => {
         if (cellValue === CellStates.Empty) {
-            performMove(cellIndex, nextMove);
+            performMove(cellIndex, CellStates.X);
         }
-    }, [cellValue, nextMove, cellIndex, performMove]);
+    }, [cellValue, cellIndex, performMove]);
 
     return (
         <div 
