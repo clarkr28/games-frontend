@@ -22,6 +22,9 @@ export const TicTacToeGame: React.FC<{}> = props => {
     },[boardState]);
     
     return (
-        <TicTacToeBoard boardState={boardState} performMove={performMove}/>
+        <>
+            <TicTacToeBoard boardState={boardState} performMove={performMove} />
+            <button onClick={() => setBoardState(makeEmptyBoard())}>Reset</button>
+        </>
     );
 }
