@@ -1,52 +1,114 @@
 /** resources for tic tac toe */
 
-export enum CellStates {
+export enum CellState {
     Empty = 0,
     X = 1,
     O = 2,
 }
 
+export enum GameStatus {
+    Playing,
+    WinX,
+    WinO,
+    NoWin,
+}
+
+export interface TicTacToeState {
+    board: CellState[];
+    status: GameStatus;
+}
+
 //#region Public Helper Functions
 
 /**
- * create a new board
- * @returns an array of empty cell states
+ * @returns the state for a new game
  */
-export function makeEmptyBoard(): CellStates[] {
-    return Array(9).fill(CellStates.Empty);
+export function makeNewGame(): TicTacToeState {
+    return  {
+        board: Array(9).fill(CellState.Empty),
+        status: GameStatus.Playing,
+    };
 }
 
 /**
  * determine if the board is full
- * @param board tic tac toe game board
+ * @param gameState tac toe game state
  * @returns true if the board is full
  */
-export function boardFull(board: CellStates[]): boolean {
-    return board.every(cell => cell !== CellStates.Empty);
+export function boardFull(board: CellState[]): boolean {
+    return board.every(cell => cell !== CellState.Empty);
+}
+
+/**
+ * make a deep copy of the game state
+ * @param gameState the game state to copy
+ * @returns a deep copy of the game state
+ */
+export function copyGame(gameState: TicTacToeState): TicTacToeState {
+    return {
+        board: [...gameState.board],
+        status: gameState.status,
+    }
+}
+
+/**
+ * Perform a move on the board and upate game status
+ * @param gameState the game state before the move has been made
+ * @param index the index of the board to make the move
+ * @param value the value to put at that board index
+ * @returns a new game state object with the move applied
+ */
+export function recordMove(gameState: TicTacToeState, index: number, value: CellState): TicTacToeState {
+    const newGameState = copyGame(gameState);
+    newGameState.board[index] = value;
+    newGameState.status = determineGameStatus(newGameState.board); 
+    return newGameState;
 }
 
 //#endregion
 //#region Private Helper Functions
 
-function serializeBoard(board: CellStates[]): string {
-    return board.map(cell => cell.toString()).join('');
+function serializeBoard(gameState: TicTacToeState): string {
+    return gameState.board.map(cell => cell.toString()).join('');
 }
 
-function deserializeBoard(boardStr: string): CellStates[] {
-    let board: CellStates[] = [];
+function deserializeBoard(boardStr: string): CellState[] {
+    let board: CellState[] = [];
     for (let i = 0; i < 9; i++) {
         const char = boardStr[i];
         if (char === '1') {
-            board.push(CellStates.X);
+            board.push(CellState.X);
         }
         else if (char === '2') {
-            board.push(CellStates.O);
+            board.push(CellState.O);
         }
         else {
-            board.push(CellStates.Empty);
+            board.push(CellState.Empty);
         }
     }
     return board;
+}
+
+/**
+ * based on the board, calculate the game's status
+ * @param board the board to evaluate
+ * @returns the winner if a winner is found, if it's a scratch game, or if the game isn't finished
+ */
+function determineGameStatus(board: CellState[]): GameStatus {
+    // indexes to check for a winner
+    const checkInds = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
+
+    for (let idx = 0; idx < checkInds.length; idx++) {
+        const testInds = checkInds[idx];
+        if (board[testInds[0]] === board[testInds[1]] && 
+            board[testInds[1]] === board[testInds[2]] &&
+            board[testInds[0]] !== CellState.Empty) {
+                return board[testInds[0]] === CellState.O ? GameStatus.WinO : GameStatus.WinX;
+            }
+    }
+
+    // if the board is full, it's a scratch game.  If the board isn't full, the game is still being played
+    return boardFull(board) ? GameStatus.NoWin : GameStatus.Playing;
 }
 
 //#endregion
@@ -60,8 +122,8 @@ const BaseRoute = 'http://localhost:5001'
  * @param nextPlayer the player that should make the next move
  * @returns a new board with the next move performed
  */
-export async function getNextMove(board: CellStates[], nextPlayer: CellStates): Promise<CellStates[]> {
-    const apiCall = `${BaseRoute}/nextmove/${serializeBoard(board)}/${nextPlayer.toString()}`;
+export async function getNextMove(gameState: TicTacToeState, nextPlayer: CellState): Promise<TicTacToeState> {
+    const apiCall = `${BaseRoute}/nextmove/${serializeBoard(gameState)}/${nextPlayer.toString()}`;
     const response = await fetch(apiCall, {
         method: 'GET', 
         headers: { 'Content-Type': 'application/json' },
@@ -70,16 +132,20 @@ export async function getNextMove(board: CellStates[], nextPlayer: CellStates): 
     // see if API returned error
     if (response.status !== 200) {
         console.log(`error with call: ${apiCall}\nreturned: ${JSON.stringify(response)}`);
-        return makeEmptyBoard();
+        return makeNewGame();
     }
 
     // process data from API response
     const data = await response.json();
     if ('board' in data) {
-        return deserializeBoard(data['board']);
+        const newBoard = deserializeBoard(data['board']);
+        return {
+            board: newBoard,
+            status: determineGameStatus(newBoard),
+        }
     }
 
-    return makeEmptyBoard();
+    return makeNewGame();
 }
 
 //#endregion

@@ -1,30 +1,37 @@
 import React, { useCallback, useState } from 'react';
 import { TicTacToeBoard } from './TicTacToeBoard';
-import { CellStates, boardFull, getNextMove, makeEmptyBoard } from '../../assets/TicTacToeResources';
+import { CellState, GameStatus, TicTacToeState, boardFull, copyGame, getNextMove, makeNewGame, recordMove } from '../../assets/TicTacToeResources';
 
 export const TicTacToeGame: React.FC<{}> = props => {
-    const [boardState, setBoardState] = useState<CellStates[]>(makeEmptyBoard());
+    const [gameState, setGameState] = useState<TicTacToeState>(makeNewGame());
 
     /**
      * Make a move on the board
      * @param index the index of the value to set
      * @param value the value to set on the board
      */
-    const performMove = useCallback(async (index: number, value: CellStates): Promise<void> => {
-        let newBoard: CellStates[] = [...boardState];
-        newBoard[index] = value;
+    const performMove = useCallback(async (index: number, value: CellState): Promise<void> => {
+        let nextGameState = recordMove(gameState, index, value);
 
-        if (!boardFull(newBoard)) {
+        if (nextGameState.status === GameStatus.Playing) {
             // get the move from the opponent
-            newBoard = await getNextMove(newBoard, CellStates.O);
+            nextGameState = await getNextMove(nextGameState, CellState.O);
         }
-        setBoardState(newBoard);
-    },[boardState]);
+        setGameState(nextGameState);
+    },[gameState]);
     
     return (
         <>
-            <TicTacToeBoard boardState={boardState} performMove={performMove} />
-            <button onClick={() => setBoardState(makeEmptyBoard())}>Reset</button>
+            <TicTacToeBoard boardState={gameState.board} performMove={performMove} />
+            <button onClick={() => setGameState(makeNewGame())}>Reset</button>
+            {gameState.status !== GameStatus.Playing && <div>{gameStatusDisplayText(gameState.status)}</div>}
         </>
     );
+}
+
+function gameStatusDisplayText(status: GameStatus): string {
+    return status === GameStatus.NoWin ? "No Winner"
+        : status === GameStatus.WinX ? "X Wins!"
+            : status === GameStatus.WinO ? "O Wins!"
+                : "";
 }

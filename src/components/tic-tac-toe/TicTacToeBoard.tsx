@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 import './TicTacToeBoardStyles.css';
-import { CellStates } from '../../assets/TicTacToeResources';
+import { CellState } from '../../assets/TicTacToeResources';
 
 export interface ITicTacToeBoardProps {
-    boardState: CellStates[];
-    performMove: (index: number, value: CellStates) => Promise<void>;
+    boardState: CellState[];
+    performMove: (index: number, value: CellState) => Promise<void>;
 }
 
 export const TicTacToeBoard: React.FC<ITicTacToeBoardProps> = (props) => {
@@ -25,8 +25,8 @@ export const TicTacToeBoard: React.FC<ITicTacToeBoardProps> = (props) => {
 
 interface ITicTacToeBoardRowProps {
     startIndex: number;
-    boardState: CellStates[];
-    performMove: (index: number, value: CellStates) => Promise<void>;
+    boardState: CellState[];
+    performMove: (index: number, value: CellState) => Promise<void>;
 }
 
 const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
@@ -35,7 +35,7 @@ const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
 
     return (
         <div className='boardRow'>
-            {rowCells.map((cell: CellStates, index: number) => 
+            {rowCells.map((cell: CellState, index: number) => 
                 <div key={index} style={{display: 'flex'}}>
                     <TicTacToeBoardCell
                         cellValue={cell}
@@ -52,9 +52,9 @@ const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
 
 
 interface ITicTacToeBoardCellProps {
-    cellValue: CellStates;
+    cellValue: CellState;
     cellIndex: number;
-    performMove: (index: number, value: CellStates) => Promise<void>;
+    performMove: (index: number, value: CellState) => Promise<void>;
 }
 
 const TicTacToeBoardCell: React.FC<ITicTacToeBoardCellProps> = (props) => {
@@ -64,18 +64,18 @@ const TicTacToeBoardCell: React.FC<ITicTacToeBoardCellProps> = (props) => {
      * Handle the user clicking a cell on the board
      */
     const clickHandler = useCallback(() => {
-        if (cellValue === CellStates.Empty) {
-            performMove(cellIndex, CellStates.X);
+        if (cellValue === CellState.Empty) {
+            performMove(cellIndex, CellState.X);
         }
     }, [cellValue, cellIndex, performMove]);
 
     return (
         <div 
-            className={`boardCell ${cellValue === CellStates.Empty ? 'cellEmptyHover' : ''}`}
+            className={`boardCell ${cellValue === CellState.Empty ? 'cellEmptyHover' : ''}`}
             onClick={clickHandler}
         >
-            {cellValue === CellStates.Empty ? null
-                : cellValue === CellStates.X ? 'X'
+            {cellValue === CellState.Empty ? null
+                : cellValue === CellState.X ? 'X'
                     : 'O'}
         </div>
         );
