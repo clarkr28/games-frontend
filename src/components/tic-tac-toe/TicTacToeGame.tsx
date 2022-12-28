@@ -22,7 +22,11 @@ export const TicTacToeGame: React.FC<{}> = props => {
     
     return (
         <>
-            <TicTacToeBoard boardState={gameState.board} performMove={performMove} />
+            <TicTacToeBoard 
+                boardState={gameState.board} 
+                performMove={performMove} 
+                canMakeMove={gameState.status === GameStatus.Playing}
+            />
             <button onClick={() => setGameState(makeNewGame())}>Reset</button>
             {gameState.status !== GameStatus.Playing && <div>{gameStatusDisplayText(gameState.status)}</div>}
         </>
