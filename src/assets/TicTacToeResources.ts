@@ -16,6 +16,7 @@ export enum GameStatus {
 export interface TicTacToeState {
     board: CellState[];
     status: GameStatus;
+    winningInds: number[];
 }
 
 //#region Public Helper Functions
@@ -27,16 +28,26 @@ export function makeNewGame(): TicTacToeState {
     return  {
         board: Array(9).fill(CellState.Empty),
         status: GameStatus.Playing,
+        winningInds: [],
     };
 }
 
 /**
  * determine if the board is full
- * @param gameState tac toe game state
+ * @param board tac toe game state
  * @returns true if the board is full
  */
 export function boardFull(board: CellState[]): boolean {
     return board.every(cell => cell !== CellState.Empty);
+}
+
+/**
+ * determine if the board is empty
+ * @param board tic tac toe game board
+ * @returns true if the board is empty
+ */
+export function boardEmpty(board: CellState[]): boolean {
+    return board.every(cell => cell === CellState.Empty);
 }
 
 /**
@@ -48,6 +59,7 @@ export function copyGame(gameState: TicTacToeState): TicTacToeState {
     return {
         board: [...gameState.board],
         status: gameState.status,
+        winningInds: [],
     }
 }
 
@@ -61,7 +73,9 @@ export function copyGame(gameState: TicTacToeState): TicTacToeState {
 export function recordMove(gameState: TicTacToeState, index: number, value: CellState): TicTacToeState {
     const newGameState = copyGame(gameState);
     newGameState.board[index] = value;
-    newGameState.status = determineGameStatus(newGameState.board); 
+    const [status, winningIngs] = determineGameStatus(newGameState.board);
+    newGameState.status = status; 
+    newGameState.winningInds = winningIngs;
     return newGameState;
 }
 
@@ -92,9 +106,9 @@ function deserializeBoard(boardStr: string): CellState[] {
 /**
  * based on the board, calculate the game's status
  * @param board the board to evaluate
- * @returns the winner if a winner is found, if it's a scratch game, or if the game isn't finished
+ * @returns [GameStatus, winning cell indexes if winner is found]
  */
-function determineGameStatus(board: CellState[]): GameStatus {
+function determineGameStatus(board: CellState[]): [GameStatus, number[]]{
     // indexes to check for a winner
     const checkInds = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
 
@@ -103,12 +117,14 @@ function determineGameStatus(board: CellState[]): GameStatus {
         if (board[testInds[0]] === board[testInds[1]] && 
             board[testInds[1]] === board[testInds[2]] &&
             board[testInds[0]] !== CellState.Empty) {
-                return board[testInds[0]] === CellState.O ? GameStatus.WinO : GameStatus.WinX;
+                const status = board[testInds[0]] === CellState.O ? GameStatus.WinO : GameStatus.WinX;
+                return [status, testInds];
             }
     }
 
     // if the board is full, it's a scratch game.  If the board isn't full, the game is still being played
-    return boardFull(board) ? GameStatus.NoWin : GameStatus.Playing;
+    const status = boardFull(board) ? GameStatus.NoWin : GameStatus.Playing;
+    return [status, []];
 }
 
 //#endregion
@@ -139,9 +155,11 @@ export async function getNextMove(gameState: TicTacToeState, nextPlayer: CellSta
     const data = await response.json();
     if ('board' in data) {
         const newBoard = deserializeBoard(data['board']);
+        const [status, winningInds] = determineGameStatus(newBoard);
         return {
             board: newBoard,
-            status: determineGameStatus(newBoard),
+            status: status,
+            winningInds: winningInds,
         }
     }
 

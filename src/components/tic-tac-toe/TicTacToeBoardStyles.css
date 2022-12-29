@@ -16,10 +16,14 @@
     cursor: pointer;
 }
 
+.cellWinner {
+    background-color: #acffa0;
+}
+
 .boardContainer {
     width: 290px;
     height: 290px;
-    margin: auto;
+    margin: 50px auto 25px auto;
 }
 
 .rowDivider {

@@ -1,36 +1,36 @@
 import React, { useCallback } from 'react';
 import './TicTacToeBoardStyles.css';
-import { CellState } from '../../assets/TicTacToeResources';
+import { CellState, TicTacToeState } from '../../assets/TicTacToeResources';
 
 export interface ITicTacToeBoardProps {
-    boardState: CellState[];
+    gameState: TicTacToeState;
     performMove: (index: number, value: CellState) => Promise<void>;
     /** true if the user can make a selection */
     canMakeMove: boolean;
 }
 
 export const TicTacToeBoard: React.FC<ITicTacToeBoardProps> = (props) => {
-    const {boardState, performMove, canMakeMove} = props;
+    const {gameState, performMove, canMakeMove} = props;
 
     return (
         <div className='boardContainer'>
             <TicTacToeBoardRow 
                 startIndex={0} 
-                boardState={boardState} 
+                gameState={gameState} 
                 performMove={performMove} 
                 canMakeMove={canMakeMove}
             />
             <div className='rowDivider'/>
             <TicTacToeBoardRow 
                 startIndex={3} 
-                boardState={boardState} 
+                gameState={gameState} 
                 performMove={performMove} 
                 canMakeMove={canMakeMove}
             />
             <div className='rowDivider'/>
             <TicTacToeBoardRow 
                 startIndex={6} 
-                boardState={boardState} 
+                gameState={gameState} 
                 performMove={performMove} 
                 canMakeMove={canMakeMove}
             />
@@ -42,15 +42,15 @@ export const TicTacToeBoard: React.FC<ITicTacToeBoardProps> = (props) => {
 
 interface ITicTacToeBoardRowProps {
     startIndex: number;
-    boardState: CellState[];
+    gameState: TicTacToeState;
     performMove: (index: number, value: CellState) => Promise<void>;
     /** true if the user can make a selection */
     canMakeMove: boolean;
 }
 
 const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
-    const {startIndex, boardState, performMove, canMakeMove} = props;
-    const rowCells = boardState.slice(startIndex, startIndex + 3);
+    const {startIndex, gameState, performMove, canMakeMove} = props;
+    const rowCells = gameState.board.slice(startIndex, startIndex + 3);
 
     return (
         <div className='boardRow'>
@@ -61,6 +61,7 @@ const TicTacToeBoardRow: React.FC<ITicTacToeBoardRowProps> = (props) => {
                         cellIndex={startIndex + index}
                         performMove={performMove}
                         canMakeMove={canMakeMove}
+                        isWinningCell={gameState.winningInds.indexOf(startIndex + index) !== -1}
                     />
                     {index < 2 && <div className='colDivider'/>}
                 </div>
@@ -77,10 +78,12 @@ interface ITicTacToeBoardCellProps {
     performMove: (index: number, value: CellState) => Promise<void>;
     /** true if the user can make a selection */
     canMakeMove: boolean;
+    /** true if this cell is one of the winning cells */
+    isWinningCell: boolean;
 }
 
 const TicTacToeBoardCell: React.FC<ITicTacToeBoardCellProps> = (props) => {
-    const {cellValue, cellIndex, performMove, canMakeMove} = props;
+    const {cellValue, cellIndex, performMove, canMakeMove, isWinningCell} = props;
 
     /**
      * Handle the user clicking a cell on the board
@@ -91,9 +94,12 @@ const TicTacToeBoardCell: React.FC<ITicTacToeBoardCellProps> = (props) => {
         }
     }, [cellValue, cellIndex, performMove, canMakeMove]);
 
+    const hoverClass = canUserMakeMove(canMakeMove, cellValue) ? 'cellEmptyHover' : '';
+    const winningClass = isWinningCell ? 'cellWinner' : '';
+
     return (
         <div 
-            className={`boardCell ${canUserMakeMove(canMakeMove, cellValue) ? 'cellEmptyHover' : ''}`}
+            className={`boardCell ${hoverClass} ${winningClass}`}
             onClick={clickHandler}
         >
             {cellValue === CellState.Empty ? null

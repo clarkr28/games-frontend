@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { TicTacToeBoard } from './TicTacToeBoard';
-import { CellState, GameStatus, TicTacToeState, boardFull, copyGame, getNextMove, makeNewGame, recordMove } from '../../assets/TicTacToeResources';
+import { CellState, GameStatus, TicTacToeState, boardEmpty, boardFull, copyGame, getNextMove, makeNewGame, recordMove } from '../../assets/TicTacToeResources';
 
 export const TicTacToeGame: React.FC<{}> = props => {
     const [gameState, setGameState] = useState<TicTacToeState>(makeNewGame());
@@ -23,11 +23,16 @@ export const TicTacToeGame: React.FC<{}> = props => {
     return (
         <>
             <TicTacToeBoard 
-                boardState={gameState.board} 
+                gameState={gameState} 
                 performMove={performMove} 
                 canMakeMove={gameState.status === GameStatus.Playing}
             />
-            <button onClick={() => setGameState(makeNewGame())}>Reset</button>
+            <button 
+                onClick={() => setGameState(makeNewGame())}
+                disabled={boardEmpty(gameState.board)}
+            >
+                Reset
+            </button>
             {gameState.status !== GameStatus.Playing && <div>{gameStatusDisplayText(gameState.status)}</div>}
         </>
     );

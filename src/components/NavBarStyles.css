@@ -1,0 +1,17 @@
+nav {
+    display: flex;
+    justify-content: space-evenly;
+    --nav-height: 50px;
+    height: var(--nav-height);
+    background-color: #e7e7e7;
+}
+
+nav a {
+    padding: 0 20px;
+    line-height: var(--nav-height);
+    color: black;
+}
+
+nav a:hover {
+    background-color: #ccc;
+}
