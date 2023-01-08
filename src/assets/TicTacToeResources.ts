@@ -130,7 +130,8 @@ function determineGameStatus(board: CellState[]): [GameStatus, number[]]{
 //#endregion
 //#region API Calls 
 
-const BaseRoute = 'http://localhost:5001'
+const ApiHost = process.env.NODE_ENV === 'production' ? 'https://games-backend-tic-tac-toe.azurewebsites.net' 
+    : 'http://localhost:5001';
 
 /**
  * API request to get the next move
@@ -139,7 +140,7 @@ const BaseRoute = 'http://localhost:5001'
  * @returns a new board with the next move performed
  */
 export async function getNextMove(gameState: TicTacToeState, nextPlayer: CellState): Promise<TicTacToeState> {
-    const apiCall = `${BaseRoute}/nextmove/${serializeBoard(gameState)}/${nextPlayer.toString()}`;
+    const apiCall = `${ApiHost}/nextmove/${serializeBoard(gameState)}/${nextPlayer.toString()}`;
     const response = await fetch(apiCall, {
         method: 'GET', 
         headers: { 'Content-Type': 'application/json' },
