@@ -1,0 +1,25 @@
+.gameCardContainer {
+    background-color: rgb(244, 244, 244);
+    border-radius: 5px;
+    width: 250px;
+}
+
+.gameCardContainer a {
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 10px;
+    color: black;
+    background-color: rgb(135, 229, 130);
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.gameCardContainer a:hover {
+    background-color: rgb(191, 220, 189);
+}
+
+.gameCardIconSection {
+    height: 200px;
+    border: 1px solid black;
+}

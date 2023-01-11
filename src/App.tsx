@@ -4,6 +4,7 @@ import { TicTacToeGame } from './components/tic-tac-toe/TicTacToeGame';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { NavBar } from './components/NavBar';
 import { HomePage } from './components/HomePage';
+import { ConnectFourGame } from './components/connect-four/ConnectFourGame';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage/>} />
           <Route path="/tic-tac-toe" element={<TicTacToeGame />} />
+          <Route path="/connect-four" element={<ConnectFourGame/>} />
         </Routes>
       </div>
     </BrowserRouter>
