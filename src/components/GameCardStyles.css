@@ -6,7 +6,6 @@
 
 .gameCardContainer a {
     display: inline-block;
-    margin-top: 10px;
     margin-bottom: 10px;
     padding: 10px 10px;
     color: black;
@@ -20,6 +19,5 @@
 }
 
 .gameCardIconSection {
-    height: 200px;
-    border: 1px solid black;
+    height: 210px;
 }

@@ -1,11 +1,27 @@
 import React from "react";
 import { GameCard } from "./GameCard";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import "./HomePageStyles.css";
 
 export const HomePage: React.FC<{}> = () => {
-    const ticTacToeDisplay = <div>test</div>;
+    const ticTacToeDisplay = (
+        <div className="fourIconGrid">
+            <FontAwesomeIcon icon={solid("x")} />
+            <FontAwesomeIcon icon={solid("o")} />
+            <FontAwesomeIcon icon={solid("o")} />
+            <FontAwesomeIcon icon={solid("x")} />
+        </div>
+    );
 
-    const connectFourDisplay = <div>test C4</div>;
+    const connectFourDisplay = (
+        <div className="fourIconGrid">
+            <FontAwesomeIcon icon={solid("circle")} />
+            <FontAwesomeIcon className="red" icon={solid("circle")} />
+            <FontAwesomeIcon className="red" icon={solid("circle")} />
+            <FontAwesomeIcon icon={solid("circle")} />
+        </div>
+    );
 
     return (
         <div className="homePageCardContainer">

@@ -5,3 +5,18 @@
     justify-content: center;
     gap: 50px;
 }
+
+.fourIconGrid {
+    font-size: 70px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    align-items: center;
+    width: 200px;
+    height: 200px;
+    margin: 10px auto 0 auto;
+}
+
+.red {
+    color: crimson;
+}
