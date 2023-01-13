@@ -1,7 +1,6 @@
-import React from 'react';
+import React from "react";
+import { ConnectFourBoard } from "./ConnectFourBoard";
 
-export const ConnectFourGame: React.FC<{}> = props => {
-    return (
-        <div>Connect Four Placeholder</div>
-    );
-}
+export const ConnectFourGame: React.FC<{}> = (props) => {
+    return <ConnectFourBoard />;
+};

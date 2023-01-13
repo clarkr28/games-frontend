@@ -1,0 +1,35 @@
+.red {
+    color: crimson;
+}
+
+.gridCell {
+    aspect-ratio: 1;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+}
+
+.gridCellSelectable:hover {
+    background-color: #ddd;
+}
+
+.cellIcon {
+    display: block;
+    margin: auto;
+    height: 75%;
+}
+
+.boardContainer {
+    max-width: 750px;
+    margin: 50px auto 0 auto;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.boardGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    background-color: black;
+    border: 2px solid black;
+    gap: 2px;
+}
