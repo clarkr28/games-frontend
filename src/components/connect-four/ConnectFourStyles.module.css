@@ -9,8 +9,9 @@
     align-items: center;
 }
 
-.gridCellSelectable:hover {
-    background-color: #ddd;
+.gridCellHovering {
+    background-color: #eee;
+    cursor: pointer;
 }
 
 .cellIcon {
@@ -31,5 +32,12 @@
     grid-template-columns: repeat(7, 1fr);
     background-color: black;
     border: 2px solid black;
+    gap: 2px;
+}
+
+.columnGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    background-color: black;
     gap: 2px;
 }

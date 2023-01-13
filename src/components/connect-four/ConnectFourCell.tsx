@@ -4,30 +4,20 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styles from "./ConnectFourStyles.module.css";
 
-export const ConnectFourCell: React.FC<{}> = (props) => {
-    const [cellState, setCellState] = useState(C4CellState.Empty);
+export interface IConnectFourCellProps {
+    cellState: C4CellState;
+    isHovering?: boolean;
+}
 
-    const handleClick = () => {
-        setCellState((cellState) => {
-            if (cellState === C4CellState.Empty) {
-                return C4CellState.Black;
-            }
-            if (cellState === C4CellState.Black) {
-                return C4CellState.Red;
-            }
-            return C4CellState.Empty; // cell must be red
-        });
-    };
-
+export const ConnectFourCell: React.FC<IConnectFourCellProps> = ({
+    cellState,
+    isHovering,
+}) => {
     const classes = `${styles.gridCell} ${
-        cellState === C4CellState.Empty ? styles.gridCellSelectable : ""
+        isHovering ? styles.gridCellHovering : ""
     }`;
 
-    return (
-        <div className={classes} onClick={handleClick}>
-            {cellStateToDisplay(cellState)}
-        </div>
-    );
+    return <div className={classes}>{cellStateToDisplay(cellState)}</div>;
 };
 
 function cellStateToDisplay(state: C4CellState): JSX.Element | null {
