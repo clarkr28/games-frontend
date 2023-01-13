@@ -4,6 +4,11 @@
     width: 250px;
 }
 
+.gameCardContainer:hover {
+    box-shadow: 0 0 7px #ccc;
+    cursor: pointer;
+}
+
 .gameCardContainer a {
     display: inline-block;
     margin-bottom: 10px;

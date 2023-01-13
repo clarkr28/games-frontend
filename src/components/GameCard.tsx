@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./GameCardStyles.css";
 
 export interface GameCardProps {
@@ -10,11 +10,17 @@ export interface GameCardProps {
 
 export const GameCard: React.FC<GameCardProps> = (props) => {
     const { buttonLabel, route, display } = props;
+    const navigate = useNavigate();
+    const routeFormatted = `/${route}`;
+
     return (
-        <div className="gameCardContainer">
+        <div
+            className="gameCardContainer"
+            onClick={() => navigate(routeFormatted)}
+        >
             <div className="gameCardIconSection">{display}</div>
             <div>
-                <Link to={`/${route}`}>{buttonLabel}</Link>
+                <Link to={routeFormatted}>{buttonLabel}</Link>
             </div>
         </div>
     );
