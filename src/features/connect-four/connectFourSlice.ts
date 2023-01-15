@@ -1,5 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import { C4CellState, C4GameStatus, createEmptyBoard } from '../../assets/ConnectFourResources';
+import { C4CellState, C4GameStatus, calculateStatus, createEmptyBoard } from '../../assets/ConnectFourResources';
 import { RootState } from '../../app/store';
 
 export interface ConnectFourState {
@@ -25,7 +25,7 @@ export const connectFourSlice = createSlice({
                     if (state.board[action.payload][i] === C4CellState.Empty) {
                         state.board[action.payload][i] = state.nextTurn;
                         state.nextTurn = state.nextTurn === C4CellState.Black ? C4CellState.Red : C4CellState.Black;
-                        state.status = C4GameStatus.InProgress;
+                        state.status = calculateStatus(state.board, action.payload);
                         break;
                     }
                 }

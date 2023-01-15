@@ -19,6 +19,26 @@ export const ConnectFourGame: React.FC<{}> = (props) => {
             >
                 reset
             </button>
+            {showGameResult(gameStatus) && (
+                <div>{gameResultText(gameStatus)}</div>
+            )}
         </>
     );
 };
+
+function showGameResult(status: C4GameStatus): boolean {
+    return status !== C4GameStatus.New && status !== C4GameStatus.InProgress;
+}
+
+function gameResultText(status: C4GameStatus): string {
+    if (status === C4GameStatus.NoWin) {
+        return "No Winner";
+    }
+    if (status === C4GameStatus.WinBlack) {
+        return "Black Wins!";
+    }
+    if (status === C4GameStatus.WinRed) {
+        return "Red Wins!";
+    }
+    return "";
+}
