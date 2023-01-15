@@ -22,7 +22,7 @@
 
 .boardContainer {
     max-width: 750px;
-    margin: 50px auto 0 auto;
+    margin: 50px auto 25px auto;
     padding-left: 50px;
     padding-right: 50px;
 }
