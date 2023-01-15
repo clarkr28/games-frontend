@@ -1,9 +1,12 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { C4CellState, C4_ROWS } from "../../assets/ConnectFourResources";
+import { C4CellState, C4_ROWS, Point } from "../../assets/ConnectFourResources";
 import { ConnectFourCell } from "./ConnectFourCell";
 import styles from "./ConnectFourStyles.module.css";
-import { useAppDispatch } from "../../app/hooks";
-import { recordMove } from "../../features/connect-four/connectFourSlice";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+    recordMove,
+    selectWinningCells,
+} from "../../features/connect-four/connectFourSlice";
 
 export interface IConnectFourColumn {
     cellStates: C4CellState[];
@@ -14,6 +17,7 @@ export interface IConnectFourColumn {
 export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
     const { cellStates, columnIndex } = props;
     const [isHovering, setIsHovering] = useState(false);
+    const winningCells = useAppSelector(selectWinningCells);
     const dispatch = useAppDispatch();
 
     const classes = `${styles.columnGrid}`;
@@ -46,6 +50,11 @@ export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
                         key={index}
                         cellState={value}
                         isHovering={isHovering}
+                        isWinner={isWiningCell(
+                            winningCells,
+                            columnIndex,
+                            C4_ROWS - index - 1
+                        )}
                     />
                 );
             })}
@@ -60,4 +69,15 @@ export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
  */
 function hasEmptyCell(cells: C4CellState[]): boolean {
     return cells.indexOf(C4CellState.Empty) !== -1;
+}
+
+function isWiningCell(
+    winningCells: Point[] | null,
+    x: number,
+    y: number
+): boolean {
+    if (!winningCells) {
+        return false;
+    }
+    return winningCells.some((point) => point.X === x && point.Y === y);
 }

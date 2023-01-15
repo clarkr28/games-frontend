@@ -7,15 +7,14 @@ import styles from "./ConnectFourStyles.module.css";
 export interface IConnectFourCellProps {
     cellState: C4CellState;
     isHovering?: boolean;
+    isWinner?: boolean;
 }
 
-export const ConnectFourCell: React.FC<IConnectFourCellProps> = ({
-    cellState,
-    isHovering,
-}) => {
+export const ConnectFourCell: React.FC<IConnectFourCellProps> = (props) => {
+    const { cellState, isHovering, isWinner } = props;
     const classes = `${styles.gridCell} ${
-        isHovering ? styles.gridCellHovering : ""
-    }`;
+        isHovering && !isWinner ? styles.gridCellHovering : ""
+    } ${isWinner ? styles.cellWinner : ""}`;
 
     return <div className={classes}>{cellStateToDisplay(cellState)}</div>;
 };

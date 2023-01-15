@@ -17,6 +17,11 @@ export enum C4GameStatus {
     NoWin,
 }
 
+export interface Point {
+    X: number;
+    Y: number;
+}
+
 /**
  * create an empty connect four board
  * @returns an empty connect four board, each inner array stores a column of the board
@@ -36,59 +41,59 @@ export function isBoardFull(board: C4CellState[][]): boolean {
     return !board.some(column => column[column.length - 1] === C4CellState.Empty);
 }
 
-export function matchCountVertical(board: C4CellState[][], startX: number, startY: number): number {
+export function matchesVertical(board: C4CellState[][], startX: number, startY: number): Point[] {
     const matchValue = board[startX][startY];
     const x = startX;
-    let matches = 1;
+    const matchingPoints: Point[] = [{X: startX, Y: startY}];
 
     // check up
     let y = startY + 1;
     while (y < C4_ROWS && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         y++;
     }
 
     // check down
     y = startY - 1;
     while (y >= 0 && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         y--;
     }
 
-    return matches;
+    return matchingPoints;
 }
 
-export function matchCountHorizontal(board: C4CellState[][], startX: number, startY: number): number {
+export function matchesHorizontal(board: C4CellState[][], startX: number, startY: number): Point[] {
     const matchValue = board[startX][startY];
     const y = startY;
-    let matches = 1;
+    const matchingPoints: Point[] = [{X: startX, Y: startY}];
 
     // check to the right
     let x = startX + 1;
     while (x < C4_COLS && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         x++;
     }
 
     // check to the left
     x = startX - 1;
     while (x >= 0 && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         x--;
     }
 
-    return matches;
+    return matchingPoints;
 }
 
 /** return the number of matches on the top-right and bottom-left diagonal */
-export function matchCountTRBL(board: C4CellState[][], startX: number, startY: number): number {
+export function matchesTRBL(board: C4CellState[][], startX: number, startY: number): Point[] {
     const matchValue = board[startX][startY];
-    let matches = 1;
+    const matchingPoints: Point[] = [{X: startX, Y: startY}];
 
     // check the top-right direction 
     let x = startX + 1, y = startY + 1;
     while (x < C4_COLS && y < C4_ROWS && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         x++;
         y++;
     }
@@ -96,23 +101,23 @@ export function matchCountTRBL(board: C4CellState[][], startX: number, startY: n
     // check the bottom-left direction 
     x = startX - 1, y = startY - 1;
     while (x >= 0 && y >= 0 && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         x--;
         y--;
     }
 
-    return matches;
+    return matchingPoints;
 }
 
 /** return the number of matches on the bottom-right and top-left diagonal */
-export function matchCountBRTL(board: C4CellState[][], startX: number, startY: number): number {
+export function matchesBRTL(board: C4CellState[][], startX: number, startY: number): Point[] {
     const matchValue = board[startX][startY];
-    let matches = 1;
+    const matchingPoints: Point[] = [{X: startX, Y: startY}];
 
     // check the bottom-right direction 
     let x = startX + 1, y = startY - 1;
     while (x < C4_COLS && y >= 0 && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         x++;
         y--;
     }
@@ -120,18 +125,24 @@ export function matchCountBRTL(board: C4CellState[][], startX: number, startY: n
     // check the top-left direction 
     x = startX - 1, y = startY + 1;
     while (x >= 0 && y < C4_ROWS && board[x][y] === matchValue) {
-        matches++;
+        matchingPoints.push({X: x, Y: y});
         x--;
         y++;
     }
 
-    return matches;
+    return matchingPoints;
 }
 
-export function calculateStatus(board: C4CellState[][], lastMoveCol: number): C4GameStatus {
+/**
+ * find the winning cells on the board
+ * @param board the game board
+ * @param lastMoveCol the column with the most recent move
+ * @return locations of each winning cell, or null if no winner
+ */
+export function findWinningCells(board: C4CellState[][], lastMoveCol: number): Point[] | null {
     let lastMoveRow = board[lastMoveCol].indexOf(C4CellState.Empty) - 1;
     if (lastMoveRow === -1) {
-        return C4GameStatus.NoWin;  // error case, this shouldn't occur
+        return null;  // error case, this shouldn't occur
     }
     if (lastMoveRow === -2) {
         // this happens when the last empty cell in a column is filled
@@ -141,23 +152,37 @@ export function calculateStatus(board: C4CellState[][], lastMoveCol: number): C4
     const matchValue = board[lastMoveCol][lastMoveRow];
     // there are four diagonals to check for 4 in a row
     // diag 1 - vertical
-    if (matchCountVertical(board, lastMoveCol, lastMoveRow) >= 4) {
-        return matchValue === C4CellState.Black ? C4GameStatus.WinBlack : C4GameStatus.WinRed;
+    let matches = matchesVertical(board, lastMoveCol, lastMoveRow);
+    if (matches.length >= 4) {
+        return matches;
     }
 
     // diag 2 - top-right and bottom-left 
-    if (matchCountTRBL(board, lastMoveCol, lastMoveRow) >= 4) {
-        return matchValue === C4CellState.Black ? C4GameStatus.WinBlack : C4GameStatus.WinRed;
+    matches = matchesTRBL(board, lastMoveCol, lastMoveRow);
+    if (matches.length >= 4){
+        return matches;
     }
 
     // diag 3 - horizontal
-    if (matchCountHorizontal(board, lastMoveCol, lastMoveRow) >= 4) {
-        return matchValue === C4CellState.Black ? C4GameStatus.WinBlack : C4GameStatus.WinRed;
+    matches = matchesHorizontal(board, lastMoveCol, lastMoveRow);
+    if (matches.length >= 4) {
+        return matches;
     }
 
     // diag 4 - bottom-right and top-left
-    if (matchCountBRTL(board, lastMoveCol, lastMoveRow) >= 4) {
-        return matchValue === C4CellState.Black ? C4GameStatus.WinBlack : C4GameStatus.WinRed;
+    matches = matchesBRTL(board, lastMoveCol, lastMoveRow);
+    if (matches.length >= 4) {
+        return matches;
+    }
+
+    return null;
+}
+
+/** return the status of the game after a move has been made */
+export function calculateStatus(board: C4CellState[][], winningCells: Point[] | null): C4GameStatus {
+    if (winningCells) {
+        // return the win state based on what cells are the winning cells
+        return board[winningCells[0].X][winningCells[0].Y] === C4CellState.Black ? C4GameStatus.WinBlack : C4GameStatus.WinRed;
     }
 
     // there aren't any winners, game is either still in progress or doesn't have a winner
