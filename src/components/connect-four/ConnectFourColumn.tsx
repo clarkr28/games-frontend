@@ -11,11 +11,12 @@ import {
 export interface IConnectFourColumn {
     cellStates: C4CellState[];
     columnIndex: number;
+    allowMoves: boolean;
 }
 
 /* renders a single column in the connect four grid */
 export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
-    const { cellStates, columnIndex } = props;
+    const { cellStates, columnIndex, allowMoves } = props;
     const [isHovering, setIsHovering] = useState(false);
     const winningCells = useAppSelector(selectWinningCells);
     const dispatch = useAppDispatch();
@@ -24,15 +25,22 @@ export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
 
     const handleMouseLeave = () => setIsHovering(false);
     const handleMouseEnter = useCallback(() => {
-        setIsHovering(hasEmptyCell(cellStates));
-    }, [cellStates]);
+        setIsHovering(allowMoves && hasEmptyCell(cellStates));
+    }, [allowMoves, cellStates]);
 
     useEffect(() => {
+        // if the last empty cell was just filled, stop the hovering effect
         if (!hasEmptyCell(cellStates)) {
-            // if the last empty cell was just filled, stop the hovering effect
             setIsHovering(false);
         }
     }, [cellStates]);
+
+    useEffect(() => {
+        // if moves are no longer allowed, stop the hovering effect
+        if (!allowMoves) {
+            setIsHovering(false);
+        }
+    }, [allowMoves]);
 
     // index 0 of cellStates should be the bottom of the column
     const cellsRenderOrder = cellStates.slice().reverse();
@@ -42,7 +50,7 @@ export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
             className={classes}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onClick={() => dispatch(recordMove(columnIndex))}
+            onClick={() => allowMoves && dispatch(recordMove(columnIndex))}
         >
             {cellsRenderOrder.map((value: C4CellState, index: number) => {
                 return (

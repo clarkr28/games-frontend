@@ -1,12 +1,23 @@
 import React from "react";
-import { C4CellState, C4_COLS } from "../../assets/ConnectFourResources";
+import {
+    C4CellState,
+    C4GameStatus,
+    C4_COLS,
+} from "../../assets/ConnectFourResources";
 import styles from "./ConnectFourStyles.module.css";
 import { ConnectFourColumn } from "./ConnectFourColumn";
 import { useAppSelector } from "../../app/hooks";
-import { selectBoard } from "../../features/connect-four/connectFourSlice";
+import {
+    selectBoard,
+    selectStatus,
+} from "../../features/connect-four/connectFourSlice";
 
 export const ConnectFourBoard: React.FC<{}> = (props) => {
     const board = useAppSelector(selectBoard);
+    const status = useAppSelector(selectStatus);
+
+    const allowMoves =
+        status === C4GameStatus.New || status === C4GameStatus.InProgress;
 
     return (
         <div className={styles.boardContainer}>
@@ -17,6 +28,7 @@ export const ConnectFourBoard: React.FC<{}> = (props) => {
                             key={index}
                             cellStates={column}
                             columnIndex={index}
+                            allowMoves={allowMoves}
                         />
                     );
                 })}
