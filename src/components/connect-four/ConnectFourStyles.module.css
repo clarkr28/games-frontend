@@ -24,7 +24,7 @@
     height: 75%;
 }
 
-.boardContainer {
+.gameContainer {
     max-width: 650px;
     margin: 50px auto 25px auto;
     padding-left: 50px;
@@ -44,4 +44,37 @@
     grid-template-columns: 1fr;
     background-color: black;
     gap: 2px;
+}
+
+.gameInfo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 25px;
+    font-size: 20px;
+}
+
+.gameStatus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.statusIconShape {
+    --icon-height: 25px;
+    height: var(--icon-height);
+    width: var(--icon-height);
+    border-radius: 50%;
+}
+
+.statusIconRed {
+    background-color: crimson;
+}
+
+.statusIconBlack {
+    background-color: black;
+}
+
+.statusIconNoWinner {
+    border: 1px dashed black;
 }
