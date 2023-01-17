@@ -1,5 +1,8 @@
 nav {
     display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    overflow: hidden;
     justify-content: space-evenly;
     --nav-height: 50px;
     height: var(--nav-height);
@@ -10,6 +13,7 @@ nav a {
     padding: 0 20px;
     line-height: var(--nav-height);
     color: black;
+    white-space: nowrap;
 }
 
 nav a:hover {
