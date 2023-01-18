@@ -1,0 +1,8 @@
+Games that could be added:
+ - Dots and Boxes
+ - Yahtzee
+ - Checkers (action space is more complex)
+ - Chess
+ - Sorry/Trouble
+ - Othello
+ - Black Jack
