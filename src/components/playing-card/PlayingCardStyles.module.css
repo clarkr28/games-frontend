@@ -1,0 +1,25 @@
+.cardContainer {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.red {
+    color: crimson;
+}
+
+.cardHeader {
+    font-size: 22px;
+    display: flex;
+    justify-content: space-between;
+    width: 95px;
+}
+
+.cardBottomRow {
+    rotate: 180deg;
+}
+
+.cardCenter {
+    font-size: 65px;
+    margin: -15px 0;
+}

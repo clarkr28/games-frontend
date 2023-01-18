@@ -3,6 +3,7 @@ import { GameCard } from "./GameCard";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import "./HomePageStyles.css";
+import { Suit, suitToUnicode } from "../assets/CardResources";
 
 export const HomePage: React.FC<{}> = () => {
     const ticTacToeDisplay = (
@@ -23,6 +24,15 @@ export const HomePage: React.FC<{}> = () => {
         </div>
     );
 
+    const blackjackDisplay = (
+        <div className="fourIconGrid">
+            <div>{suitToUnicode(Suit.Spade)}</div>
+            <div className="red">{suitToUnicode(Suit.Heart)}</div>
+            <div className="red">{suitToUnicode(Suit.Diamond)}</div>
+            <div>{suitToUnicode(Suit.Club)}</div>
+        </div>
+    );
+
     return (
         <div className="homePageCardContainer">
             <GameCard
@@ -34,6 +44,11 @@ export const HomePage: React.FC<{}> = () => {
                 buttonLabel="Play Connect Four"
                 route="connect-four"
                 display={connectFourDisplay}
+            />
+            <GameCard
+                buttonLabel="Play Blackjack"
+                route="blackjack"
+                display={blackjackDisplay}
             />
         </div>
     );
