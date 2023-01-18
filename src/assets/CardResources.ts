@@ -26,6 +26,10 @@ export interface PlayingCard {
     value: CardValue;
 }
 
+export function MakePlayingCard(suit: Suit, value: CardValue): PlayingCard {
+    return {suit: suit, value: value};
+}
+
 export function suitToUnicode(suit: Suit, solid = true): string {
     switch (suit) {
         case Suit.Spade:

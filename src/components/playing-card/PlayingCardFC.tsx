@@ -9,6 +9,7 @@ import styles from "./PlayingCardStyles.module.css";
 
 export interface IPlayingCardProps {
     card: PlayingCard;
+    hidden?: boolean;
 }
 
 export const PlayingCardFC: React.FC<IPlayingCardProps> = (props) => {

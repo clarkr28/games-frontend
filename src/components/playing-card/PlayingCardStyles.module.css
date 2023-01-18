@@ -23,3 +23,13 @@
     font-size: 65px;
     margin: -15px 0;
 }
+
+.stacked {
+    position: relative;
+    display: inline-block;
+}
+
+.stacked > div {
+    position: absolute;
+    background-color: #fff; /* makes it non-transparent */
+}
