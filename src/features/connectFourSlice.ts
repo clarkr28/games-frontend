@@ -1,6 +1,6 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import { C4CellState, C4GameStatus, C4_COLS, C4_ROWS, Point, calculateStatus, createEmptyBoard, findWinningCells } from '../../assets/ConnectFourResources';
-import { RootState } from '../../app/store';
+import { C4CellState, C4GameStatus, C4_COLS, C4_ROWS, Point, calculateStatus, createEmptyBoard, findWinningCells } from '../assets/ConnectFourResources';
+import { RootState } from '../app/store';
 
 export interface ConnectFourState {
     board: C4CellState[][]; // board[x][y]

@@ -28,7 +28,7 @@ export const CardHand: React.FC<ICardHand> = (props) => {
                         key={index}
                         style={{
                             left: `${CARD_OFFSET * index}px`,
-                            zIndex: `${cards.length - index}`,
+                            zIndex: `${index}`,
                         }}
                     >
                         <PlayingCardFC {...card} />

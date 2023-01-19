@@ -7,10 +7,7 @@ import {
 import styles from "./ConnectFourStyles.module.css";
 import { ConnectFourColumn } from "./ConnectFourColumn";
 import { useAppSelector } from "../../app/hooks";
-import {
-    selectBoard,
-    selectStatus,
-} from "../../features/connect-four/connectFourSlice";
+import { selectBoard, selectStatus } from "../../features/connectFourSlice";
 
 export const ConnectFourBoard: React.FC<{}> = (props) => {
     const board = useAppSelector(selectBoard);

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
     recordMove,
     selectWinningCells,
-} from "../../features/connect-four/connectFourSlice";
+} from "../../features/connectFourSlice";
 
 export interface IConnectFourColumn {
     cellStates: C4CellState[];

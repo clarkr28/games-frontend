@@ -5,7 +5,7 @@ import {
     reset,
     selectNextTurnPlayer,
     selectStatus,
-} from "../../features/connect-four/connectFourSlice";
+} from "../../features/connectFourSlice";
 import { C4GameStatus } from "../../assets/ConnectFourResources";
 import styles from "./ConnectFourStyles.module.css";
 import { ConnectFourStatus } from "./ConnectFourStatus";

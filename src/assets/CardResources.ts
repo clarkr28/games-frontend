@@ -26,8 +26,27 @@ export interface PlayingCard {
     value: CardValue;
 }
 
-export function MakePlayingCard(suit: Suit, value: CardValue): PlayingCard {
+export function createPlayingCard(suit: Suit, value: CardValue): PlayingCard {
     return {suit: suit, value: value};
+}
+
+export interface Deck {
+    cards: PlayingCard[];
+}
+
+export function createOrderedDeck(): Deck {
+    const cards: PlayingCard[] = [];
+    const allSuits = [Suit.Spade, Suit.Club, Suit.Diamond, Suit.Heart];
+    const allCardVals = [CardValue.Two, CardValue.Three, CardValue.Four, CardValue.Five, CardValue.Six, CardValue.Seven, CardValue.Eight, CardValue.Nine, CardValue.Ten, CardValue.Jack, CardValue.Queen, CardValue.King, CardValue.Ace];
+    allSuits.forEach(suit => 
+        allCardVals.forEach(val => cards.push(createPlayingCard(suit, val)))
+    );
+
+    return {cards: cards};
+}
+
+export function drawCard(deck: Deck): PlayingCard | undefined {
+    return deck.cards.pop();
 }
 
 export function suitToUnicode(suit: Suit, solid = true): string {
