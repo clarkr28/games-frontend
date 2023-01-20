@@ -34,6 +34,7 @@ export interface Deck {
     cards: PlayingCard[];
 }
 
+/** returns a deck of cards in suit and value order */
 export function createOrderedDeck(): Deck {
     const cards: PlayingCard[] = [];
     const allSuits = [Suit.Spade, Suit.Club, Suit.Diamond, Suit.Heart];
@@ -43,6 +44,23 @@ export function createOrderedDeck(): Deck {
     );
 
     return {cards: cards};
+}
+
+/** shuffles the passed deck of cards */
+export function randomizeDeck(deck: Deck): void {
+    for (let i = deck.cards.length; i >= 0; i--) {
+        const randIndex = Math.floor(Math.random() * i);
+        const temp = deck.cards[randIndex];
+        deck.cards[randIndex] = deck.cards[i];
+        deck.cards[i] = temp;
+    }
+}
+
+/** returns a single deck that has been shuffled */
+export function createRandomDeck(): Deck {
+    const deck = createOrderedDeck();
+    randomizeDeck(deck);
+    return deck;
 }
 
 export function drawCard(deck: Deck): PlayingCard | undefined {
@@ -93,4 +111,50 @@ export function cardValueToString(value: CardValue): string {
             return "A";
     }
     return "";
+}
+
+export function cardValueToInt(value: CardValue): number {
+    switch (value) {
+        case CardValue.Two:
+            return 2;
+        case CardValue.Three:
+            return 3;
+        case CardValue.Four:
+            return 4;
+        case CardValue.Five:
+            return 5;
+        case CardValue.Six:
+            return 6;
+        case CardValue.Seven:
+            return 7;
+        case CardValue.Eight:
+            return 8;
+        case CardValue.Nine:
+            return 9;
+        case CardValue.Ten:
+        case CardValue.Jack:
+        case CardValue.Queen:
+        case CardValue.King:
+            return 10;
+        case CardValue.Ace:
+            return 11; // remember that aces can be either 11 or 1 in blackjack
+    }
+    return 0;
+}
+
+export function scoreBlackjackHand(cards: PlayingCard[]): number {
+    let highAces = 0, total = 0;
+
+    cards.forEach(card => {
+        total += cardValueToInt(card.value);
+        if (card.value === CardValue.Ace) {
+            highAces++;
+        }
+        while (total > 21 && highAces > 0) {
+            total -= 10;
+            highAces--;
+        }
+    });
+
+    return total;
 }
