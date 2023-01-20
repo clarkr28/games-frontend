@@ -46,6 +46,11 @@ export const blackjackSlice = createSlice({
                 }
             }
         },
+        standPlayer: (state) => {
+            if (state.gameStatus === BlackjackStatus.Hitting) {
+                state.gameStatus = BlackjackStatus.DealerPlaying;
+            }
+        },
         hitDealer: (state) => {
             if (state.gameStatus !== BlackjackStatus.DealerPlaying) {return;}
             const card = drawCard(state.deck);
@@ -57,9 +62,9 @@ export const blackjackSlice = createSlice({
                 }
             }
         },
-        standPlayer: (state) => {
-            if (state.gameStatus === BlackjackStatus.Hitting) {
-                state.gameStatus = BlackjackStatus.DealerPlaying;
+        standDealer: (state) => {
+            if (state.gameStatus === BlackjackStatus.DealerPlaying) {
+                state.gameStatus = BlackjackStatus.FinalScoring;
             }
         },
         finalizeBet: (state, action: PayloadAction<number>) => {
@@ -108,7 +113,7 @@ export const blackjackSlice = createSlice({
     }
 });
 
-export const {hitPlayer, hitDealer, standPlayer, finalizeBet, finalScoringAndReset} = blackjackSlice.actions;
+export const {hitPlayer, standPlayer, hitDealer, standDealer, finalizeBet, finalScoringAndReset} = blackjackSlice.actions;
 
 export const selectBlackjackStatus = (state: RootState) => state.blackjack.gameStatus;
 export const selectBlackjackDealerHand = (state: RootState) => state.blackjack.dealerHand;

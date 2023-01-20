@@ -6,6 +6,7 @@ import {
     selectBlackjackDealerHand,
     selectBlackjackDealerHandValue,
     selectBlackjackStatus,
+    standDealer,
 } from "../../features/blackjackSlice";
 import { CardHand } from "../playing-card/CardHand";
 import { IPlayingCardProps } from "../playing-card/PlayingCardFC";
@@ -21,9 +22,15 @@ export const BlackjackDealer: React.FC<{}> = (props) => {
 
     useEffect(() => {
         if (gameStatus === BlackjackStatus.DealerPlaying) {
-            setTimeout(() => {
-                dispatch(hitDealer());
-            }, 750);
+            if (dealerHandValue < 17) {
+                setTimeout(() => {
+                    dispatch(hitDealer());
+                }, 750);
+            } else {
+                setTimeout(() => {
+                    dispatch(standDealer());
+                }, 750);
+            }
         }
     }, [gameStatus, dealerHand.length]);
 
