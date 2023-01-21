@@ -41,11 +41,11 @@ export const BlackjackDealer: React.FC<{}> = (props) => {
     }, [gameStatus, dealerHand.length]);
 
     return (
-        <>
+        <div>
             <CardHand cards={cardProps} stacked />
             {!partiallyHidden && dealerHand.length > 0 && (
                 <div>{`Dealer hand: ${dealerHandValue}`}</div>
             )}
-        </>
+        </div>
     );
 };
