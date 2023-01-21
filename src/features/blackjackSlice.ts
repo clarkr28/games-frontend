@@ -71,9 +71,10 @@ export const blackjackSlice = createSlice({
             if (state.gameStatus === BlackjackStatus.Betting && action.payload > 0 && action.payload <= state.playerBank) {
                 state.playerBank -= action.payload;
                 state.betPool = action.payload;
+
                 // give the dealer two cards
-                const firstCard = drawCard(state.deck);
-                const secondCard = drawCard(state.deck);
+                let firstCard = drawCard(state.deck);
+                let secondCard = drawCard(state.deck);
                 if (firstCard) {
                     state.dealerHand.push(firstCard);
                 }
@@ -81,6 +82,18 @@ export const blackjackSlice = createSlice({
                     state.dealerHand.push(secondCard);
                 }
                 state.dealerHandValue = scoreBlackjackHand(state.dealerHand);
+                
+                // give the player two cards
+                firstCard = drawCard(state.deck);
+                secondCard = drawCard(state.deck);
+                if (firstCard) {
+                    state.playerHand.push(firstCard);
+                }
+                if (secondCard) {
+                    state.playerHand.push(secondCard);
+                }
+                state.playerHandValue = scoreBlackjackHand(state.playerHand);
+
                 state.gameStatus = BlackjackStatus.Hitting;
             }
         },
