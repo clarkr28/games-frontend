@@ -1,9 +1,12 @@
 import React from "react";
-import { IPlayingCardProps, PlayingCardFC } from "./PlayingCardFC";
+import {
+    CARD_HEIGHT,
+    CARD_WIDTH,
+    IPlayingCardProps,
+    PlayingCardFC,
+} from "./PlayingCardFC";
 import styles from "./PlayingCardStyles.module.css";
 
-const CARD_WIDTH = 95; // pixels
-const CARD_HEIGHT = 157; // pixels
 const CARD_OFFSET = 23; // offset (pixels) when cards are stacked
 
 export interface ICardHand {

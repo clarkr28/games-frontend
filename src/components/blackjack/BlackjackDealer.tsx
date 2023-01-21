@@ -10,6 +10,7 @@ import {
 } from "../../features/blackjackSlice";
 import { CardHand } from "../playing-card/CardHand";
 import { IPlayingCardProps } from "../playing-card/PlayingCardFC";
+import { PlayingCard } from "../../assets/CardResources";
 
 export const BlackjackDealer: React.FC<{}> = (props) => {
     const gameStatus = useAppSelector(selectBlackjackStatus);
@@ -17,8 +18,13 @@ export const BlackjackDealer: React.FC<{}> = (props) => {
     const dealerHandValue = useAppSelector(selectBlackjackDealerHandValue);
     const dispatch = useAppDispatch();
 
+    const partiallyHidden =
+        gameStatus === BlackjackStatus.Betting ||
+        gameStatus === BlackjackStatus.Hitting;
     const cardProps: IPlayingCardProps[] = [];
-    dealerHand.forEach((card) => cardProps.push({ card: card, hidden: false }));
+    dealerHand.forEach((card: PlayingCard, index: number) =>
+        cardProps.push({ card: card, hidden: partiallyHidden && index > 0 })
+    );
 
     useEffect(() => {
         if (gameStatus === BlackjackStatus.DealerPlaying) {
@@ -37,7 +43,7 @@ export const BlackjackDealer: React.FC<{}> = (props) => {
     return (
         <>
             <CardHand cards={cardProps} stacked />
-            {dealerHand.length > 0 && (
+            {!partiallyHidden && dealerHand.length > 0 && (
                 <div>{`Dealer hand: ${dealerHandValue}`}</div>
             )}
         </>

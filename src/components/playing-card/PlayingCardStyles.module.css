@@ -4,6 +4,10 @@
     border-radius: 5px;
 }
 
+.cardHidden {
+    background-color: aqua;
+}
+
 .red {
     color: crimson;
 }
@@ -12,7 +16,6 @@
     font-size: 22px;
     display: flex;
     justify-content: space-between;
-    width: 95px;
 }
 
 .cardBottomRow {

@@ -7,13 +7,16 @@ import {
 } from "../../assets/CardResources";
 import styles from "./PlayingCardStyles.module.css";
 
+export const CARD_WIDTH = 95; // pixels
+export const CARD_HEIGHT = 155; // pixels
+
 export interface IPlayingCardProps {
     card: PlayingCard;
     hidden?: boolean;
 }
 
 export const PlayingCardFC: React.FC<IPlayingCardProps> = (props) => {
-    const { card } = props;
+    const { card, hidden } = props;
 
     const valueAndSuit = (
         <>
@@ -22,23 +25,36 @@ export const PlayingCardFC: React.FC<IPlayingCardProps> = (props) => {
         </>
     );
 
+    const containerClasses: string[] = [
+        styles.cardContainer,
+        colorClassForSuit(card.suit),
+    ];
+    if (hidden) {
+        containerClasses.push(styles.cardHidden);
+    }
+
     return (
         <div
-            className={`${styles.cardContainer} ${colorClassForSuit(
-                card.suit
-            )}`}
+            style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}
+            className={containerClasses.join(" ")}
         >
-            <div className={styles.cardHeader}>
-                <div>{valueAndSuit}</div>
-                <div>{valueAndSuit}</div>
-            </div>
-            <div className={styles.cardCenter}>
-                {suitToUnicode(card.suit, false)}
-            </div>
-            <div className={`${styles.cardHeader} ${styles.cardBottomRow}`}>
-                <div>{valueAndSuit}</div>
-                <div>{valueAndSuit}</div>
-            </div>
+            {!hidden && (
+                <>
+                    <div className={styles.cardHeader}>
+                        <div>{valueAndSuit}</div>
+                        <div>{valueAndSuit}</div>
+                    </div>
+                    <div className={styles.cardCenter}>
+                        {suitToUnicode(card.suit, false)}
+                    </div>
+                    <div
+                        className={`${styles.cardHeader} ${styles.cardBottomRow}`}
+                    >
+                        <div>{valueAndSuit}</div>
+                        <div>{valueAndSuit}</div>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
