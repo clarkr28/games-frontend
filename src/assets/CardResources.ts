@@ -63,8 +63,16 @@ export function createRandomDeck(): Deck {
     return deck;
 }
 
-export function drawCard(deck: Deck): PlayingCard | undefined {
-    return deck.cards.pop();
+/** returns a card from the deck. Refills the deck if it's empty */
+export function drawCard(deck: Deck): PlayingCard {
+    const card = deck.cards.pop();
+    if (card) {
+        return card;
+    }
+    // deck is empty. Refill it and return a card
+    const newDeck = createRandomDeck();
+    deck.cards = newDeck.cards;
+    return deck.cards.pop()!;
 }
 
 export function suitToUnicode(suit: Suit, solid = true): string {

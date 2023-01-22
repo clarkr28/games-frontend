@@ -37,13 +37,10 @@ export const blackjackSlice = createSlice({
     reducers: {
         hitPlayer: (state) => {
             if (state.gameStatus !== BlackjackStatus.Hitting) { return; }
-            const card = drawCard(state.deck);
-            if (card) {
-                state.playerHand.push(card);
-                state.playerHandValue = scoreBlackjackHand(state.playerHand);
-                if (state.playerHandValue >= 21) {
-                    state.gameStatus = BlackjackStatus.DealerPlaying;
-                }
+            state.playerHand.push(drawCard(state.deck));
+            state.playerHandValue = scoreBlackjackHand(state.playerHand);
+            if (state.playerHandValue >= 21) {
+                state.gameStatus = BlackjackStatus.DealerPlaying;
             }
         },
         standPlayer: (state) => {
@@ -53,13 +50,10 @@ export const blackjackSlice = createSlice({
         },
         hitDealer: (state) => {
             if (state.gameStatus !== BlackjackStatus.DealerPlaying) {return;}
-            const card = drawCard(state.deck);
-            if (card) {
-                state.dealerHand.push(card);
-                state.dealerHandValue = scoreBlackjackHand(state.dealerHand);
-                if (state.dealerHandValue >= 17) {
-                    state.gameStatus = BlackjackStatus.FinalScoring;
-                }
+            state.dealerHand.push(drawCard(state.deck));
+            state.dealerHandValue = scoreBlackjackHand(state.dealerHand);
+            if (state.dealerHandValue >= 17) {
+                state.gameStatus = BlackjackStatus.FinalScoring;
             }
         },
         standDealer: (state) => {
@@ -73,25 +67,13 @@ export const blackjackSlice = createSlice({
                 state.betPool = action.payload;
 
                 // give the dealer two cards
-                let firstCard = drawCard(state.deck);
-                let secondCard = drawCard(state.deck);
-                if (firstCard) {
-                    state.dealerHand.push(firstCard);
-                }
-                if (secondCard) {
-                    state.dealerHand.push(secondCard);
-                }
+                state.dealerHand.push(drawCard(state.deck));
+                state.dealerHand.push(drawCard(state.deck));
                 state.dealerHandValue = scoreBlackjackHand(state.dealerHand);
                 
                 // give the player two cards
-                firstCard = drawCard(state.deck);
-                secondCard = drawCard(state.deck);
-                if (firstCard) {
-                    state.playerHand.push(firstCard);
-                }
-                if (secondCard) {
-                    state.playerHand.push(secondCard);
-                }
+                state.playerHand.push(drawCard(state.deck));
+                state.playerHand.push(drawCard(state.deck));
                 state.playerHandValue = scoreBlackjackHand(state.playerHand);
 
                 state.gameStatus = BlackjackStatus.Hitting;
