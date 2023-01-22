@@ -1,0 +1,35 @@
+.incrementChangeContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 80px;
+}
+
+.button {
+    cursor: pointer;
+    height: 30px;
+    border-radius: 15px;
+    /* centers the icon */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.incrementButton:hover {
+    background-color: lightgreen;
+}
+
+.incrementButton:active {
+    background-color: green;
+    color: white;
+}
+
+.decrementButton:hover {
+    background-color: lightsalmon; 
+}
+
+.decrementButton:active {
+    background-color: #f2523f;
+    color: white;
+}

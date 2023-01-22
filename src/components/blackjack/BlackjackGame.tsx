@@ -23,6 +23,7 @@ export const BlackjackGame: React.FC<{}> = (props) => {
     const betPool = useSelector(selectBlackjackBetPool);
     const gameStatus = useSelector(selectBlackjackStatus);
     const dispatch = useDispatch();
+    const [betAmount, setBetAmount] = useState(25);
 
     const playerHandDisplay: IPlayingCardProps[] = [];
     playerHand.forEach((card) =>
@@ -37,23 +38,31 @@ export const BlackjackGame: React.FC<{}> = (props) => {
         }
     });
 
+    const hitStandUI = (
+        <div>
+            <button onClick={() => dispatch(hitPlayer())}>Hit</button>
+            <button onClick={() => dispatch(standPlayer())}>Stand</button>
+            <div>{`Bank: ${playerBank}`}</div>
+        </div>
+    );
+
     return (
         <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr" }}>
             <div>{`On the table: ${betPool}`}</div>
             <BlackjackDealer />
-            {gameStatus === BlackjackStatus.Hitting && (
-                <div>
-                    <button onClick={() => dispatch(hitPlayer())}>Hit</button>
-                    <button onClick={() => dispatch(standPlayer())}>
-                        Stand
-                    </button>
-                    <div>{`Bank: ${playerBank}`}</div>
-                </div>
+            {gameStatus === BlackjackStatus.Betting ? (
+                <BlackjackBetting
+                    betAmount={betAmount}
+                    setBetAmount={setBetAmount}
+                />
+            ) : (
+                hitStandUI
             )}
-            {gameStatus === BlackjackStatus.Betting && <BlackjackBetting />}
             <div>
                 <CardHand cards={playerHandDisplay} stacked />
-                <div>{`Your hand: ${playerHandValue}`}</div>
+                {playerHandValue > 0 && (
+                    <div>{`Your hand: ${playerHandValue}`}</div>
+                )}
             </div>
         </div>
     );

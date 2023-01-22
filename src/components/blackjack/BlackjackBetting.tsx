@@ -5,10 +5,17 @@ import {
     selectBlackjackPlayerBank,
 } from "../../features/blackjackSlice";
 import { useDispatch } from "react-redux";
+import { IncrementChange } from "../common/IncrementChange";
 
-export const BlackjackBetting: React.FC<{}> = (props) => {
+export interface IBlackjackBetting {
+    betAmount: number;
+    setBetAmount: React.Dispatch<React.SetStateAction<number>>;
+}
+
+export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
+    const { betAmount, setBetAmount } = props;
+
     const playerBank = useAppSelector(selectBlackjackPlayerBank);
-    const [betAmount, setBetAmount] = useState(25);
     const dispatch = useDispatch();
 
     const trySetBet = useCallback(
@@ -38,10 +45,20 @@ export const BlackjackBetting: React.FC<{}> = (props) => {
             <button onClick={() => dispatch(finalizeBet(betAmount))}>
                 Place Bet
             </button>
-            <button onClick={() => trySetBet(1)}>+1</button>
-            <button onClick={() => trySetBet(-1)}>-1</button>
-            <button onClick={() => trySetBet(10)}>+10</button>
-            <button onClick={() => trySetBet(-10)}>-10</button>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                <IncrementChange
+                    changeIncrement={1}
+                    tryChangeValue={trySetBet}
+                />
+                <IncrementChange
+                    changeIncrement={5}
+                    tryChangeValue={trySetBet}
+                />
+                <IncrementChange
+                    changeIncrement={10}
+                    tryChangeValue={trySetBet}
+                />
+            </div>
             <div>{`Bank: ${playerBank}`}</div>
         </div>
     );
