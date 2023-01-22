@@ -31,11 +31,11 @@ export const BlackjackDealer: React.FC<{}> = (props) => {
             if (dealerHandValue < 17) {
                 setTimeout(() => {
                     dispatch(hitDealer());
-                }, 750);
+                }, 1000);
             } else {
                 setTimeout(() => {
                     dispatch(standDealer());
-                }, 750);
+                }, 1000);
             }
         }
     }, [gameStatus, dealerHand.length]);

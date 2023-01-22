@@ -15,6 +15,7 @@ import {
 } from "../../features/blackjackSlice";
 import { BlackjackDealer } from "./BlackjackDealer";
 import { BlackjackBetting } from "./BlackjackBetting";
+import styles from "./Blackjack.module.css";
 
 export const BlackjackGame: React.FC<{}> = (props) => {
     const playerHand = useSelector(selectBlackjackPlayerHand);
@@ -34,7 +35,7 @@ export const BlackjackGame: React.FC<{}> = (props) => {
         if (gameStatus === BlackjackStatus.FinalScoring) {
             setTimeout(() => {
                 dispatch(finalScoringAndReset());
-            }, 750);
+            }, 2000);
         }
     });
 
@@ -47,9 +48,11 @@ export const BlackjackGame: React.FC<{}> = (props) => {
     );
 
     return (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr" }}>
+        <div className={styles.gameContainer}>
             <div>{`On the table: ${betPool}`}</div>
-            <BlackjackDealer />
+            <div className={styles.cardsContainer}>
+                <BlackjackDealer />
+            </div>
             {gameStatus === BlackjackStatus.Betting ? (
                 <BlackjackBetting
                     betAmount={betAmount}
@@ -58,11 +61,13 @@ export const BlackjackGame: React.FC<{}> = (props) => {
             ) : (
                 hitStandUI
             )}
-            <div>
-                <CardHand cards={playerHandDisplay} stacked />
-                {playerHandValue > 0 && (
-                    <div>{`Your hand: ${playerHandValue}`}</div>
-                )}
+            <div className={styles.cardsContainer}>
+                <div>
+                    <CardHand cards={playerHandDisplay} stacked />
+                    {playerHandValue > 0 && (
+                        <div>{`Your hand: ${playerHandValue}`}</div>
+                    )}
+                </div>
             </div>
         </div>
     );

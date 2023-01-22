@@ -1,0 +1,13 @@
+.gameContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    max-width: 600px;
+    margin: 50px auto 0 auto;
+}
+
+.cardsContainer {
+    margin: 10px 0;
+    display: flex;
+    height: 185px;
+}
