@@ -7,11 +7,11 @@ import {
 import styles from "./ConnectFourStyles.module.css";
 import { ConnectFourColumn } from "./ConnectFourColumn";
 import { useAppSelector } from "../../app/hooks";
-import { selectBoard, selectStatus } from "../../features/connectFourSlice";
+import { selectC4Board, selectC4Status } from "../../features/connectFourSlice";
 
 export const ConnectFourBoard: React.FC<{}> = (props) => {
-    const board = useAppSelector(selectBoard);
-    const status = useAppSelector(selectStatus);
+    const board = useAppSelector(selectC4Board);
+    const status = useAppSelector(selectC4Status);
 
     const allowMoves =
         status === C4GameStatus.New || status === C4GameStatus.InProgress;

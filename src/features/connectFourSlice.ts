@@ -45,9 +45,9 @@ export const connectFourSlice = createSlice({
 
 export const {recordMove, reset} = connectFourSlice.actions;
 
-export const selectBoard = (state: RootState) => state.connectFour.board;
-export const selectStatus = (state: RootState) => state.connectFour.status;
-export const selectWinningCells = (state: RootState) => state.connectFour.winningCells;
-export const selectNextTurnPlayer = (state: RootState) => state.connectFour.nextTurn;
+export const selectC4Board = (state: RootState) => state.connectFour.board;
+export const selectC4Status = (state: RootState) => state.connectFour.status;
+export const selectC4WinningCells = (state: RootState) => state.connectFour.winningCells;
+export const selectC4NextTurnPlayer = (state: RootState) => state.connectFour.nextTurn;
 
 export default connectFourSlice.reducer;

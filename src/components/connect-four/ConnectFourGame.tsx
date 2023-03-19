@@ -3,16 +3,16 @@ import { ConnectFourBoard } from "./ConnectFourBoard";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
     reset,
-    selectNextTurnPlayer,
-    selectStatus,
+    selectC4NextTurnPlayer,
+    selectC4Status,
 } from "../../features/connectFourSlice";
 import { C4GameStatus } from "../../assets/ConnectFourResources";
 import styles from "./ConnectFourStyles.module.css";
 import { ConnectFourStatus } from "./ConnectFourStatus";
 
 export const ConnectFourGame: React.FC<{}> = (props) => {
-    const gameStatus = useAppSelector(selectStatus);
-    const nextTurnPlayer = useAppSelector(selectNextTurnPlayer);
+    const gameStatus = useAppSelector(selectC4Status);
+    const nextTurnPlayer = useAppSelector(selectC4NextTurnPlayer);
     const dispatch = useAppDispatch();
 
     return (

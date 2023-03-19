@@ -5,7 +5,7 @@ import styles from "./ConnectFourStyles.module.css";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
     recordMove,
-    selectWinningCells,
+    selectC4WinningCells,
 } from "../../features/connectFourSlice";
 
 export interface IConnectFourColumn {
@@ -18,7 +18,7 @@ export interface IConnectFourColumn {
 export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
     const { cellStates, columnIndex, allowMoves } = props;
     const [isHovering, setIsHovering] = useState(false);
-    const winningCells = useAppSelector(selectWinningCells);
+    const winningCells = useAppSelector(selectC4WinningCells);
     const dispatch = useAppDispatch();
 
     const classes = `${styles.columnGrid}`;
