@@ -6,6 +6,7 @@ import { NavBar } from "./components/NavBar";
 import { HomePage } from "./components/HomePage";
 import { ConnectFourGame } from "./components/connect-four/ConnectFourGame";
 import { BlackjackGame } from "./components/blackjack/BlackjackGame";
+import { LifeGame } from "./components/life/LifeGame";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                     <Route path="/tic-tac-toe" element={<TicTacToeGame />} />
                     <Route path="/connect-four" element={<ConnectFourGame />} />
                     <Route path="/blackjack" element={<BlackjackGame />} />
+                    <Route path="/life" element={<LifeGame />} />
                 </Routes>
             </div>
         </BrowserRouter>

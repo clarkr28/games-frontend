@@ -9,6 +9,7 @@ export const NavBar: React.FC<{}> = () => {
             <Link to="/tic-tac-toe">Tic Tac Toe</Link>
             <Link to="/connect-four">Connect Four</Link>
             <Link to="/blackjack">Blackjack</Link>
+            <Link to="/life">Life</Link>
         </nav>
     );
 };
