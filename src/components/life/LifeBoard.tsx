@@ -1,7 +1,11 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectLifeBoard, toggleCell } from "../../features/lifeSlice";
-import { LIFE_COLS, LifeCellStates } from "../../assets/LifeResources";
+import {
+    LIFE_COLS,
+    LIFE_ROWS,
+    LifeCellStates,
+} from "../../assets/LifeResources";
 import { useDispatch } from "react-redux";
 import { Point } from "../../assets/ConnectFourResources";
 
@@ -38,7 +42,7 @@ export const LifeCell: React.FC<ILifeCell> = (props) => {
     const { cellState, rowInd, colInd } = props;
     const dispatch = useDispatch();
     return (
-        <div onClick={() => dispatch(toggleCell({ X: rowInd, Y: colInd }))}>
+        <div onClick={() => dispatch(toggleCell({ X: colInd, Y: rowInd }))}>
             {cellState === LifeCellStates.Alive ? 1 : 0}
         </div>
     );
