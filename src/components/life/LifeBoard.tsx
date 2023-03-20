@@ -1,7 +1,9 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectLifeBoard } from "../../features/lifeSlice";
+import { selectLifeBoard, toggleCell } from "../../features/lifeSlice";
 import { LIFE_COLS, LifeCellStates } from "../../assets/LifeResources";
+import { useDispatch } from "react-redux";
+import { Point } from "../../assets/ConnectFourResources";
 
 export const LifeBoard: React.FC<{}> = () => {
     const board = useAppSelector(selectLifeBoard);
@@ -9,11 +11,18 @@ export const LifeBoard: React.FC<{}> = () => {
         <div
             style={{
                 display: "grid",
-                gridTemplateColumns: `repeat(${LIFE_COLS}, 10px)`,
+                gridTemplateColumns: `repeat(${LIFE_COLS}, 15px)`,
+                fontSize: "20px",
             }}
         >
-            {board.map((row) =>
-                row.map((cell) => <LifeCell cellState={cell} />)
+            {board.map((row, rowInd) =>
+                row.map((cell, colInd) => (
+                    <LifeCell
+                        cellState={cell}
+                        rowInd={rowInd}
+                        colInd={colInd}
+                    />
+                ))
             )}
         </div>
     );
@@ -21,9 +30,16 @@ export const LifeBoard: React.FC<{}> = () => {
 
 interface ILifeCell {
     cellState: LifeCellStates;
+    rowInd: number;
+    colInd: number;
 }
 
 export const LifeCell: React.FC<ILifeCell> = (props) => {
-    const { cellState } = props;
-    return <div>{cellState === LifeCellStates.Alive ? 1 : 0}</div>;
+    const { cellState, rowInd, colInd } = props;
+    const dispatch = useDispatch();
+    return (
+        <div onClick={() => dispatch(toggleCell({ X: rowInd, Y: colInd }))}>
+            {cellState === LifeCellStates.Alive ? 1 : 0}
+        </div>
+    );
 };

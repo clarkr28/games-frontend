@@ -1,3 +1,4 @@
+import { Point } from "./ConnectFourResources";
 
 export const LIFE_ROWS = 5;
 export const LIFE_COLS = 9;
@@ -18,6 +19,13 @@ export function createEmptyBoard(): LifeCellStates[][] {
 export function createInitialBoard(): LifeCellStates[][] {
     const board = createEmptyBoard();
     board[0][0] = LifeCellStates.Alive;
+    return board;
+}
+
+export function toggleBoardCell(board: LifeCellStates[][], point: Point): LifeCellStates[][] {
+    if (point.X < board.length && point.Y < board[0].length) {
+        board[point.X][point.Y] = board[point.X][point.Y] === LifeCellStates.Alive ? LifeCellStates.Dead : LifeCellStates.Alive;
+    }
     return board;
 }
 
