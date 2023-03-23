@@ -1,7 +1,7 @@
 import { Point } from "./ConnectFourResources";
 
-export const LIFE_ROWS = 5;
-export const LIFE_COLS = 10;
+export const LIFE_ROWS = 30;
+export const LIFE_COLS = 30;
 
 export enum LifeCellStates {
     Alive,

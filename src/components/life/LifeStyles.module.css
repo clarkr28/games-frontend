@@ -1,0 +1,21 @@
+.gameGrid {
+    display: grid;
+    margin: 0 auto;
+    width: 479px;
+    gap: 1px;
+    background-color: lightgray;
+    border: 1px solid lightgray;
+}
+
+.gameGrid div {
+    height: 15px;
+    cursor: pointer;
+}
+
+.alive {
+    background-color: black;
+}
+
+.dead {
+    background-color: white;
+}
