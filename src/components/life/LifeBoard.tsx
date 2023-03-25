@@ -17,6 +17,7 @@ export const LifeBoard: React.FC<{}> = () => {
             {board.map((row, rowInd) =>
                 row.map((cell, colInd) => (
                     <LifeCell
+                        key={colInd}
                         cellState={cell}
                         rowInd={rowInd}
                         colInd={colInd}

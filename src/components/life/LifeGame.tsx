@@ -12,13 +12,20 @@ export const LifeGame: React.FC<{}> = () => {
     const tripper = useCallback(() => {
         setAdvanceTrigger((val) => val + 1);
         dispatch(advanceGeneration());
-    }, [setAdvanceTrigger, dispatch]);
+    }, [dispatch]);
 
     useEffect(() => {
         if (isPlaying) {
             setTimeout(() => tripper(), interval);
         }
     }, [isPlaying, tripper, advanceTrigger]);
+
+    const trySetInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newNum = parseInt(event.target.value);
+        if (!isNaN(newNum) && newNum >= 0) {
+            setInterval(newNum);
+        }
+    };
 
     return (
         <div>
@@ -28,10 +35,7 @@ export const LifeGame: React.FC<{}> = () => {
             <button onClick={() => setIsPlaying(!isPlaying)}>
                 {isPlaying ? "Stop" : "Start"}
             </button>
-            <input
-                value={interval}
-                onChange={(e) => setInterval(parseInt(e.target.value))}
-            />
+            <input value={interval} onChange={trySetInterval} />
             <LifeBoard />
         </div>
     );
