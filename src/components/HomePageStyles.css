@@ -20,3 +20,17 @@
 .red {
     color: crimson;
 }
+
+.lifeDisplayGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 15px);
+    gap: 1px;
+}
+
+.lifeDisplayGrid div {
+    height: 15px;
+}
+
+.blackBackground {
+    background-color: black;
+}
