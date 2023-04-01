@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { advanceGeneration } from "../../features/lifeSlice";
+import { advanceGeneration, boardResize } from "../../features/lifeSlice";
 import { LifeBoard } from "./LifeBoard";
 import styles from "./LifeStyles.module.css";
 
@@ -38,6 +38,7 @@ export const LifeGame: React.FC<{}> = () => {
                     const width = entries[0].contentBoxSize[0].inlineSize;
                     const height = entries[0].contentBoxSize[0].blockSize;
                     console.log(`width: ${width}, height: ${height}`);
+                    dispatch(boardResize({ width: width, height: height }));
                 }
             );
 

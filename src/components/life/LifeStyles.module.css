@@ -21,6 +21,6 @@
 }
 
 .gameShell {
-    height: 100%;
+    height: calc(100% - 50px); /* 50px for nav height */
     background-color: aqua;
 }

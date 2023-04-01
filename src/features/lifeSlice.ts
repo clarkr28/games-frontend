@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { LifeCellStates, createInitialBoard, makeNextGeneration, toggleBoardCell } from "../assets/LifeResources";
+import { IRect, LifeCellStates, createInitialBoard, makeNextGeneration, processBoardResize, toggleBoardCell } from "../assets/LifeResources";
 import { RootState } from "../app/store";
 import { Point } from "../assets/ConnectFourResources";
 
@@ -20,11 +20,14 @@ export const lifeSlice = createSlice({
         },
         toggleCell: (state, action: PayloadAction<Point>) => {
             state.board = toggleBoardCell(state.board, action.payload);
+        },
+        boardResize: (state, action: PayloadAction<IRect>) => {
+            state.board = processBoardResize(state.board, action.payload);
         }
     }
 });
 
-export const {advanceGeneration, toggleCell}= lifeSlice.actions;
+export const {advanceGeneration, toggleCell, boardResize}= lifeSlice.actions;
 
 export const selectLifeBoard = (state: RootState) => state.life.board;
 

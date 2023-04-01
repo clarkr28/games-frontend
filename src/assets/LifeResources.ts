@@ -2,22 +2,28 @@ import { Point } from "./ConnectFourResources";
 
 export const LIFE_ROWS = 30;
 export const LIFE_COLS = 30;
+export const CELL_HEIGHT = 15; // pixel height (and width) of a game square
+
+export interface IRect {
+    width: number;
+    height: number;
+}
 
 export enum LifeCellStates {
     Alive,
     Dead
 }
 
-export function createEmptyBoard(): LifeCellStates[][] {
+function createEmptyBoard(rows: number, columns: number): LifeCellStates[][] {
     const board: LifeCellStates[][] = [];
-    for (let i = 0; i < LIFE_ROWS; i++) {
-        board.push(Array<LifeCellStates>(LIFE_COLS).fill(LifeCellStates.Dead));
+    for (let i = 0; i < rows; i++) {
+        board.push(Array<LifeCellStates>(columns).fill(LifeCellStates.Dead));
     }
     return board;
 }
 
 export function createInitialBoard(): LifeCellStates[][] {
-    return createEmptyBoard();
+    return createEmptyBoard(30, 30);
 }
 
 export function toggleBoardCell(board: LifeCellStates[][], point: Point): LifeCellStates[][] {
@@ -58,7 +64,7 @@ function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): num
 export function makeNextGeneration(board: LifeCellStates[][]): LifeCellStates[][] {
     // treat cells after the walls as dead cells?
 
-    const newBoard = createEmptyBoard();
+    const newBoard = createEmptyBoard(board.length, board[0].length);
 
     for (let y = 0; y < board.length; y++) {
         for (let x = 0; x < board[0].length; x++) {
@@ -82,4 +88,18 @@ export function makeNextGeneration(board: LifeCellStates[][]): LifeCellStates[][
     }
 
     return newBoard;
+}
+
+export function processBoardResize(board: LifeCellStates[][], newSize: IRect): LifeCellStates[][] {
+    // TODO: update width of board
+
+    // see if the height of the board needs to change
+    const boardHeight = board.length * CELL_HEIGHT + board.length + 1; // board.length + 1 is for cell borders
+    const extraHeight = newSize.height - boardHeight - 22; // 22 for the controls at the top
+    const rowsToAdd = Math.floor(extraHeight / (CELL_HEIGHT + 1)); // +1 for cell border
+    for (let i = 0; i < rowsToAdd; i++) {
+        board.push(Array<LifeCellStates>(LIFE_COLS).fill(LifeCellStates.Dead))
+    }
+
+    return board;
 }
