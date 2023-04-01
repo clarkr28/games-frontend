@@ -19,3 +19,8 @@
 .dead {
     background-color: white;
 }
+
+.gameShell {
+    height: 100%;
+    background-color: aqua;
+}

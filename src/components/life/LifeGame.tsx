@@ -1,9 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useAppDispatch } from "../../app/hooks";
 import { advanceGeneration } from "../../features/lifeSlice";
 import { LifeBoard } from "./LifeBoard";
+import styles from "./LifeStyles.module.css";
 
 export const LifeGame: React.FC<{}> = () => {
+    const shellRef = useRef<HTMLDivElement>(null);
+
     const dispatch = useAppDispatch();
     const [isPlaying, setIsPlaying] = useState(false);
     const [advanceTrigger, setAdvanceTrigger] = useState(0);
@@ -27,8 +30,25 @@ export const LifeGame: React.FC<{}> = () => {
         }
     };
 
+    /** add a resize observer to the outermost div */
+    useEffect(() => {
+        if (shellRef && shellRef.current) {
+            const observer = new ResizeObserver(
+                (entries: ResizeObserverEntry[]) => {
+                    const width = entries[0].contentBoxSize[0].inlineSize;
+                    const height = entries[0].contentBoxSize[0].blockSize;
+                    console.log(`width: ${width}, height: ${height}`);
+                }
+            );
+
+            observer.observe(shellRef.current);
+
+            return () => observer.disconnect();
+        }
+    }, [shellRef]);
+
     return (
-        <div>
+        <div className={styles.gameShell} ref={shellRef}>
             <button onClick={() => dispatch(advanceGeneration())}>
                 Advance
             </button>
