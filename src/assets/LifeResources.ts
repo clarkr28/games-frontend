@@ -127,7 +127,7 @@ export function processBoardResize(board: LifeCellStates[][], newSize: IRect): L
         for (let i = 0; i < rowDiff; i++) {
             board.push(Array<LifeCellStates>(board[0].length).fill(LifeCellStates.Dead))
         }
-    } else if (rowDiff < 0) {
+    } else if (rowDiff < 0 && board.length > rowDiff * -1) {
         // remove rows
         board.splice(board.length + rowDiff, rowDiff * -1);
     }
