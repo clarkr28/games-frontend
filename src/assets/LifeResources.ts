@@ -96,9 +96,21 @@ export function processBoardResize(board: LifeCellStates[][], newSize: IRect): L
     // see if the height of the board needs to change
     const boardHeight = board.length * CELL_HEIGHT + board.length + 1; // board.length + 1 is for cell borders
     const extraHeight = newSize.height - boardHeight - 22; // 22 for the controls at the top
-    const rowsToAdd = Math.floor(extraHeight / (CELL_HEIGHT + 1)); // +1 for cell border
-    for (let i = 0; i < rowsToAdd; i++) {
-        board.push(Array<LifeCellStates>(LIFE_COLS).fill(LifeCellStates.Dead))
+    const rowDiff = Math.floor(extraHeight / (CELL_HEIGHT + 1)); // +1 for cell border
+    if (rowDiff > 0) {
+        // add rows 
+        for (let i = 0; i < rowDiff; i++) {
+            board.push(Array<LifeCellStates>(LIFE_COLS).fill(LifeCellStates.Dead))
+        }
+    } else if (rowDiff < 0) {
+        // remove rows
+        board.splice(board.length + rowDiff, rowDiff * -1);
+        // for (let i = 0; i < rowDiff * -1; i++) {
+        //     if (board.length > 0) {
+        //         delete board[board.length - 1];
+        //         board.splice()
+        //     }
+        // }
     }
 
     return board;
