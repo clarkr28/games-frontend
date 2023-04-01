@@ -37,7 +37,6 @@ export const LifeGame: React.FC<{}> = () => {
                 (entries: ResizeObserverEntry[]) => {
                     const width = entries[0].contentBoxSize[0].inlineSize;
                     const height = entries[0].contentBoxSize[0].blockSize;
-                    console.log(`width: ${width}, height: ${height}`);
                     dispatch(boardResize({ width: width, height: height }));
                 }
             );

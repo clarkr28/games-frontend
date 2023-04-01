@@ -91,16 +91,41 @@ export function makeNextGeneration(board: LifeCellStates[][]): LifeCellStates[][
 }
 
 export function processBoardResize(board: LifeCellStates[][], newSize: IRect): LifeCellStates[][] {
-    // TODO: update width of board
+    //
+    // update width of board
+    //
+    const boardWidth = board[0].length * CELL_HEIGHT + board[0].length + 1; 
+    const extraWidth = newSize.width - boardWidth;
+    // colDiff is the number of cells that could be added to a row
+    const colDiff = Math.floor(extraWidth / (CELL_HEIGHT + 1)); // +1 for cell border
+    // we want to add a cell to both ends at a time to keep it symmetrical
+    const pairedColDiff = Math.floor(colDiff / 2);
+    if (pairedColDiff > 0) {
+        // add columns
+        for (let i = 0; i < board.length; i++) {
+            board[i].push(...Array<LifeCellStates>(pairedColDiff).fill(LifeCellStates.Dead));
+            board[i].unshift(...Array<LifeCellStates>(pairedColDiff).fill(LifeCellStates.Dead));
+        }
+    }
+    if (pairedColDiff < 0) {
+        // remove columns
+        for (let i = 0; i < board.length; i++) {
+            board[i].splice(board[i].length + pairedColDiff, pairedColDiff * -1);
+            board[i].splice(0, pairedColDiff * -1);
+        }
+    }
 
-    // see if the height of the board needs to change
+    //
+    // update height of board
+    //
     const boardHeight = board.length * CELL_HEIGHT + board.length + 1; // board.length + 1 is for cell borders
     const extraHeight = newSize.height - boardHeight - 22; // 22 for the controls at the top
+    // rowDiff is the number of rows that should be added or removed
     const rowDiff = Math.floor(extraHeight / (CELL_HEIGHT + 1)); // +1 for cell border
     if (rowDiff > 0) {
         // add rows 
         for (let i = 0; i < rowDiff; i++) {
-            board.push(Array<LifeCellStates>(LIFE_COLS).fill(LifeCellStates.Dead))
+            board.push(Array<LifeCellStates>(board[0].length).fill(LifeCellStates.Dead))
         }
     } else if (rowDiff < 0) {
         // remove rows

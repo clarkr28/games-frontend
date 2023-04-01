@@ -1,29 +1,26 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import { selectLifeBoard, toggleCell } from "../../features/lifeSlice";
-import { LIFE_COLS, LifeCellStates } from "../../assets/LifeResources";
+import { LifeCellStates } from "../../assets/LifeResources";
 import { useDispatch } from "react-redux";
 import styles from "./LifeStyles.module.css";
 
 export const LifeBoard: React.FC<{}> = () => {
     const board = useAppSelector(selectLifeBoard);
     return (
-        <div
-            className={styles.gameGrid}
-            style={{
-                gridTemplateColumns: `repeat(${LIFE_COLS}, 15px)`,
-            }}
-        >
-            {board.map((row, rowInd) =>
-                row.map((cell, colInd) => (
-                    <LifeCell
-                        key={colInd}
-                        cellState={cell}
-                        rowInd={rowInd}
-                        colInd={colInd}
-                    />
-                ))
-            )}
+        <div className={styles.gameGrid}>
+            {board.map((row, rowInd) => (
+                <div className={styles.gridRow} key={rowInd}>
+                    {row.map((cell, colInd) => (
+                        <LifeCell
+                            key={colInd}
+                            cellState={cell}
+                            rowInd={rowInd}
+                            colInd={colInd}
+                        />
+                    ))}
+                </div>
+            ))}
         </div>
     );
 };
