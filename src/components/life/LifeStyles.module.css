@@ -1,14 +1,25 @@
 .gameGrid {
-    display: grid;
-    margin: 0 auto;
-    width: 479px;
-    gap: 1px;
-    background-color: lightgray;
-    border: 1px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.gameGrid div {
+.gameGrid>div:first-child {
+    padding-top: 1px;
+}
+
+.gridRow {
+    background-color: lightgray;
+    display: flex;
+    gap: 1px;
+    padding-bottom: 1px;
+    padding-right: 1px;
+    padding-left: 1px;
+}
+
+.gridRow div {
     height: 15px;
+    width: 15px;
     cursor: pointer;
 }
 
@@ -18,4 +29,8 @@
 
 .dead {
     background-color: white;
+}
+
+.gameShell {
+    height: calc(100% - 50px); /* 50px for nav height */
 }
