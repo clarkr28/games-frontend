@@ -1,20 +1,35 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectLifeBoard, toggleCell } from "../../features/lifeSlice";
-import { LifeCellStates } from "../../assets/LifeResources";
+import {
+    selectBoardHeight,
+    selectBoardWidth,
+    selectLifeBoard,
+    toggleCell,
+} from "../../features/lifeSlice";
+import { LifeCellStates, getCellState } from "../../assets/LifeResources";
 import { useDispatch } from "react-redux";
 import styles from "./LifeStyles.module.css";
 
 export const LifeBoard: React.FC<{}> = () => {
     const board = useAppSelector(selectLifeBoard);
+    const boardWidth = useAppSelector(selectBoardWidth);
+    const boardHeight = useAppSelector(selectBoardHeight);
+
+    const widthArray = Array<number>(boardWidth);
+    const heightArray = Array<number>(boardHeight);
+
     return (
         <div className={styles.gameGrid}>
-            {board.map((row, rowInd) => (
+            {heightArray.map((_, rowInd) => (
                 <div className={styles.gridRow} key={rowInd}>
-                    {row.map((cell, colInd) => (
+                    {widthArray.map((_, colInd) => (
                         <LifeCell
                             key={colInd}
-                            cellState={cell}
+                            cellState={getCellState(
+                                board,
+                                { X: colInd, Y: rowInd },
+                                boardWidth
+                            )}
                             rowInd={rowInd}
                             colInd={colInd}
                         />
@@ -25,13 +40,13 @@ export const LifeBoard: React.FC<{}> = () => {
     );
 };
 
-interface ILifeCell {
+interface LifeCellProps {
     cellState: LifeCellStates;
     rowInd: number;
     colInd: number;
 }
 
-export const LifeCell: React.FC<ILifeCell> = (props) => {
+const LifeCell: React.FC<LifeCellProps> = (props) => {
     const { cellState, rowInd, colInd } = props;
     const dispatch = useDispatch();
 

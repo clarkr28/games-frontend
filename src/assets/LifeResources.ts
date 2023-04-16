@@ -14,6 +14,24 @@ export enum LifeCellStates {
     Dead
 }
 
+/**
+ * convert a point to its corresponding dictionary key
+ * @param point the point to encode 
+ * @returns key to use in cell state dictionary
+ */
+function encode(point: Point): string {
+    return String(point.X) + ',' + String(point.Y);
+}
+
+/** decode a dictionary key into its corresponding coordinate
+ * @param key the dictionary key to decode
+ * @return point coordinates for the dictionary key
+ */
+function decode(key: string): Point {
+    const tokens = key.split(',');
+    return {X: parseInt(tokens[0]), Y: parseInt(tokens[1])};
+}
+
 function createEmptyBoard(rows: number, columns: number): LifeCellStates[][] {
     const board: LifeCellStates[][] = [];
     for (let i = 0; i < rows; i++) {
@@ -22,14 +40,39 @@ function createEmptyBoard(rows: number, columns: number): LifeCellStates[][] {
     return board;
 }
 
-export function createInitialBoard(): LifeCellStates[][] {
-    return createEmptyBoard(30, 30);
+/**
+ * convert a point from the board's coordinate frame to the data map's coordinate frame
+ * @param boardPoint a point from the board's coordinate frame
+ * @param boardWidth the width of the board
+ */
+export function transformBoardToData(boardPoint: Point, boardWidth: number): Point {
+    return {X: boardPoint.X - Math.floor(boardWidth / 2), Y: boardPoint.Y};
 }
 
-export function toggleBoardCell(board: LifeCellStates[][], point: Point): LifeCellStates[][] {
-    if (point.Y < board.length && point.X < board[0].length) {
-        board[point.Y][point.X] = board[point.Y][point.X] === LifeCellStates.Alive ? LifeCellStates.Dead : LifeCellStates.Alive;
-    }
+/**
+ * get cell data for a point on the board
+ * @param board board data
+ * @param boardPoint the point from the board's coordinate frame to retrieve
+ * @param boardWidth the width of the board
+ * @returns the cell data for the correspoinding point on the board
+ */
+export function getCellState(board: Map<string, LifeCellStates>, boardPoint: Point, boardWidth: number): LifeCellStates {
+    const dataPoint = transformBoardToData(boardPoint, boardWidth);
+    const key = encode(dataPoint);
+    console.log(`getting data at: ${key}`);
+    return board.get(key) || LifeCellStates.Dead; 
+}
+
+/**
+ * toggle the state of a cell
+ * @param board the board cell data
+ * @param point the cell coordinates to toggle (board data frame of reference)
+ * @return the board state after the cell toggle has been applied
+ */
+export function toggleBoardCell(board: Map<string, LifeCellStates>, point: Point): Map<string, LifeCellStates> {
+    const key = encode(point);
+    const currValue = board.has(key) ? board.get(key) : LifeCellStates.Dead;
+    board.set(key, currValue === LifeCellStates.Alive ? LifeCellStates.Dead : LifeCellStates.Alive);
     return board;
 }
 
@@ -61,9 +104,8 @@ function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): num
     return liveCount;
 }
 
-export function makeNextGeneration(board: LifeCellStates[][]): LifeCellStates[][] {
-    // treat cells after the walls as dead cells?
-
+// TODO: remove this method
+export function makeNextGenerationOld(board: LifeCellStates[][]): LifeCellStates[][] {
     const newBoard = createEmptyBoard(board.length, board[0].length);
 
     for (let y = 0; y < board.length; y++) {
@@ -87,6 +129,12 @@ export function makeNextGeneration(board: LifeCellStates[][]): LifeCellStates[][
         }
     }
 
+    return newBoard;
+}
+
+export function makeNextGeneration(boadData: Map<string, LifeCellStates>, boardWidth: number, boardHeight: number): Map<string, LifeCellStates> {
+    const newBoard = new Map<string, number>();
+    // TODO: implement
     return newBoard;
 }
 

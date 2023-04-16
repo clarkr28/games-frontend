@@ -1,14 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IRect, LifeCellStates, createInitialBoard, makeNextGeneration, processBoardResize, toggleBoardCell } from "../assets/LifeResources";
+import { IRect, LifeCellStates, makeNextGeneration, processBoardResize, toggleBoardCell, transformBoardToData } from "../assets/LifeResources";
 import { RootState } from "../app/store";
 import { Point } from "../assets/ConnectFourResources";
 
 export interface LifeState {
-    board: LifeCellStates[][];
+    boardData: Map<string, LifeCellStates>;
+    boardWidth: number;
+    boardHeight: number;
 }
 
 const initialState: LifeState = {
-    board: createInitialBoard(),
+    boardData: new Map<string, LifeCellStates>(),
+    boardWidth: 10,
+    boardHeight: 10,
 };
 
 export const lifeSlice = createSlice({
@@ -16,19 +20,23 @@ export const lifeSlice = createSlice({
     initialState,
     reducers: {
         advanceGeneration: (state) => {
-            state.board = makeNextGeneration(state.board);
+            state.boardData = makeNextGeneration(state.boardData, state.boardWidth, state.boardHeight);
         },
         toggleCell: (state, action: PayloadAction<Point>) => {
-            state.board = toggleBoardCell(state.board, action.payload);
+            const boardPoint = transformBoardToData(action.payload, state.boardWidth);
+            state.boardData = toggleBoardCell(state.boardData, boardPoint);
         },
         boardResize: (state, action: PayloadAction<IRect>) => {
-            state.board = processBoardResize(state.board, action.payload);
+            // separate functions will be needed for resizing width and height
+            //state.board = processBoardResize(state.board, action.payload);
         }
     }
 });
 
 export const {advanceGeneration, toggleCell, boardResize}= lifeSlice.actions;
 
-export const selectLifeBoard = (state: RootState) => state.life.board;
+export const selectLifeBoard = (state: RootState) => state.life.boardData;
+export const selectBoardHeight = (state: RootState) => state.life.boardHeight;
+export const selectBoardWidth = (state: RootState) => state.life.boardWidth;
 
 export default lifeSlice.reducer;
