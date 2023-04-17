@@ -14,6 +14,29 @@ export enum LifeCellStates {
     Dead
 }
 
+/**
+ * convert a point to its corresponding dictionary key
+ * @param point the point to encode 
+ * @param boardWidth the width of the board
+ * @returns key to use in cell state dictionary
+ */
+export function encode(point: Point, boardWidth: number): string {
+    /* x values have to be converted so 0 is in the middle of the board
+     * to ensure values remain accurage as the board changes size */
+    const xVal = point.X - Math.floor(boardWidth / 2);
+    return `${xVal},${point.Y}`;
+}
+
+/** decode a dictionary key into its corresponding coordinate point
+ * @param key the dictionary key to decode
+ * @param boardWidth the width of the board
+ * @return point coordinates for the dictionary key
+ */
+export function decode(key: string, boardWidth: number): Point {
+    const tokens = key.split(",");
+    return {X: parseInt(tokens[0]) + boardWidth / 2, Y: parseInt(tokens[1])};
+}
+
 function createEmptyBoard(rows: number, columns: number): LifeCellStates[][] {
     const board: LifeCellStates[][] = [];
     for (let i = 0; i < rows; i++) {
@@ -26,11 +49,22 @@ export function createInitialBoard(): LifeCellStates[][] {
     return createEmptyBoard(30, 30);
 }
 
-export function toggleBoardCell(board: LifeCellStates[][], point: Point): LifeCellStates[][] {
+/**
+ * toggle a cell on the board
+ * @param board the board of cells
+ * @param liveCellKeys the list of live keys
+ * @param point the point that was clicked
+ * @returns [newBoard, newLiveCellKeys]
+ */
+export function toggleBoardCell(board: LifeCellStates[][], liveCellKeys: string[], point: Point): [LifeCellStates[][], string[]] {
     if (point.Y < board.length && point.X < board[0].length) {
-        board[point.Y][point.X] = board[point.Y][point.X] === LifeCellStates.Alive ? LifeCellStates.Dead : LifeCellStates.Alive;
+        const newCellValue = board[point.Y][point.X] === LifeCellStates.Alive ? LifeCellStates.Dead : LifeCellStates.Alive;
+        board[point.Y][point.X] = newCellValue;
+        if (newCellValue === LifeCellStates.Alive) {
+            liveCellKeys.push(encode(point, board[0].length));
+        }
     }
-    return board;
+    return [board, liveCellKeys];
 }
 
 function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): number {

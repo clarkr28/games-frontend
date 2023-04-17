@@ -6,11 +6,14 @@ import { Point } from "../assets/ConnectFourResources";
 export interface LifeState {
     board: LifeCellStates[][];
     measurePerformance: boolean;
+    /** these cells are probably alive, but could be dead and could be out of bounds */
+    liveCellKeys: string[];
 }
 
 const initialState: LifeState = {
     board: createInitialBoard(),
-    measurePerformance: false,
+    measurePerformance: true,
+    liveCellKeys: [],
 };
 
 export const lifeSlice = createSlice({
@@ -26,7 +29,7 @@ export const lifeSlice = createSlice({
             }
         },
         toggleCell: (state, action: PayloadAction<Point>) => {
-            state.board = toggleBoardCell(state.board, action.payload);
+            [state.board, state.liveCellKeys] = toggleBoardCell(state.board, state.liveCellKeys, action.payload);
         },
         boardResize: (state, action: PayloadAction<IRect>) => {
             state.board = processBoardResize(state.board, action.payload);
