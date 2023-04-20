@@ -67,6 +67,13 @@ export function toggleBoardCell(board: LifeCellStates[][], liveCellKeys: string[
     return [board, liveCellKeys];
 }
 
+/**
+ * determine the number of live neighbors that a point has on the board
+ * @param board the game board to compute with
+ * @param y the y coordinate on the board to compute
+ * @param x the x coordinate on the board to compute
+ * @returns the number of live neighbors that the point has on the board
+ */
 function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): number {
     let liveCount = 0;
 
@@ -95,33 +102,96 @@ function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): num
     return liveCount;
 }
 
-export function makeNextGeneration(board: LifeCellStates[][]): LifeCellStates[][] {
+/**
+ * compute the next generation 
+ * @param board the board to base the next generation off of
+ * @param liveCells encoded keys of the cells that are alive (to improve performance)
+ * @returns [newBoard, newLiveCellKeys]
+ */
+export function makeNextGeneration(board: LifeCellStates[][], liveCells: string[]): [LifeCellStates[][], string[]] {
     // treat cells after the walls as dead cells?
 
     const newBoard = createEmptyBoard(board.length, board[0].length);
+    const newLiveCells: string[] = [];
+    const processedKeys = new Map<string, boolean>(); // value doesn't matter, having a key means it's processed
 
-    for (let y = 0; y < board.length; y++) {
-        for (let x = 0; x < board[0].length; x++) {
-            const liveNeighbors = cellLiveNeighbors(board, y, x);
-            if (board[y][x] === LifeCellStates.Alive) {
-                if (liveNeighbors < 2 || liveNeighbors > 3) {
-                    // any live cell with fewer than two neighbor dies
-                    // any live cell with more than 3 live neighbors dies
-                    newBoard[y][x] = LifeCellStates.Dead;
-                } else {
-                    // any live cell with 2 or 3 live neighbors lives
-                    newBoard[y][x] = LifeCellStates.Alive;
-                }
-            } else {
-                // any dead cell with 3 live neighbors comes to life
-                if (liveNeighbors === 3) {
-                    newBoard[y][x] = LifeCellStates.Alive;
-                }
-            }
-        }
+    liveCells.forEach(key => {
+        processCellAndNeighbors(board, newBoard, key, processedKeys, newLiveCells);
+    })
+
+    return [newBoard, newLiveCells];
+}
+
+/**
+ * for a given point on the board, process the next generation for that point and all its neighbors
+ * @param oldBoard the previous generation 
+ * @param newBoard the new generation 
+ * @param key the encoded key of the cell to process 
+ * @param processedKeys a map of keys that have already been processed
+ * @param newLiveKeys a list of the new keys that are alive
+ */
+function processCellAndNeighbors(
+    oldBoard: LifeCellStates[][], 
+    newBoard: LifeCellStates[][], 
+    key: string,
+    processedKeys: Map<string, boolean>,
+    newLiveKeys: string[]
+): void {
+    const point = decode(key, oldBoard[0].length);
+    // make sure the point is actually on the board
+    if (point.X < 0 || point.X >= newBoard[0].length || point.Y >= newBoard.length) {
+        return;
     }
 
-    return newBoard;
+    // if the cell isn't alive on the old board, I don't think we need to process it
+    if (oldBoard[point.Y][point.X] !== LifeCellStates.Alive) {
+        return;
+    }
+
+    // process the point and all its neighbors
+    // offset[n] = [Y,X]
+    const offsets: number[][] = [[0,0], [-1,0], [-1,1], [0,1], [1,1], [1,0], [1,-1], [0,-1], [-1,-1]];
+    offsets.forEach(offset => processCell({X: point.X + offset[1], Y: point.Y + offset[0]}, oldBoard, newBoard, processedKeys, newLiveKeys));
+}
+
+/**
+ * compute the state of the passed cell for the next generation
+ * @param cell the point to process on the board
+ * @param oldBoard the previous generation
+ * @param newBoard the generation currently being computed
+ * @param processedKeys a map of keys that have already been processed
+ * @param newLiveKeys list of live encoded keys in the new generation
+ */
+function processCell(
+    cell: Point,
+    oldBoard: LifeCellStates[][],
+    newBoard: LifeCellStates[][],
+    processedKeys: Map<string, boolean>,
+    newLiveKeys: string[]
+): void {
+    // make sure the point is on the board
+    if (cell.X < 0 || cell.X >= oldBoard[0].length || cell.Y < 0 || cell.Y >= oldBoard.length) { 
+        return; 
+    }
+
+    // see if the point has already been processed
+    const key = encode(cell, oldBoard[0].length);
+    if (processedKeys.has(key)) { 
+        return; 
+    }
+    processedKeys.set(key, true); // mark cell as processed
+
+    const liveNeighbors = cellLiveNeighbors(oldBoard, cell.Y, cell.X);
+    if (oldBoard[cell.Y][cell.X] === LifeCellStates.Alive && (liveNeighbors === 2 || liveNeighbors === 3)) {
+        // any live cell with 2 or 3 live neighbors lives
+        newBoard[cell.Y][cell.X] = LifeCellStates.Alive;
+        newLiveKeys.push(key);
+    } 
+    else if (oldBoard[cell.Y][cell.X] === LifeCellStates.Dead && liveNeighbors === 3) {
+        // any dead cell with 3 live neighbors comes to life
+        newBoard[cell.Y][cell.X] = LifeCellStates.Alive;
+        newLiveKeys.push(key);
+    }
 }
 
 export function processBoardResize(board: LifeCellStates[][], newSize: IRect): LifeCellStates[][] {

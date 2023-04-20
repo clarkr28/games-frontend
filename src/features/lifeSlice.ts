@@ -22,7 +22,7 @@ export const lifeSlice = createSlice({
     reducers: {
         advanceGeneration: (state) => {
             const startTime = new Date();
-            state.board = makeNextGeneration(state.board);
+            [state.board, state.liveCellKeys] = makeNextGeneration(state.board, state.liveCellKeys);
             if (state.measurePerformance) {
                 const diff = new Date().getTime() - startTime.getTime();
                 console.log(diff);
