@@ -12,7 +12,7 @@ export interface LifeState {
 
 const initialState: LifeState = {
     board: createInitialBoard(),
-    measurePerformance: true,
+    measurePerformance: false,
     liveCellKeys: [],
 };
 
