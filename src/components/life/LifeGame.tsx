@@ -1,8 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import { advanceGeneration, boardResize } from "../../features/lifeSlice";
+import {
+    advanceGeneration,
+    boardResize,
+    pickPreset,
+} from "../../features/lifeSlice";
 import { LifeBoard } from "./LifeBoard";
 import styles from "./LifeStyles.module.css";
+import { LifePresets } from "../../assets/LifePatternResources";
 
 export const LifeGame: React.FC<{}> = () => {
     const shellRef = useRef<HTMLDivElement>(null);
@@ -56,6 +61,12 @@ export const LifeGame: React.FC<{}> = () => {
                 {isPlaying ? "Stop" : "Start"}
             </button>
             <input value={interval} onChange={trySetInterval} />
+            <button onClick={() => dispatch(pickPreset(LifePresets.Glider))}>
+                Glider
+            </button>
+            <button onClick={() => dispatch(pickPreset(LifePresets.LWSH))}>
+                LWSH
+            </button>
             <LifeBoard />
         </div>
     );

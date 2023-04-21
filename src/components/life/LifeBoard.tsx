@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectLifeBoard, toggleCell } from "../../features/lifeSlice";
+import {
+    selectLifeBoard,
+    selectPreset,
+    toggleCell,
+} from "../../features/lifeSlice";
 import { LifeCellStates } from "../../assets/LifeResources";
 import { useDispatch } from "react-redux";
 import styles from "./LifeStyles.module.css";
@@ -33,15 +37,24 @@ interface ILifeCell {
 
 export const LifeCell: React.FC<ILifeCell> = (props) => {
     const { cellState, rowInd, colInd } = props;
+
     const dispatch = useDispatch();
+    const selectedPreset = useAppSelector(selectPreset);
+    const [isHovering, setIsHovering] = useState(false);
 
     const colorClass =
-        cellState === LifeCellStates.Alive ? styles.alive : styles.dead;
+        selectedPreset !== null && isHovering
+            ? styles.presetHovering
+            : cellState === LifeCellStates.Alive
+            ? styles.alive
+            : styles.dead;
 
     return (
         <div
             className={colorClass}
             onClick={() => dispatch(toggleCell({ X: colInd, Y: rowInd }))}
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
         />
     );
 };
