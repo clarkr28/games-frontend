@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
+    presetHoverCell,
     selectLifeBoard,
     selectPreset,
     toggleCell,
@@ -42,19 +43,29 @@ export const LifeCell: React.FC<ILifeCell> = (props) => {
     const selectedPreset = useAppSelector(selectPreset);
     const [isHovering, setIsHovering] = useState(false);
 
-    const colorClass =
-        selectedPreset !== null && isHovering
-            ? styles.presetHovering
-            : cellState === LifeCellStates.Alive
-            ? styles.alive
-            : styles.dead;
+    const mouseEnterCallback = useCallback(() => {
+        if (selectedPreset !== null) {
+            dispatch(presetHoverCell({ X: colInd, Y: rowInd }));
+        }
+    }, [selectedPreset, dispatch]);
 
     return (
         <div
-            className={colorClass}
+            className={cellStateToStyleClass(cellState)}
             onClick={() => dispatch(toggleCell({ X: colInd, Y: rowInd }))}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            onMouseEnter={mouseEnterCallback}
         />
     );
 };
+
+function cellStateToStyleClass(cellState: LifeCellStates): string {
+    switch (cellState) {
+        case LifeCellStates.Alive:
+            return styles.alive;
+        case LifeCellStates.Dead:
+            return styles.dead;
+        case LifeCellStates.HoverPreset:
+            return styles.presetHovering;
+    }
+    return "";
+}

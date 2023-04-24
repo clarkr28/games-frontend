@@ -1,4 +1,5 @@
 import { Point } from "./ConnectFourResources";
+import { LifePresets, getPresetData } from "./LifePatternResources";
 
 export const LIFE_ROWS = 30;
 export const LIFE_COLS = 30;
@@ -11,7 +12,8 @@ export interface IRect {
 
 export enum LifeCellStates {
     Alive,
-    Dead
+    Dead,
+    HoverPreset,
 }
 
 /**
@@ -47,6 +49,17 @@ function createEmptyBoard(rows: number, columns: number): LifeCellStates[][] {
 
 export function createInitialBoard(): LifeCellStates[][] {
     return createEmptyBoard(30, 30);
+}
+
+/**
+ * create a deep copy of the passed board 
+ * @param board the board to copy
+ * @returns a deep copy of the passed board
+ */
+export function copyBoard(board: LifeCellStates[][]): LifeCellStates[][] {
+    const newBoard: LifeCellStates[][] = [];
+    board.forEach((row) => newBoard.push(new Array<LifeCellStates>(...row)));
+    return newBoard;
 }
 
 /**
@@ -237,4 +250,20 @@ export function processBoardResize(board: LifeCellStates[][], newSize: IRect): L
     }
 
     return board;
+}
+
+/**
+ * apply a preset to the board
+ * @param board the board without any hover state applied
+ * @param startPoint the point where the preset should be applied to the board
+ * @param presetType the preset that should be applied
+ * @param isHover true if the cell states should be set to hover display
+ */
+export function applyPresetToBoard(board: LifeCellStates[][], startPoint: Point, presetType: LifePresets, isHover: boolean): LifeCellStates[][] {
+    const newBoard = copyBoard(board);
+    const stateToSet = isHover ? LifeCellStates.HoverPreset : LifeCellStates.Alive;
+    const presetData = getPresetData(presetType);
+    newBoard[startPoint.Y][startPoint.X] = stateToSet;
+    // TODO: actually apply the preset data
+    return newBoard;
 }
