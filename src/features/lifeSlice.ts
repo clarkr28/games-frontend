@@ -1,17 +1,17 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { IRect, LifeCellStates, applyPresetToBoard, createInitialBoard, makeNextGeneration, processBoardResize, toggleBoardCell } from "../assets/LifeResources";
+import { IRect, applyPresetToBoard, createInitialBoard, makeNextGeneration, processBoardResize, toggleBoardCell } from "../assets/LifeResources";
 import { RootState } from "../app/store";
 import { Point } from "../assets/ConnectFourResources";
-import { LifePresets } from "../assets/LifePatternResources";
+import { LifeCellState, LifePresets } from "../assets/LifePatternResources";
 
 export interface LifeState {
-    board: LifeCellStates[][];
+    board: LifeCellState[][];
     measurePerformance: boolean;
     /** these cells are probably alive, but could be dead and could be out of bounds */
     liveCellKeys: string[];
     presetSelection: LifePresets | null;
     hoverPoint: Point | null;
-    boardWithHover: LifeCellStates[][] | null;
+    boardWithHover: LifeCellState[][] | null;
 }
 
 const initialState: LifeState = {

@@ -6,9 +6,9 @@ import {
     selectPreset,
     toggleCell,
 } from "../../features/lifeSlice";
-import { LifeCellStates } from "../../assets/LifeResources";
 import { useDispatch } from "react-redux";
 import styles from "./LifeStyles.module.css";
+import { LifeCellState } from "../../assets/LifePatternResources";
 
 export const LifeBoard: React.FC<{}> = () => {
     const board = useAppSelector(selectLifeBoard);
@@ -31,7 +31,7 @@ export const LifeBoard: React.FC<{}> = () => {
 };
 
 interface ILifeCell {
-    cellState: LifeCellStates;
+    cellState: LifeCellState;
     rowInd: number;
     colInd: number;
 }
@@ -58,13 +58,13 @@ export const LifeCell: React.FC<ILifeCell> = (props) => {
     );
 };
 
-function cellStateToStyleClass(cellState: LifeCellStates): string {
+function cellStateToStyleClass(cellState: LifeCellState): string {
     switch (cellState) {
-        case LifeCellStates.Alive:
+        case LifeCellState.Alive:
             return styles.alive;
-        case LifeCellStates.Dead:
+        case LifeCellState.Dead:
             return styles.dead;
-        case LifeCellStates.HoverPreset:
+        case LifeCellState.HoverPreset:
             return styles.presetHovering;
     }
     return "";

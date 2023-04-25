@@ -1,4 +1,9 @@
-import { LifeCellStates } from "./LifeResources";
+
+export enum LifeCellState {
+    Alive,
+    Dead,
+    HoverPreset,
+}
 
 export enum LifePresets {
     Glider,
@@ -8,16 +13,16 @@ export enum LifePresets {
 export interface LifePresetData {
     width: number,
     height: number,
-    data: LifeCellStates[][],
+    data: LifeCellState[][],
 }
 
 const GliderPreset: LifePresetData = {
     width: 3,
     height: 3,
     data: [
-        /*[LifeCellStates.Dead, LifeCellStates.Alive, LifeCellStates.Dead],
-        [LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Alive],
-        [LifeCellStates.Alive, LifeCellStates.Alive, LifeCellStates.Alive]*/
+        [LifeCellState.Dead, LifeCellState.Alive, LifeCellState.Dead],
+        [LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Alive],
+        [LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive]
     ]
 };
 
@@ -25,10 +30,10 @@ const LWSHPreset: LifePresetData = {
     width: 5,
     height: 4,
     data: [
-        /*[LifeCellStates.Alive, LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Alive, LifeCellStates.Dead],
-        [LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Alive],
-        [LifeCellStates.Alive, LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Dead, LifeCellStates.Alive],
-        [LifeCellStates.Dead, LifeCellStates.Alive, LifeCellStates.Alive, LifeCellStates.Alive, LifeCellStates.Alive]*/
+        [LifeCellState.Alive, LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Alive, LifeCellState.Dead],
+        [LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Alive],
+        [LifeCellState.Alive, LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Dead, LifeCellState.Alive],
+        [LifeCellState.Dead, LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive]
     ]
 };
 
