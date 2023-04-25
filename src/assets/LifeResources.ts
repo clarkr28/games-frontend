@@ -249,15 +249,44 @@ export function processBoardResize(board: LifeCellState[][], newSize: IRect): Li
 /**
  * apply a preset to the board
  * @param board the board without any hover state applied
- * @param startPoint the point where the preset should be applied to the board
+ * @param mousePoint the point where the mouse is hovering/clicked to apply the preset
  * @param presetType the preset that should be applied
  * @param isHover true if the cell states should be set to hover display
+ * @param [board with preset applied, encoded points that were added to the board as LIVE cells]
  */
-export function applyPresetToBoard(board: LifeCellState[][], startPoint: Point, presetType: LifePresets, isHover: boolean): LifeCellState[][] {
+export function applyPresetToBoard(
+    board: LifeCellState[][],
+    mousePoint: Point, 
+    presetType: LifePresets, 
+    isHover: boolean
+): [LifeCellState[][], string[]] {
     const newBoard = copyBoard(board);
     const stateToSet = isHover ? LifeCellState.HoverPreset : LifeCellState.Alive;
     const presetData = getPresetData(presetType);
-    newBoard[startPoint.Y][startPoint.X] = stateToSet;
-    // TODO: actually apply the preset data
-    return newBoard;
+    if (!presetData) { return [newBoard, []]; }
+
+    /* apply the preset data to the new board */
+    const startPoint: Point = {
+        X: mousePoint.X - Math.floor(presetData.width / 2), 
+        Y: mousePoint.Y - Math.floor(presetData.height / 2)
+    };
+    const newEncodedCells: string[] = [];
+
+    for (let yInd = 0; yInd < presetData.height; yInd++) {
+        const yCoord = startPoint.Y + yInd;
+        if (yCoord < 0) {continue;}
+        if (yCoord >= board.length) {break;}
+        for (let xInd = 0; xInd < presetData.width; xInd++) {
+            const xCoord = startPoint.X + xInd;
+            if (xCoord >= 0 && xCoord < board[0].length && presetData.data[yInd][xInd] === LifeCellState.Alive) {
+                newBoard[yCoord][xCoord] = stateToSet;
+                if (stateToSet === LifeCellState.Alive && board[yCoord][xCoord] === LifeCellState.Dead) {
+                    // if the cell was dead, we need to track a new encoded cell value for that cell
+                    newEncodedCells.push(encode({X: xCoord, Y: yCoord}, board[0].length));
+                }
+            }
+        }
+    }
+
+    return [newBoard, newEncodedCells];
 }

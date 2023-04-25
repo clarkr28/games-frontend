@@ -32,7 +32,8 @@ export const lifeSlice = createSlice({
             [state.board, state.liveCellKeys] = makeNextGeneration(state.board, state.liveCellKeys);
             if (state.presetSelection !== null && state.hoverPoint) {
                 // now that the board has been updated, reapply the preset hovering if necessary
-                state.boardWithHover = applyPresetToBoard(state.board, state.hoverPoint, state.presetSelection, true);
+                let unused: string[] = [];
+                [state.boardWithHover, unused] = applyPresetToBoard(state.board, state.hoverPoint, state.presetSelection, true);
             }
             if (state.measurePerformance) {
                 const diff = new Date().getTime() - startTime.getTime();
@@ -42,7 +43,9 @@ export const lifeSlice = createSlice({
         toggleCell: (state, action: PayloadAction<Point>) => {
             if (state.presetSelection !== null) {
                 // a preset is selected, so apply the preset to the board
-                state.board = applyPresetToBoard(state.board, action.payload, state.presetSelection, false);
+                let newEncodedCells: string[] = [];
+                [state.board, newEncodedCells] = applyPresetToBoard(state.board, action.payload, state.presetSelection, false);
+                state.liveCellKeys = [...state.liveCellKeys, ...newEncodedCells];
                 state.boardWithHover = null;
                 state.presetSelection = null;
             } else {
@@ -59,7 +62,8 @@ export const lifeSlice = createSlice({
         presetHoverCell: (state, action: PayloadAction<Point>) => {
             if (state.presetSelection !== null) {
                 state.hoverPoint = action.payload;
-                state.boardWithHover = applyPresetToBoard(state.board, action.payload, state.presetSelection, true);
+                let unused: string[] = [];
+                [state.boardWithHover, unused] = applyPresetToBoard(state.board, action.payload, state.presetSelection, true);
             }
         }
     }
