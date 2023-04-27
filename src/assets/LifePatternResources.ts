@@ -8,7 +8,8 @@ export enum LifeCellState {
 export enum LifePresets {
     Glider,
     LWSH, // leight-weight space ship
-    CircleOfLife,
+    CircleOfFire,
+    Griddle,
 }
 
 export interface LifePresetData {
@@ -38,7 +39,7 @@ const LWSHPreset: LifePresetData = {
     ]
 };
 
-const CircleOfLifePreset: LifePresetData = {
+const CircleOfFirePreset: LifePresetData = {
     width: 11,
     height: 11,
     data: [
@@ -56,11 +57,26 @@ const CircleOfLifePreset: LifePresetData = {
     ]
 };
 
+const GriddlePreset: LifePresetData = {
+    width: 6,
+    height: 7,
+    data: [
+        [LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Alive, LifeCellState.Dead,  LifeCellState.Dead],
+        [LifeCellState.Dead,  LifeCellState.Alive, LifeCellState.Dead,  LifeCellState.Alive, LifeCellState.Dead,  LifeCellState.Dead],
+        [LifeCellState.Alive, LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Alive],
+        [LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Alive],
+        [LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Dead],
+        [LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Dead,  LifeCellState.Dead],
+        [LifeCellState.Dead,  LifeCellState.Dead,  LifeCellState.Alive, LifeCellState.Alive, LifeCellState.Dead,  LifeCellState.Dead],
+    ]
+}
+
 /* Store the presets in a map for easy access */
 const presetMap: Map<LifePresets, LifePresetData> = new Map();
 presetMap.set(LifePresets.Glider, GliderPreset);
 presetMap.set(LifePresets.LWSH, LWSHPreset);
-presetMap.set(LifePresets.CircleOfLife, CircleOfLifePreset);
+presetMap.set(LifePresets.CircleOfFire, CircleOfFirePreset);
+presetMap.set(LifePresets.Griddle, GriddlePreset);
 
 /**
  * get preset data for a specific preset type 
