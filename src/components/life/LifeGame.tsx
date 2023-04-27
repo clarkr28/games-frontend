@@ -67,6 +67,11 @@ export const LifeGame: React.FC<{}> = () => {
             <button onClick={() => dispatch(pickPreset(LifePresets.LWSH))}>
                 LWSH
             </button>
+            <button
+                onClick={() => dispatch(pickPreset(LifePresets.CircleOfLife))}
+            >
+                Circle of Life
+            </button>
             <LifeBoard />
         </div>
     );
