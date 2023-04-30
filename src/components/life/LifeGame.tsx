@@ -75,6 +75,15 @@ export const LifeGame: React.FC<{}> = () => {
             <button onClick={() => dispatch(pickPreset(LifePresets.Griddle))}>
                 Griddle
             </button>
+            <button onClick={() => dispatch(pickPreset(LifePresets.Turtle))}>
+                Turtle
+            </button>
+            <button onClick={() => dispatch(pickPreset(LifePresets.Puffer))}>
+                Puffer
+            </button>
+            <button onClick={() => dispatch(pickPreset(LifePresets.Blom))}>
+                Blom
+            </button>
             <LifeBoard />
         </div>
     );
