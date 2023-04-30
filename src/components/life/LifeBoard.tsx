@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectLifeBoard, toggleCell } from "../../features/lifeSlice";
-import { LifeCellStates } from "../../assets/LifeResources";
+import {
+    presetHoverCell,
+    selectLifeBoard,
+    selectPreset,
+    toggleCell,
+} from "../../features/lifeSlice";
 import { useDispatch } from "react-redux";
 import styles from "./LifeStyles.module.css";
+import { LifeCellState } from "../../assets/LifePatternResources";
 
 export const LifeBoard: React.FC<{}> = () => {
     const board = useAppSelector(selectLifeBoard);
@@ -26,22 +31,41 @@ export const LifeBoard: React.FC<{}> = () => {
 };
 
 interface ILifeCell {
-    cellState: LifeCellStates;
+    cellState: LifeCellState;
     rowInd: number;
     colInd: number;
 }
 
 export const LifeCell: React.FC<ILifeCell> = (props) => {
     const { cellState, rowInd, colInd } = props;
-    const dispatch = useDispatch();
 
-    const colorClass =
-        cellState === LifeCellStates.Alive ? styles.alive : styles.dead;
+    const dispatch = useDispatch();
+    const selectedPreset = useAppSelector(selectPreset);
+    const [isHovering, setIsHovering] = useState(false);
+
+    const mouseEnterCallback = useCallback(() => {
+        if (selectedPreset !== null) {
+            dispatch(presetHoverCell({ X: colInd, Y: rowInd }));
+        }
+    }, [selectedPreset, dispatch]);
 
     return (
         <div
-            className={colorClass}
+            className={cellStateToStyleClass(cellState)}
             onClick={() => dispatch(toggleCell({ X: colInd, Y: rowInd }))}
+            onMouseEnter={mouseEnterCallback}
         />
     );
 };
+
+function cellStateToStyleClass(cellState: LifeCellState): string {
+    switch (cellState) {
+        case LifeCellState.Alive:
+            return styles.alive;
+        case LifeCellState.Dead:
+            return styles.dead;
+        case LifeCellState.HoverPreset:
+            return styles.presetHovering;
+    }
+    return "";
+}

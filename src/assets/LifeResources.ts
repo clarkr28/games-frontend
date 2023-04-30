@@ -1,4 +1,5 @@
 import { Point } from "./ConnectFourResources";
+import { LifeCellState, LifePresets, getPresetData } from "./LifePatternResources";
 
 export const LIFE_ROWS = 30;
 export const LIFE_COLS = 30;
@@ -7,11 +8,6 @@ export const CELL_HEIGHT = 15; // pixel height (and width) of a game square
 export interface IRect {
     width: number;
     height: number;
-}
-
-export enum LifeCellStates {
-    Alive,
-    Dead
 }
 
 /**
@@ -37,16 +33,27 @@ export function decode(key: string, boardWidth: number): Point {
     return {X: parseInt(tokens[0]) + boardWidth / 2, Y: parseInt(tokens[1])};
 }
 
-function createEmptyBoard(rows: number, columns: number): LifeCellStates[][] {
-    const board: LifeCellStates[][] = [];
+function createEmptyBoard(rows: number, columns: number): LifeCellState[][] {
+    const board: LifeCellState[][] = [];
     for (let i = 0; i < rows; i++) {
-        board.push(Array<LifeCellStates>(columns).fill(LifeCellStates.Dead));
+        board.push(Array<LifeCellState>(columns).fill(LifeCellState.Dead));
     }
     return board;
 }
 
-export function createInitialBoard(): LifeCellStates[][] {
+export function createInitialBoard(): LifeCellState[][] {
     return createEmptyBoard(30, 30);
+}
+
+/**
+ * create a deep copy of the passed board 
+ * @param board the board to copy
+ * @returns a deep copy of the passed board
+ */
+export function copyBoard(board: LifeCellState[][]): LifeCellState[][] {
+    const newBoard: LifeCellState[][] = [];
+    board.forEach((row) => newBoard.push(new Array<LifeCellState>(...row)));
+    return newBoard;
 }
 
 /**
@@ -56,11 +63,11 @@ export function createInitialBoard(): LifeCellStates[][] {
  * @param point the point that was clicked
  * @returns [newBoard, newLiveCellKeys]
  */
-export function toggleBoardCell(board: LifeCellStates[][], liveCellKeys: string[], point: Point): [LifeCellStates[][], string[]] {
+export function toggleBoardCell(board: LifeCellState[][], liveCellKeys: string[], point: Point): [LifeCellState[][], string[]] {
     if (point.Y < board.length && point.X < board[0].length) {
-        const newCellValue = board[point.Y][point.X] === LifeCellStates.Alive ? LifeCellStates.Dead : LifeCellStates.Alive;
+        const newCellValue = board[point.Y][point.X] === LifeCellState.Alive ? LifeCellState.Dead : LifeCellState.Alive;
         board[point.Y][point.X] = newCellValue;
-        if (newCellValue === LifeCellStates.Alive) {
+        if (newCellValue === LifeCellState.Alive) {
             liveCellKeys.push(encode(point, board[0].length));
         }
     }
@@ -74,28 +81,28 @@ export function toggleBoardCell(board: LifeCellStates[][], liveCellKeys: string[
  * @param x the x coordinate on the board to compute
  * @returns the number of live neighbors that the point has on the board
  */
-function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): number {
+function cellLiveNeighbors(board: LifeCellState[][], y: number, x: number): number {
     let liveCount = 0;
 
     for (let i = x - 1; i <= x + 1; i++) {
         // three above the cell
-        if (y > 0 && i >= 0 && i < board[0].length && board[y-1][i] === LifeCellStates.Alive) {
+        if (y > 0 && i >= 0 && i < board[0].length && board[y-1][i] === LifeCellState.Alive) {
             liveCount++;
         }
 
         // three below the cell
-        if (y < board.length - 1 && i >= 0 && i < board[0].length && board[y+1][i] === LifeCellStates.Alive) {
+        if (y < board.length - 1 && i >= 0 && i < board[0].length && board[y+1][i] === LifeCellState.Alive) {
             liveCount++;
         }
     }
 
     // left of cell
-    if (x > 0 && board[y][x-1] === LifeCellStates.Alive) {
+    if (x > 0 && board[y][x-1] === LifeCellState.Alive) {
         liveCount++;
     }
 
     // right of cell
-    if (x < board[0].length && board[y][x+1] === LifeCellStates.Alive) {
+    if (x < board[0].length && board[y][x+1] === LifeCellState.Alive) {
         liveCount++;
     }
 
@@ -108,7 +115,7 @@ function cellLiveNeighbors(board: LifeCellStates[][], y: number, x: number): num
  * @param liveCells encoded keys of the cells that are alive (to improve performance)
  * @returns [newBoard, newLiveCellKeys]
  */
-export function makeNextGeneration(board: LifeCellStates[][], liveCells: string[]): [LifeCellStates[][], string[]] {
+export function makeNextGeneration(board: LifeCellState[][], liveCells: string[]): [LifeCellState[][], string[]] {
     // treat cells after the walls as dead cells?
 
     const newBoard = createEmptyBoard(board.length, board[0].length);
@@ -131,8 +138,8 @@ export function makeNextGeneration(board: LifeCellStates[][], liveCells: string[
  * @param newLiveKeys a list of the new keys that are alive
  */
 function processCellAndNeighbors(
-    oldBoard: LifeCellStates[][], 
-    newBoard: LifeCellStates[][], 
+    oldBoard: LifeCellState[][], 
+    newBoard: LifeCellState[][], 
     key: string,
     processedKeys: Map<string, boolean>,
     newLiveKeys: string[]
@@ -144,7 +151,7 @@ function processCellAndNeighbors(
     }
 
     // if the cell isn't alive on the old board, I don't think we need to process it
-    if (oldBoard[point.Y][point.X] !== LifeCellStates.Alive) {
+    if (oldBoard[point.Y][point.X] !== LifeCellState.Alive) {
         return;
     }
 
@@ -164,8 +171,8 @@ function processCellAndNeighbors(
  */
 function processCell(
     cell: Point,
-    oldBoard: LifeCellStates[][],
-    newBoard: LifeCellStates[][],
+    oldBoard: LifeCellState[][],
+    newBoard: LifeCellState[][],
     processedKeys: Map<string, boolean>,
     newLiveKeys: string[]
 ): void {
@@ -182,19 +189,19 @@ function processCell(
     processedKeys.set(key, true); // mark cell as processed
 
     const liveNeighbors = cellLiveNeighbors(oldBoard, cell.Y, cell.X);
-    if (oldBoard[cell.Y][cell.X] === LifeCellStates.Alive && (liveNeighbors === 2 || liveNeighbors === 3)) {
+    if (oldBoard[cell.Y][cell.X] === LifeCellState.Alive && (liveNeighbors === 2 || liveNeighbors === 3)) {
         // any live cell with 2 or 3 live neighbors lives
-        newBoard[cell.Y][cell.X] = LifeCellStates.Alive;
+        newBoard[cell.Y][cell.X] = LifeCellState.Alive;
         newLiveKeys.push(key);
     } 
-    else if (oldBoard[cell.Y][cell.X] === LifeCellStates.Dead && liveNeighbors === 3) {
+    else if (oldBoard[cell.Y][cell.X] === LifeCellState.Dead && liveNeighbors === 3) {
         // any dead cell with 3 live neighbors comes to life
-        newBoard[cell.Y][cell.X] = LifeCellStates.Alive;
+        newBoard[cell.Y][cell.X] = LifeCellState.Alive;
         newLiveKeys.push(key);
     }
 }
 
-export function processBoardResize(board: LifeCellStates[][], newSize: IRect): LifeCellStates[][] {
+export function processBoardResize(board: LifeCellState[][], newSize: IRect): LifeCellState[][] {
     //
     // update width of board
     //
@@ -207,8 +214,8 @@ export function processBoardResize(board: LifeCellStates[][], newSize: IRect): L
     if (pairedColDiff > 0) {
         // add columns
         for (let i = 0; i < board.length; i++) {
-            board[i].push(...Array<LifeCellStates>(pairedColDiff).fill(LifeCellStates.Dead));
-            board[i].unshift(...Array<LifeCellStates>(pairedColDiff).fill(LifeCellStates.Dead));
+            board[i].push(...Array<LifeCellState>(pairedColDiff).fill(LifeCellState.Dead));
+            board[i].unshift(...Array<LifeCellState>(pairedColDiff).fill(LifeCellState.Dead));
         }
     }
     if (pairedColDiff < 0) {
@@ -229,7 +236,7 @@ export function processBoardResize(board: LifeCellStates[][], newSize: IRect): L
     if (rowDiff > 0) {
         // add rows 
         for (let i = 0; i < rowDiff; i++) {
-            board.push(Array<LifeCellStates>(board[0].length).fill(LifeCellStates.Dead))
+            board.push(Array<LifeCellState>(board[0].length).fill(LifeCellState.Dead))
         }
     } else if (rowDiff < 0 && board.length > rowDiff * -1) {
         // remove rows
@@ -237,4 +244,49 @@ export function processBoardResize(board: LifeCellStates[][], newSize: IRect): L
     }
 
     return board;
+}
+
+/**
+ * apply a preset to the board
+ * @param board the board without any hover state applied
+ * @param mousePoint the point where the mouse is hovering/clicked to apply the preset
+ * @param presetType the preset that should be applied
+ * @param isHover true if the cell states should be set to hover display
+ * @param [board with preset applied, encoded points that were added to the board as LIVE cells]
+ */
+export function applyPresetToBoard(
+    board: LifeCellState[][],
+    mousePoint: Point, 
+    presetType: LifePresets, 
+    isHover: boolean
+): [LifeCellState[][], string[]] {
+    const newBoard = copyBoard(board);
+    const stateToSet = isHover ? LifeCellState.HoverPreset : LifeCellState.Alive;
+    const presetData = getPresetData(presetType);
+    if (!presetData) { return [newBoard, []]; }
+
+    /* apply the preset data to the new board */
+    const startPoint: Point = {
+        X: mousePoint.X - Math.floor(presetData.width / 2), 
+        Y: mousePoint.Y - Math.floor(presetData.height / 2)
+    };
+    const newEncodedCells: string[] = [];
+
+    for (let yInd = 0; yInd < presetData.height; yInd++) {
+        const yCoord = startPoint.Y + yInd;
+        if (yCoord < 0) {continue;}
+        if (yCoord >= board.length) {break;}
+        for (let xInd = 0; xInd < presetData.width; xInd++) {
+            const xCoord = startPoint.X + xInd;
+            if (xCoord >= 0 && xCoord < board[0].length && presetData.data[yInd][xInd] === LifeCellState.Alive) {
+                newBoard[yCoord][xCoord] = stateToSet;
+                if (stateToSet === LifeCellState.Alive && board[yCoord][xCoord] === LifeCellState.Dead) {
+                    // if the cell was dead, we need to track a new encoded cell value for that cell
+                    newEncodedCells.push(encode({X: xCoord, Y: yCoord}, board[0].length));
+                }
+            }
+        }
+    }
+
+    return [newBoard, newEncodedCells];
 }

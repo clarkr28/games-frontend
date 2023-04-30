@@ -31,6 +31,10 @@
     background-color: white;
 }
 
+.presetHovering {
+    background-color: lightcoral;
+}
+
 .gameShell {
     height: calc(100% - 50px); /* 50px for nav height */
 }
