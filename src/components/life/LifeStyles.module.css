@@ -38,3 +38,33 @@
 .gameShell {
     height: calc(100% - 50px); /* 50px for nav height */
 }
+
+.lifeControls {
+    position: absolute;
+    top: 81px;
+    left: 19px;
+    padding: 8px;
+    border: 2px solid black;
+    border-radius: 21px;
+    background-color: #fff;
+    display: flex;
+}
+
+.lifeControls a {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.3rem;
+}
+
+.lifeControls a:hover {
+    cursor: pointer;
+}
+
+.lifeControls a svg {
+    width: 100%;
+    height: 100%
+}
+
+.lifeControls input {
+    width: 5rem;
+}

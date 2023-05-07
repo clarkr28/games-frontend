@@ -8,6 +8,7 @@ import {
 import { LifeBoard } from "./LifeBoard";
 import styles from "./LifeStyles.module.css";
 import { LifePresets } from "../../assets/LifePatternResources";
+import { LifeControls } from "./LifeControls";
 
 export const LifeGame: React.FC<{}> = () => {
     const shellRef = useRef<HTMLDivElement>(null);
@@ -15,7 +16,7 @@ export const LifeGame: React.FC<{}> = () => {
     const dispatch = useAppDispatch();
     const [isPlaying, setIsPlaying] = useState(false);
     const [advanceTrigger, setAdvanceTrigger] = useState(0);
-    const [interval, setInterval] = useState(200);
+    const [interval, setInterval] = useState(375); // milliseconds
 
     const tripper = useCallback(() => {
         setAdvanceTrigger((val) => val + 1);
@@ -28,10 +29,9 @@ export const LifeGame: React.FC<{}> = () => {
         }
     }, [isPlaying, tripper, advanceTrigger]);
 
-    const trySetInterval = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const newNum = parseInt(event.target.value);
-        if (!isNaN(newNum) && newNum >= 0) {
-            setInterval(newNum);
+    const trySetInterval = (newInterval: number) => {
+        if (!isNaN(newInterval) && newInterval >= 0) {
+            setInterval(newInterval);
         }
     };
 
@@ -54,13 +54,6 @@ export const LifeGame: React.FC<{}> = () => {
 
     return (
         <div className={styles.gameShell} ref={shellRef}>
-            <button onClick={() => dispatch(advanceGeneration())}>
-                Advance
-            </button>
-            <button onClick={() => setIsPlaying(!isPlaying)}>
-                {isPlaying ? "Stop" : "Start"}
-            </button>
-            <input value={interval} onChange={trySetInterval} />
             <button onClick={() => dispatch(pickPreset(LifePresets.Glider))}>
                 Glider
             </button>
@@ -84,6 +77,12 @@ export const LifeGame: React.FC<{}> = () => {
             <button onClick={() => dispatch(pickPreset(LifePresets.Blom))}>
                 Blom
             </button>
+            <LifeControls
+                isPlaying={isPlaying}
+                setIsPlaying={setIsPlaying}
+                interval={interval}
+                trySetInterval={trySetInterval}
+            />
             <LifeBoard />
         </div>
     );
