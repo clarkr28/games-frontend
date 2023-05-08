@@ -9,6 +9,7 @@ import { LifeBoard } from "./LifeBoard";
 import styles from "./LifeStyles.module.css";
 import { LifePresets } from "../../assets/LifePatternResources";
 import { LifeControls } from "./LifeControls";
+import { LifePresetControls } from "./LifePresetControls";
 
 export const LifeGame: React.FC<{}> = () => {
     const shellRef = useRef<HTMLDivElement>(null);
@@ -54,19 +55,10 @@ export const LifeGame: React.FC<{}> = () => {
 
     return (
         <div className={styles.gameShell} ref={shellRef}>
-            <button onClick={() => dispatch(pickPreset(LifePresets.Glider))}>
-                Glider
-            </button>
-            <button onClick={() => dispatch(pickPreset(LifePresets.LWSH))}>
-                LWSH
-            </button>
             <button
                 onClick={() => dispatch(pickPreset(LifePresets.CircleOfFire))}
             >
                 Circle of Fire
-            </button>
-            <button onClick={() => dispatch(pickPreset(LifePresets.Griddle))}>
-                Griddle
             </button>
             <button onClick={() => dispatch(pickPreset(LifePresets.Turtle))}>
                 Turtle
@@ -83,6 +75,7 @@ export const LifeGame: React.FC<{}> = () => {
                 interval={interval}
                 trySetInterval={trySetInterval}
             />
+            <LifePresetControls />
             <LifeBoard />
         </div>
     );
