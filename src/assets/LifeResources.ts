@@ -230,7 +230,7 @@ export function processBoardResize(board: LifeCellState[][], newSize: IRect): Li
     // update height of board
     //
     const boardHeight = board.length * CELL_HEIGHT + board.length + 1; // board.length + 1 is for cell borders
-    const extraHeight = newSize.height - boardHeight - 22; // 22 for the controls at the top
+    const extraHeight = newSize.height - boardHeight - 12; // 12 for margin above board
     // rowDiff is the number of rows that should be added or removed
     const rowDiff = Math.floor(extraHeight / (CELL_HEIGHT + 1)); // +1 for cell border
     if (rowDiff > 0) {

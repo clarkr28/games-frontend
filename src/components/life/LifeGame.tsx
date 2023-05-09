@@ -55,20 +55,6 @@ export const LifeGame: React.FC<{}> = () => {
 
     return (
         <div className={styles.gameShell} ref={shellRef}>
-            <button
-                onClick={() => dispatch(pickPreset(LifePresets.CircleOfFire))}
-            >
-                Circle of Fire
-            </button>
-            <button onClick={() => dispatch(pickPreset(LifePresets.Turtle))}>
-                Turtle
-            </button>
-            <button onClick={() => dispatch(pickPreset(LifePresets.Puffer))}>
-                Puffer
-            </button>
-            <button onClick={() => dispatch(pickPreset(LifePresets.Blom))}>
-                Blom
-            </button>
             <LifeControls
                 isPlaying={isPlaying}
                 setIsPlaying={setIsPlaying}
