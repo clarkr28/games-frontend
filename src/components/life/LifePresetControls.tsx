@@ -17,13 +17,21 @@ const presetPages = [
 
 export const LifePresetControls: React.FC<{}> = () => {
     const [pageIndex, setPageIndex] = useState(0);
+    const [showControl, setShowControl] = useState(false);
 
     const enableLeft = pageIndex > 0;
     const enableRight = pageIndex < presetPages.length - 1;
 
     return (
-        <div className={styles.lifePresetsContainer}>
-            <a>
+        <div
+            className={`${styles.lifePresetsContainer} ${
+                showControl ? styles.show : ""
+            }`}
+        >
+            <a
+                className={`${showControl ? styles.rotate : ""}`}
+                onClick={() => setShowControl((val) => !val)}
+            >
                 <FontAwesomeIcon icon={faChevronLeft} />
             </a>
             <div className={styles.lifePresetsList}>
