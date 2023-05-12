@@ -42,11 +42,11 @@
 
 .lifeControls {
     position: absolute;
-    top: 81px;
+    top: 71px;
     left: 19px;
-    padding: 8px;
+    padding: 0.3rem;
     border: 2px solid black;
-    border-radius: 21px;
+    border-radius: 3rem;
     background-color: #fff;
     display: flex;
 }
@@ -54,11 +54,13 @@
 .lifeControls a {
     width: 1.5rem;
     height: 1.5rem;
-    margin-right: 0.3rem;
+    padding: 0.3rem;
+    border-radius: 50%;
 }
 
 .lifeControls a:hover {
     cursor: pointer;
+    background-color: #ddd;
 }
 
 .lifeControls a svg {
@@ -67,7 +69,8 @@
 }
 
 .lifeControls input {
-    width: 5rem;
+    width: 4rem;
+    margin-right: 5px;
 }
 
 .lifePresetsContainer {
@@ -140,9 +143,9 @@
 }
 
 .pageControls {
-    padding: 5px 0;
+    padding-top: 5px;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.1rem;
     justify-content: center;
 }
 
@@ -150,6 +153,8 @@
     width: 1.5rem;
     height: 1.5rem;
     color: #999;
+    padding: 4px;
+    border-radius: 50%;
 }
 
 .pageControls > a.enabled {
@@ -158,6 +163,7 @@
 
 .pageControls > a.enabled:hover {
     cursor: pointer;
+    background-color: #ddd;
 }
 
 .pageControls > a > svg {

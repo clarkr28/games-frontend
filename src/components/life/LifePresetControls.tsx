@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faChevronLeft,
-    faCircleLeft,
-    faCircleRight,
+    faArrowLeft,
+    faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./LifeStyles.module.css";
 import { LifePresets } from "../../assets/LifePatternResources";
@@ -35,9 +35,6 @@ export const LifePresetControls: React.FC<{}> = () => {
                 <FontAwesomeIcon icon={faChevronLeft} />
             </a>
             <div className={styles.lifePresetsList}>
-                <LifePresetDisplay preset={presetPages[pageIndex][0]} />
-                <LifePresetDisplay preset={presetPages[pageIndex][1]} />
-                <LifePresetDisplay preset={presetPages[pageIndex][2]} />
                 <div className={styles.pageControls}>
                     <a
                         className={enableLeft ? styles.enabled : ""}
@@ -45,7 +42,7 @@ export const LifePresetControls: React.FC<{}> = () => {
                             enableLeft && setPageIndex((index) => index - 1)
                         }
                     >
-                        <FontAwesomeIcon icon={faCircleLeft} />
+                        <FontAwesomeIcon icon={faArrowLeft} />
                     </a>
                     <a
                         className={enableRight ? styles.enabled : ""}
@@ -53,9 +50,12 @@ export const LifePresetControls: React.FC<{}> = () => {
                             enableRight && setPageIndex((index) => index + 1)
                         }
                     >
-                        <FontAwesomeIcon icon={faCircleRight} />
+                        <FontAwesomeIcon icon={faArrowRight} />
                     </a>
                 </div>
+                <LifePresetDisplay preset={presetPages[pageIndex][0]} />
+                <LifePresetDisplay preset={presetPages[pageIndex][1]} />
+                <LifePresetDisplay preset={presetPages[pageIndex][2]} />
             </div>
         </div>
     );
