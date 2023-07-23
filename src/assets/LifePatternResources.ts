@@ -13,6 +13,8 @@ export enum LifePresets {
     Turtle,
     Puffer,
     Blom, // methuselah
+    BeaconFuse,
+    AntWick,
 }
 
 export interface LifePresetData {
@@ -122,6 +124,39 @@ const BlomPreset: LifePresetData = {
         stringToCellStates("          1 "),
         stringToCellStates("        1 1 "),
     ]
+};
+
+const BeaconFusePreset: LifePresetData = {
+    width: 16,
+    height: 15,
+    data: [
+        stringToCellStates("              11"),
+        stringToCellStates("             1 1"),
+        stringToCellStates("            1   "),
+        stringToCellStates("           1    "),
+        stringToCellStates("          1     "),
+        stringToCellStates("         1      "),
+        stringToCellStates("        1       "),
+        stringToCellStates("       1        "),
+        stringToCellStates("      1         "),
+        stringToCellStates("     1          "),
+        stringToCellStates("    1           "),
+        stringToCellStates("   1            "),
+        stringToCellStates("111             "),
+        stringToCellStates("  1             "),
+        stringToCellStates("  1             "),
+    ]
+};
+
+const AntWickPreset: LifePresetData = {
+    width: 19,
+    height: 4,
+    data: [
+        stringToCellStates("11   11   11   11  "),
+        stringToCellStates("  11   11   11   11"),
+        stringToCellStates("  11   11   11   11"),
+        stringToCellStates("11   11   11   11  "),
+    ]
 }
 
 /* Store the presets in a map for easy access */
@@ -133,6 +168,8 @@ presetMap.set(LifePresets.Griddle, GriddlePreset);
 presetMap.set(LifePresets.Turtle, TurtlePreset);
 presetMap.set(LifePresets.Puffer, PufferPreset);
 presetMap.set(LifePresets.Blom, BlomPreset);
+presetMap.set(LifePresets.BeaconFuse, BeaconFusePreset);
+presetMap.set(LifePresets.AntWick, AntWickPreset);
 
 /**
  * get preset data for a specific preset type 

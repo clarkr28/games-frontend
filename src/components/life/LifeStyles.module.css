@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 10px;
 }
 
 .gameGrid>div:first-child {
@@ -32,9 +33,140 @@
 }
 
 .presetHovering {
-    background-color: lightcoral;
+    background-color: lightseagreen;
 }
 
 .gameShell {
     height: calc(100% - 50px); /* 50px for nav height */
+}
+
+.lifeControls {
+    position: absolute;
+    top: 71px;
+    left: 19px;
+    padding: 0.3rem;
+    border: 2px solid black;
+    border-radius: 3rem;
+    background-color: #fff;
+    display: flex;
+}
+
+.lifeControls a {
+    width: 1.5rem;
+    height: 1.5rem;
+    padding: 0.3rem;
+    border-radius: 50%;
+}
+
+.lifeControls a:hover {
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.lifeControls a svg {
+    width: 100%;
+    height: 100%
+}
+
+.lifeControls input {
+    width: 4rem;
+    margin-right: 5px;
+}
+
+.lifePresetsContainer {
+    position: absolute;
+    right: calc(-5rem - 2px);
+    transition: right 0.5s;
+    top: 150px;
+    display: flex;
+}
+
+.lifePresetsContainer.show {
+    right: 0 !important;
+}
+
+.lifePresetsContainer > a {
+    border: 2px solid black;
+    border-right: none;
+    border-radius: 2rem 0 0 2rem;
+    width: 1rem;
+    height: 2rem;
+    padding-left: 0.1rem;
+    align-self: center; 
+    background-color: white;
+    display: flex;
+    align-items: center;
+}
+
+.lifePresetsContainer > a > svg {
+    width: 1rem;
+    height: 1rem;    
+    transition: 0.5s;
+}
+
+.lifePresetsContainer > a.rotate > svg {
+    transform: rotate(0.5turn);
+}
+
+.lifePresetsContainer .lifePresetsList {
+    width: 5rem;
+    background-color: white;
+    border: 2px solid black;
+    border-right: none;
+    border-radius: 1rem 0 0 1rem;
+}
+
+.lifePresetsList > .lifeGridStatic {
+    padding: 10px;
+    transition: 0.3s padding;
+}
+
+.lifePresetsList > .lifeGridStatic:hover {
+    padding: 5px;
+}
+
+.lifeGridStatic {
+    display: grid;
+    gap: 1px;
+}
+
+.lifeGridStatic:hover {
+    cursor: pointer;
+}
+
+.lifeGridStatic:hover .alive {
+    background-color: lightseagreen;
+}
+
+.lifeGridStatic > div {
+    aspect-ratio: 1;
+}
+
+.pageControls {
+    padding-top: 5px;
+    display: flex;
+    gap: 0.1rem;
+    justify-content: center;
+}
+
+.pageControls > a {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: #999;
+    padding: 4px;
+    border-radius: 50%;
+}
+
+.pageControls > a.enabled {
+    color: black;
+}
+
+.pageControls > a.enabled:hover {
+    cursor: pointer;
+    background-color: #ddd;
+}
+
+.pageControls > a > svg {
+    width: 100%;
+    height: 100%;
 }
