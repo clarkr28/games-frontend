@@ -1,0 +1,58 @@
+
+$width: 50px;
+$borderThickness: 5px;
+$whiteBackground: #eee;
+
+.chip {
+    width: $width;
+    height: $width;
+    border-radius: calc($width / 2 + $borderThickness);
+    border: $borderThickness dashed $whiteBackground;
+    & > div {
+        border: $borderThickness solid black;
+        border-radius: calc($width / 2);
+        width: calc($width - $borderThickness * 2);
+        height: calc($width - $borderThickness * 2);
+        line-height: calc($width - $borderThickness * 2);
+    }
+}
+
+.white {
+    background-color: $whiteBackground;
+    border-color: black;
+    & > div {
+        border-color: black;
+    }
+}
+
+.red {
+    background-color: lightcoral;
+    & > div {
+        border-color: darken(lightcoral, 10%);
+        background-color: lighten(lightcoral, 5%);
+    }
+}
+
+.green {
+    background-color: lighten(green, 10%);
+    & > div {
+        border-color: green;
+        background-color: lighten(green, 12%);
+    }
+}
+
+.blue {
+    background-color: lighten(blue, 15%);
+    & > div {
+        border-color: blue;
+        background-color: lighten(blue, 30%);
+    }
+}
+
+.black {
+    background-color: black;
+    color: white;
+    & > div {
+        border-color: black;
+    }
+}

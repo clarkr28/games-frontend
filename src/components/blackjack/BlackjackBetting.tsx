@@ -5,7 +5,8 @@ import {
     selectBlackjackPlayerBank,
 } from "../../features/blackjackSlice";
 import { useDispatch } from "react-redux";
-import { IncrementChange } from "../common/IncrementChange";
+import { IncrementChange } from "../common/IncrementChange/IncrementChange";
+import { Chip } from "../common/Chip/Chip";
 
 export interface IBlackjackBetting {
     betAmount: number;
@@ -60,6 +61,11 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
                 />
             </div>
             <div>{`Bank: ${playerBank}`}</div>
+            <Chip value={1} />
+            <Chip value={5} />
+            <Chip value={25} />
+            <Chip value={50} />
+            <Chip value={100} />
         </div>
     );
 };
