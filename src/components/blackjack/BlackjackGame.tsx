@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IPlayingCardProps } from "../playing-card/PlayingCardFC";
 import { CardHand } from "../playing-card/CardHand";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,7 +6,6 @@ import {
     BlackjackStatus,
     finalScoringAndReset,
     hitPlayer,
-    selectBlackjackBetPool,
     selectBlackjackPlayerBank,
     selectBlackjackPlayerHand,
     selectBlackjackPlayerHandValue,
@@ -16,12 +15,12 @@ import {
 import { BlackjackDealer } from "./BlackjackDealer";
 import { BlackjackBetting } from "./BlackjackBetting";
 import styles from "./Blackjack.module.css";
+import { BlackjackChips } from "./BlackjackChips/BlackjackChips";
 
 export const BlackjackGame: React.FC<{}> = (props) => {
     const playerHand = useSelector(selectBlackjackPlayerHand);
     const playerBank = useSelector(selectBlackjackPlayerBank);
     const playerHandValue = useSelector(selectBlackjackPlayerHandValue);
-    const betPool = useSelector(selectBlackjackBetPool);
     const gameStatus = useSelector(selectBlackjackStatus);
     const dispatch = useDispatch();
     const [betAmount, setBetAmount] = useState(25);
@@ -49,7 +48,7 @@ export const BlackjackGame: React.FC<{}> = (props) => {
 
     return (
         <div className={styles.gameContainer}>
-            <div>{`On the table: ${betPool}`}</div>
+            <BlackjackChips betAmount={betAmount} gameStatus={gameStatus} />
             <div className={styles.cardsContainer}>
                 <BlackjackDealer />
             </div>

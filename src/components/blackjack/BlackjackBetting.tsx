@@ -6,7 +6,6 @@ import {
 } from "../../features/blackjackSlice";
 import { useDispatch } from "react-redux";
 import { IncrementChange } from "../common/IncrementChange/IncrementChange";
-import { Chip } from "../common/Chip/Chip";
 import { ChipStack } from "../common/ChipStack/ChipStack";
 import { ChipValue, numToChips } from "../../assets/ChipResources";
 
@@ -46,7 +45,6 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
 
     return (
         <div>
-            <div>{`Bet Amount: ${betAmount}`}</div>
             <button onClick={() => dispatch(finalizeBet(betAmount))}>
                 Place Bet
             </button>
@@ -60,21 +58,15 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
                     tryChangeValue={trySetBet}
                 />
                 <IncrementChange
-                    changeIncrement={10}
+                    changeIncrement={25}
+                    tryChangeValue={trySetBet}
+                />
+                <IncrementChange
+                    changeIncrement={50}
                     tryChangeValue={trySetBet}
                 />
             </div>
-            <div>{`Bank: ${playerBank}`}</div>
-            <div style={{ display: "flex" }}>
-                <Chip value={1} />
-                <Chip value={5} />
-                <Chip value={25} />
-                <Chip value={50} />
-                <Chip value={100} />
-            </div>
-            <div>
-                <ChipStack chips={chips} />
-            </div>
+            <div>{`Bank: $${playerBank}`}</div>
         </div>
     );
 };

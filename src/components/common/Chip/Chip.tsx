@@ -3,6 +3,7 @@ import styles from "./Chip.module.scss";
 import { ChipValue } from "../../../assets/ChipResources";
 
 export const CHIP_WIDTH = 60; // pixels
+export const CHIP_HEIGHT = 60; // pixels
 
 export interface IChipProps {
     value: ChipValue;

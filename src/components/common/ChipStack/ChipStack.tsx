@@ -1,5 +1,5 @@
 import React from "react";
-import { CHIP_WIDTH, Chip } from "../Chip/Chip";
+import { CHIP_HEIGHT, CHIP_WIDTH, Chip } from "../Chip/Chip";
 import styles from "./ChipStack.module.scss";
 import { ChipValue } from "../../../assets/ChipResources";
 
@@ -21,6 +21,7 @@ export const ChipStack: React.FC<IChipStackProps> = (props) => {
             className={styles.chipStack}
             style={{
                 width: `${CHIP_WIDTH + CHIP_OFFSET * (chips.length - 1)}px`,
+                height: `${CHIP_HEIGHT}px`,
             }}
         >
             {chips.map((chipVal, index) => (
