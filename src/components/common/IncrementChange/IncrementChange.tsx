@@ -21,18 +21,18 @@ export const IncrementChange: React.FC<IncrementChangeProps> = (props) => {
 
     return (
         <div className={styles.incrementChangeContainer}>
-            <div className={`${styles.button} ${styles.incrementButton}`}>
-                <FontAwesomeIcon
-                    onClick={incrementCallback}
-                    icon={solid("chevron-up")}
-                />
+            <div
+                className={`${styles.button} ${styles.incrementButton}`}
+                onClick={incrementCallback}
+            >
+                <FontAwesomeIcon icon={solid("chevron-up")} />
             </div>
             <div>{changeIncrement}</div>
-            <div className={`${styles.button} ${styles.decrementButton}`}>
-                <FontAwesomeIcon
-                    onClick={decrementCallback}
-                    icon={solid("chevron-down")}
-                />
+            <div
+                className={`${styles.button} ${styles.decrementButton}`}
+                onClick={decrementCallback}
+            >
+                <FontAwesomeIcon icon={solid("chevron-down")} />
             </div>
         </div>
     );

@@ -1,0 +1,8 @@
+.chipStack {
+    position: relative;
+    display: inline-block;
+
+    & > div {
+        position: absolute;
+    }
+}

@@ -1,7 +1,8 @@
 import React from "react";
 import styles from "./Chip.module.scss";
+import { ChipValue } from "../../../assets/ChipResources";
 
-export type ChipValue = 1 | 5 | 25 | 50 | 100;
+export const CHIP_WIDTH = 60; // pixels
 
 export interface IChipProps {
     value: ChipValue;

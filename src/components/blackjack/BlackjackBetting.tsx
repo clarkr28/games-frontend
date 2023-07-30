@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
     finalizeBet,
@@ -7,6 +7,8 @@ import {
 import { useDispatch } from "react-redux";
 import { IncrementChange } from "../common/IncrementChange/IncrementChange";
 import { Chip } from "../common/Chip/Chip";
+import { ChipStack } from "../common/ChipStack/ChipStack";
+import { ChipValue, numToChips } from "../../assets/ChipResources";
 
 export interface IBlackjackBetting {
     betAmount: number;
@@ -18,27 +20,29 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
 
     const playerBank = useAppSelector(selectBlackjackPlayerBank);
     const dispatch = useDispatch();
+    const [chips, setChips] = useState<ChipValue[]>([]);
 
-    const trySetBet = useCallback(
-        (delta: number) => {
-            const newBetAmount = betAmount + delta;
+    useEffect(() => {
+        setChips(numToChips(betAmount));
+    }, [betAmount]);
 
-            // don't let a player bet more than what is in their bank
-            if (newBetAmount > playerBank) {
-                setBetAmount(playerBank);
-                return;
-            }
+    const trySetBet = (delta: number) => {
+        const newBetAmount = betAmount + delta;
 
-            // don't let a player bet a negative amount
-            if (newBetAmount < 0) {
-                setBetAmount(0);
-                return;
-            }
+        // don't let a player bet more than what is in their bank
+        if (newBetAmount > playerBank) {
+            setBetAmount(playerBank);
+            return;
+        }
 
-            setBetAmount(newBetAmount);
-        },
-        [betAmount, playerBank]
-    );
+        // don't let a player bet a negative amount
+        if (newBetAmount < 0) {
+            setBetAmount(0);
+            return;
+        }
+
+        setBetAmount(newBetAmount);
+    };
 
     return (
         <div>
@@ -61,11 +65,16 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
                 />
             </div>
             <div>{`Bank: ${playerBank}`}</div>
-            <Chip value={1} />
-            <Chip value={5} />
-            <Chip value={25} />
-            <Chip value={50} />
-            <Chip value={100} />
+            <div style={{ display: "flex" }}>
+                <Chip value={1} />
+                <Chip value={5} />
+                <Chip value={25} />
+                <Chip value={50} />
+                <Chip value={100} />
+            </div>
+            <div>
+                <ChipStack chips={chips} />
+            </div>
         </div>
     );
 };
