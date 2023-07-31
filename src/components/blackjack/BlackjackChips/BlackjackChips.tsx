@@ -25,7 +25,7 @@ export const BlackjackChips: React.FC<IBlackjackChipsProps> = (props) => {
 
     useEffect(() => {
         setChips(numToChips(isBetting ? betAmount : betPool));
-    }, [betAmount, betPool]);
+    }, [isBetting, betAmount, betPool]);
 
     return (
         <div

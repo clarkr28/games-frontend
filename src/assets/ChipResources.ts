@@ -25,12 +25,11 @@ function tryUseChip(chipValue: ChipValue, total: number, chips: ChipValue[]): nu
 export function numToChips(amount: number): ChipValue[] {
     const chips: ChipValue[] = [];
 
-    let remainingAmount = amount;
-    remainingAmount = tryUseChip(100, remainingAmount, chips);
-    remainingAmount = tryUseChip(50, remainingAmount, chips);
-    remainingAmount = tryUseChip(25, remainingAmount, chips);
-    remainingAmount = tryUseChip(5, remainingAmount, chips);
-    remainingAmount = tryUseChip(1, remainingAmount, chips);
+    amount = tryUseChip(100, amount, chips);
+    amount = tryUseChip(50, amount, chips);
+    amount = tryUseChip(25, amount, chips);
+    amount = tryUseChip(5, amount, chips);
+    amount = tryUseChip(1, amount, chips);
 
     return chips;
 }

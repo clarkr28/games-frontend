@@ -5,12 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import {
     BlackjackStatus,
     finalScoringAndReset,
-    hitPlayer,
     selectBlackjackPlayerBank,
     selectBlackjackPlayerHand,
     selectBlackjackPlayerHandValue,
     selectBlackjackStatus,
-    standPlayer,
 } from "../../features/blackjackSlice";
 import { BlackjackDealer } from "./BlackjackDealer";
 import { BlackjackBetting } from "./BlackjackBetting";

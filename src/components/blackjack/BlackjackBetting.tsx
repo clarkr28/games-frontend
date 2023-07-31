@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
     finalizeBet,
@@ -6,10 +6,7 @@ import {
 } from "../../features/blackjackSlice";
 import { useDispatch } from "react-redux";
 import { IncrementChange } from "../common/IncrementChange/IncrementChange";
-import { ChipValue, numToChips } from "../../assets/ChipResources";
 import { IconButton, IconButtonColor } from "../common/IconButton/IconButton";
-import { IconName } from "@fortawesome/fontawesome-svg-core";
-import { isContinueStatement } from "typescript";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
 export interface IBlackjackBetting {
@@ -22,11 +19,6 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
 
     const playerBank = useAppSelector(selectBlackjackPlayerBank);
     const dispatch = useDispatch();
-    const [chips, setChips] = useState<ChipValue[]>([]);
-
-    useEffect(() => {
-        setChips(numToChips(betAmount));
-    }, [betAmount]);
 
     const trySetBet = (delta: number) => {
         const newBetAmount = betAmount + delta;
