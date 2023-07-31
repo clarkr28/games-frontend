@@ -16,6 +16,7 @@ import { BlackjackDealer } from "./BlackjackDealer";
 import { BlackjackBetting } from "./BlackjackBetting";
 import styles from "./Blackjack.module.css";
 import { BlackjackChips } from "./BlackjackChips/BlackjackChips";
+import { HitStand } from "./HitStand/HitStand";
 
 export const BlackjackGame: React.FC<{}> = (props) => {
     const playerHand = useSelector(selectBlackjackPlayerHand);
@@ -38,14 +39,6 @@ export const BlackjackGame: React.FC<{}> = (props) => {
         }
     });
 
-    const hitStandUI = (
-        <div>
-            <button onClick={() => dispatch(hitPlayer())}>Hit</button>
-            <button onClick={() => dispatch(standPlayer())}>Stand</button>
-            <div>{`Bank: ${playerBank}`}</div>
-        </div>
-    );
-
     return (
         <div className={styles.gameContainer}>
             <BlackjackChips betAmount={betAmount} gameStatus={gameStatus} />
@@ -58,7 +51,7 @@ export const BlackjackGame: React.FC<{}> = (props) => {
                     setBetAmount={setBetAmount}
                 />
             ) : (
-                hitStandUI
+                <HitStand bank={playerBank} />
             )}
             <div className={styles.cardsContainer}>
                 <div>

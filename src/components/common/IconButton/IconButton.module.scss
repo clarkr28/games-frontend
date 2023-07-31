@@ -1,0 +1,29 @@
+@import "../Colors.module.scss";
+
+.iconButton {
+    border: none;
+    padding: 7px 10px;
+    border-radius: 4px;
+
+    & > svg {
+        padding-right: 6px;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.green {
+        background-color: $greenBackground;
+        border: none;
+
+        &:hover {
+            background-color: darken($greenBackground, 10);
+        }
+
+        &:active {
+            background-color: $greenBackgroundActive;
+            color: white;
+        }
+    }
+}

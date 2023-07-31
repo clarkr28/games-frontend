@@ -6,8 +6,11 @@ import {
 } from "../../features/blackjackSlice";
 import { useDispatch } from "react-redux";
 import { IncrementChange } from "../common/IncrementChange/IncrementChange";
-import { ChipStack } from "../common/ChipStack/ChipStack";
 import { ChipValue, numToChips } from "../../assets/ChipResources";
+import { IconButton, IconButtonColor } from "../common/IconButton/IconButton";
+import { IconName } from "@fortawesome/fontawesome-svg-core";
+import { isContinueStatement } from "typescript";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
 export interface IBlackjackBetting {
     betAmount: number;
@@ -45,9 +48,12 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
 
     return (
         <div>
-            <button onClick={() => dispatch(finalizeBet(betAmount))}>
-                Place Bet
-            </button>
+            <IconButton
+                displayText="Place Bet"
+                clickCallback={() => dispatch(finalizeBet(betAmount))}
+                color={IconButtonColor.Green}
+                icon={solid("coins")}
+            />
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <IncrementChange
                     changeIncrement={1}
