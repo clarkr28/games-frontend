@@ -49,7 +49,10 @@ export const BlackjackGame: React.FC<{}> = (props) => {
                     setBetAmount={setBetAmount}
                 />
             ) : (
-                <HitStand bank={playerBank} />
+                <HitStand
+                    bank={playerBank}
+                    enableButtons={gameStatus === BlackjackStatus.Hitting}
+                />
             )}
             <div className={styles.cardsContainer}>
                 <div>

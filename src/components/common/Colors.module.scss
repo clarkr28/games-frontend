@@ -1,3 +1,10 @@
 
+$disabledTextColor: #666;
+
 $greenBackground: rgb(135, 229, 130);
-$greenBackgroundActive: green;
+$greenBackgroundHover: darken($greenBackground, 10);
+$greenBackgroundActive: darken($greenBackground, 25);
+
+$greyBackground: #ccc;
+$greyBackgroundHover: darken($greyBackground, 10);
+$greyBackgroundActive: darken($greyBackground, 25);

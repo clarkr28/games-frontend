@@ -9,21 +9,36 @@
         padding-right: 6px;
     }
 
-    &:hover {
+    &:hover:not(.disabled) {
         cursor: pointer;
+    }
+
+    &.disabled {
+        color: $disabledTextColor;
     }
 
     &.green {
         background-color: $greenBackground;
-        border: none;
 
-        &:hover {
-            background-color: darken($greenBackground, 10);
+        &:hover:not(.disabled) {
+            background-color: $greenBackgroundHover;
+        }
+        
+        &:active:not(.disabled) {
+            background-color: $greenBackgroundActive;
+        }
+        
+    }
+
+    &.grey {
+        background-color: $greyBackground;
+
+        &:hover:not(.disabled) {
+            background-color: $greyBackgroundHover;
         }
 
-        &:active {
-            background-color: $greenBackgroundActive;
-            color: white;
+        &:active:not(.disabled) {
+            background-color: $greyBackgroundActive;
         }
     }
 }
