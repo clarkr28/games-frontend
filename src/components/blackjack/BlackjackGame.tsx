@@ -4,7 +4,7 @@ import { CardHand } from "../playing-card/CardHand";
 import { useDispatch, useSelector } from "react-redux";
 import {
     BlackjackStatus,
-    finalScoringAndReset,
+    nextRound,
     selectBlackjackPlayerBank,
     selectBlackjackPlayerHand,
     selectBlackjackPlayerHandValue,
@@ -30,9 +30,9 @@ export const BlackjackGame: React.FC<{}> = (props) => {
     );
 
     useEffect(() => {
-        if (gameStatus === BlackjackStatus.FinalScoring) {
+        if (gameStatus === BlackjackStatus.AwaitNextRound) {
             setTimeout(() => {
-                dispatch(finalScoringAndReset());
+                dispatch(nextRound());
             }, 2000);
         }
     });
