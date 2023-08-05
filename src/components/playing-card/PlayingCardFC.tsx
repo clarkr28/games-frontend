@@ -6,6 +6,7 @@ import {
     suitToUnicode,
 } from "../../assets/CardResources";
 import styles from "./PlayingCardStyles.module.css";
+import cardBackground from "../../assets/images/card-back.png";
 
 export const CARD_WIDTH = 95; // pixels
 export const CARD_HEIGHT = 155; // pixels
@@ -38,7 +39,9 @@ export const PlayingCardFC: React.FC<IPlayingCardProps> = (props) => {
             style={{ width: `${CARD_WIDTH}px`, height: `${CARD_HEIGHT}px` }}
             className={containerClasses.join(" ")}
         >
-            {!hidden && (
+            {hidden ? (
+                <img src={cardBackground} />
+            ) : (
                 <>
                     <div className={styles.cardHeader}>
                         <div>{valueAndSuit}</div>
