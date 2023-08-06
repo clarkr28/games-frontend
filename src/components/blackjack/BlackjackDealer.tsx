@@ -38,6 +38,7 @@ export const BlackjackDealer: React.FC<{}> = (props) => {
                 }, 1000);
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameStatus, dealerHand.length]);
 
     return (

@@ -1,6 +1,6 @@
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useCallback } from "react";
+import React from "react";
 import styles from "./IncrementChange.module.css";
 
 export interface IncrementChangeProps {
@@ -11,13 +11,8 @@ export interface IncrementChangeProps {
 export const IncrementChange: React.FC<IncrementChangeProps> = (props) => {
     const { changeIncrement, tryChangeValue } = props;
 
-    const incrementCallback = useCallback(() => {
-        tryChangeValue(changeIncrement);
-    }, [changeIncrement, tryChangeValue]);
-
-    const decrementCallback = useCallback(() => {
-        tryChangeValue(-1 * changeIncrement);
-    }, [changeIncrement, tryChangeValue]);
+    const incrementCallback = () => tryChangeValue(changeIncrement);
+    const decrementCallback = () => tryChangeValue(-1 * changeIncrement);
 
     return (
         <div className={styles.incrementChangeContainer}>

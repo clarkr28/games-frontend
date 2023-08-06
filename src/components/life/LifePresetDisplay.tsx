@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { LifePresets, getPresetData } from "../../assets/LifePatternResources";
 import { LifeGridStatic } from "./LifeGridStatic";
 import { pickPreset } from "../../features/lifeSlice";
@@ -15,10 +15,10 @@ export const LifePresetDisplay: React.FC<LifePresetDisplayProps> = ({
     const presetGrid = presetData === undefined ? [] : presetData.data;
     const dispatch = useAppDispatch();
 
-    /* when this preset is clicked, update state accordingly */
-    const presetClickHandler = useCallback(() => {
+    /* when this preset is clicked, send a message saying it was selected */
+    const presetClickHandler = () => {
         dispatch(pickPreset(preset));
-    }, [dispatch, preset]);
+    };
 
     return (
         <LifeGridStatic

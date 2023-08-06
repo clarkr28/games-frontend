@@ -1,8 +1,16 @@
-import React, { useCallback, useState } from 'react';
-import { TicTacToeBoard } from './TicTacToeBoard';
-import { CellState, GameStatus, TicTacToeState, boardEmpty, boardFull, copyGame, getNextMove, makeNewGame, recordMove } from '../../assets/TicTacToeResources';
+import React, { useState } from "react";
+import { TicTacToeBoard } from "./TicTacToeBoard";
+import {
+    CellState,
+    GameStatus,
+    TicTacToeState,
+    boardEmpty,
+    getNextMove,
+    makeNewGame,
+    recordMove,
+} from "../../assets/TicTacToeResources";
 
-export const TicTacToeGame: React.FC<{}> = props => {
+export const TicTacToeGame: React.FC<{}> = (props) => {
     const [gameState, setGameState] = useState<TicTacToeState>(makeNewGame());
 
     /**
@@ -10,7 +18,10 @@ export const TicTacToeGame: React.FC<{}> = props => {
      * @param index the index of the value to set
      * @param value the value to set on the board
      */
-    const performMove = useCallback(async (index: number, value: CellState): Promise<void> => {
+    const performMove = async (
+        index: number,
+        value: CellState
+    ): Promise<void> => {
         let nextGameState = recordMove(gameState, index, value);
 
         if (nextGameState.status === GameStatus.Playing) {
@@ -18,29 +29,34 @@ export const TicTacToeGame: React.FC<{}> = props => {
             nextGameState = await getNextMove(nextGameState, CellState.O);
         }
         setGameState(nextGameState);
-    },[gameState]);
-    
+    };
+
     return (
         <>
-            <TicTacToeBoard 
-                gameState={gameState} 
-                performMove={performMove} 
+            <TicTacToeBoard
+                gameState={gameState}
+                performMove={performMove}
                 canMakeMove={gameState.status === GameStatus.Playing}
             />
-            <button 
+            <button
                 onClick={() => setGameState(makeNewGame())}
                 disabled={boardEmpty(gameState.board)}
             >
                 Reset
             </button>
-            {gameState.status !== GameStatus.Playing && <div>{gameStatusDisplayText(gameState.status)}</div>}
+            {gameState.status !== GameStatus.Playing && (
+                <div>{gameStatusDisplayText(gameState.status)}</div>
+            )}
         </>
     );
-}
+};
 
 function gameStatusDisplayText(status: GameStatus): string {
-    return status === GameStatus.NoWin ? "No Winner"
-        : status === GameStatus.WinX ? "X Wins!"
-            : status === GameStatus.WinO ? "O Wins!"
-                : "";
+    return status === GameStatus.NoWin
+        ? "No Winner"
+        : status === GameStatus.WinX
+        ? "X Wins!"
+        : status === GameStatus.WinO
+        ? "O Wins!"
+        : "";
 }

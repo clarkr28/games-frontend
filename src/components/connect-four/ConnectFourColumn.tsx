@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { C4CellState, C4_ROWS, Point } from "../../assets/ConnectFourResources";
 import { ConnectFourCell } from "./ConnectFourCell";
 import styles from "./ConnectFourStyles.module.css";
@@ -24,9 +24,9 @@ export const ConnectFourColumn: React.FC<IConnectFourColumn> = (props) => {
     const classes = `${styles.columnGrid}`;
 
     const handleMouseLeave = () => setIsHovering(false);
-    const handleMouseEnter = useCallback(() => {
+    const handleMouseEnter = () => {
         setIsHovering(allowMoves && hasEmptyCell(cellStates));
-    }, [allowMoves, cellStates]);
+    };
 
     useEffect(() => {
         // if the last empty cell was just filled, stop the hovering effect

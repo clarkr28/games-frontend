@@ -1,5 +1,5 @@
 import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import { C4CellState, C4GameStatus, C4_COLS, C4_ROWS, Point, calculateStatus, createEmptyBoard, findWinningCells } from '../assets/ConnectFourResources';
+import { C4CellState, C4GameStatus, Point, calculateStatus, createEmptyBoard, findWinningCells } from '../assets/ConnectFourResources';
 import { RootState } from '../app/store';
 
 export interface ConnectFourState {

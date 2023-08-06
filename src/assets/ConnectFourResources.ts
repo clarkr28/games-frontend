@@ -151,7 +151,6 @@ export function findWinningCells(board: C4CellState[][], lastMoveCol: number): P
         lastMoveRow = board[lastMoveCol].length - 1;
     }
 
-    const matchValue = board[lastMoveCol][lastMoveRow];
     // there are four diagonals to check for 4 in a row
     // diag 1 - vertical
     let matches = matchesVertical(board, lastMoveCol, lastMoveRow);

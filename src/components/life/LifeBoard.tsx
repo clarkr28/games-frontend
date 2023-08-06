@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
     presetHoverCell,
@@ -41,13 +41,12 @@ export const LifeCell: React.FC<ILifeCell> = (props) => {
 
     const dispatch = useDispatch();
     const selectedPreset = useAppSelector(selectPreset);
-    const [isHovering, setIsHovering] = useState(false);
 
-    const mouseEnterCallback = useCallback(() => {
+    const mouseEnterCallback = () => {
         if (selectedPreset !== null) {
             dispatch(presetHoverCell({ X: colInd, Y: rowInd }));
         }
-    }, [selectedPreset, dispatch]);
+    };
 
     return (
         <div

@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useAppDispatch } from "../../app/hooks";
 import { advanceGeneration } from "../../features/lifeSlice";
 import styles from "./LifeStyles.module.css";
@@ -22,21 +22,18 @@ export const LifeControls: React.FC<LifeControlsProps> = (props) => {
     const { isPlaying, setIsPlaying, interval, trySetInterval } = props;
     const dispatch = useAppDispatch();
 
-    const onSliderChange = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
-            const newNum = parseInt(event.target.value);
-            // the subtraction below makes the fast side the right side of the slider
-            trySetInterval(MaxSliderValue - newNum);
-        },
-        [trySetInterval]
-    );
+    const onSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newNum = parseInt(event.target.value);
+        // the subtraction below makes the fast side the right side of the slider
+        trySetInterval(MaxSliderValue - newNum);
+    };
 
     return (
         <div className={styles.lifeControls}>
-            <a onClick={() => dispatch(advanceGeneration())}>
+            <a onClick={() => dispatch(advanceGeneration())} href="#/">
                 <FontAwesomeIcon icon={faForwardStep} />
             </a>
-            <a onClick={() => setIsPlaying(!isPlaying)}>
+            <a onClick={() => setIsPlaying(!isPlaying)} href="#/">
                 <FontAwesomeIcon icon={isPlaying ? faPause : faPlay} />
             </a>
             <input

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { C4CellState } from "../../assets/ConnectFourResources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
