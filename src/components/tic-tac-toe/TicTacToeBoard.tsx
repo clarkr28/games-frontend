@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./TicTacToeBoardStyles.css";
 import { CellState, TicTacToeState } from "../../assets/TicTacToeResources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -85,22 +85,17 @@ interface ITicTacToeBoardCellProps {
 }
 
 const TicTacToeBoardCell: React.FC<ITicTacToeBoardCellProps> = (props) => {
-    const {
-        cellValue,
-        cellIndex,
-        performMove,
-        canMakeMove,
-        isWinningCell,
-    } = props;
+    const { cellValue, cellIndex, performMove, canMakeMove, isWinningCell } =
+        props;
 
     /**
      * Handle the user clicking a cell on the board
      */
-    const clickHandler = useCallback(() => {
+    const clickHandler = () => {
         if (canUserMakeMove(canMakeMove, cellValue)) {
             performMove(cellIndex, CellState.X);
         }
-    }, [cellValue, cellIndex, performMove, canMakeMove]);
+    };
 
     const hoverClass = canUserMakeMove(canMakeMove, cellValue)
         ? "cellEmptyHover"

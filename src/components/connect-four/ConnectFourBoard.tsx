@@ -1,9 +1,5 @@
 import React from "react";
-import {
-    C4CellState,
-    C4GameStatus,
-    C4_COLS,
-} from "../../assets/ConnectFourResources";
+import { C4CellState, C4GameStatus } from "../../assets/ConnectFourResources";
 import styles from "./ConnectFourStyles.module.css";
 import { ConnectFourColumn } from "./ConnectFourColumn";
 import { useAppSelector } from "../../app/hooks";

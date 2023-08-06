@@ -31,6 +31,7 @@ export const LifePresetControls: React.FC<{}> = () => {
             <a
                 className={`${showControl ? styles.rotate : ""}`}
                 onClick={() => setShowControl((val) => !val)}
+                href="#/"
             >
                 <FontAwesomeIcon icon={faChevronLeft} />
             </a>
@@ -41,6 +42,7 @@ export const LifePresetControls: React.FC<{}> = () => {
                         onClick={() =>
                             enableLeft && setPageIndex((index) => index - 1)
                         }
+                        href="#/"
                     >
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </a>
@@ -49,6 +51,7 @@ export const LifePresetControls: React.FC<{}> = () => {
                         onClick={() =>
                             enableRight && setPageIndex((index) => index + 1)
                         }
+                        href="#/"
                     >
                         <FontAwesomeIcon icon={faArrowRight} />
                     </a>

@@ -8,26 +8,34 @@ import { Suit, suitToUnicode } from "../assets/CardResources";
 export const HomePage: React.FC<{}> = () => {
     return (
         <div className="homePageCardContainer">
-            <GameCard
-                buttonLabel="Play Tic Tac Toe"
-                route="tic-tac-toe"
-                display={ticTacToeDisplay}
-            />
-            <GameCard
-                buttonLabel="Play Connect Four"
-                route="connect-four"
-                display={connectFourDisplay}
-            />
-            <GameCard
-                buttonLabel="Play Blackjack"
-                route="blackjack"
-                display={blackjackDisplay}
-            />
-            <GameCard
-                buttonLabel="Play Life"
-                route="life"
-                display={lifeDisplay}
-            />
+            {process.env.REACT_APP_ENABLE_TICTACTOE && (
+                <GameCard
+                    buttonLabel="Play Tic Tac Toe"
+                    route="tic-tac-toe"
+                    display={ticTacToeDisplay}
+                />
+            )}
+            {process.env.REACT_APP_ENABLE_CONNECTFOUR && (
+                <GameCard
+                    buttonLabel="Play Connect Four"
+                    route="connect-four"
+                    display={connectFourDisplay}
+                />
+            )}
+            {process.env.REACT_APP_ENABLE_BLACKJACK && (
+                <GameCard
+                    buttonLabel="Play Blackjack"
+                    route="blackjack"
+                    display={blackjackDisplay}
+                />
+            )}
+            {process.env.REACT_APP_ENABLE_LIFE && (
+                <GameCard
+                    buttonLabel="Play Life"
+                    route="life"
+                    display={lifeDisplay}
+                />
+            )}
         </div>
     );
 };

@@ -15,10 +15,24 @@ function App() {
                 <NavBar />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/tic-tac-toe" element={<TicTacToeGame />} />
-                    <Route path="/connect-four" element={<ConnectFourGame />} />
-                    <Route path="/blackjack" element={<BlackjackGame />} />
-                    <Route path="/life" element={<LifeGame />} />
+                    {process.env.REACT_APP_ENABLE_TICTACTOE && (
+                        <Route
+                            path="/tic-tac-toe"
+                            element={<TicTacToeGame />}
+                        />
+                    )}
+                    {process.env.REACT_APP_ENABLE_CONNECTFOUR && (
+                        <Route
+                            path="/connect-four"
+                            element={<ConnectFourGame />}
+                        />
+                    )}
+                    {process.env.REACT_APP_ENABLE_BLACKJACK && (
+                        <Route path="/blackjack" element={<BlackjackGame />} />
+                    )}
+                    {process.env.REACT_APP_ENABLE_LIFE && (
+                        <Route path="/life" element={<LifeGame />} />
+                    )}
                 </Routes>
             </div>
         </BrowserRouter>

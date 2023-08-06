@@ -1,13 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import {
-    advanceGeneration,
-    boardResize,
-    pickPreset,
-} from "../../features/lifeSlice";
+import { advanceGeneration, boardResize } from "../../features/lifeSlice";
 import { LifeBoard } from "./LifeBoard";
 import styles from "./LifeStyles.module.css";
-import { LifePresets } from "../../assets/LifePatternResources";
 import { LifeControls } from "./LifeControls";
 import { LifePresetControls } from "./LifePresetControls";
 
@@ -19,15 +14,16 @@ export const LifeGame: React.FC<{}> = () => {
     const [advanceTrigger, setAdvanceTrigger] = useState(0);
     const [interval, setInterval] = useState(375); // milliseconds
 
-    const tripper = useCallback(() => {
+    const tripper = () => {
         setAdvanceTrigger((val) => val + 1);
         dispatch(advanceGeneration());
-    }, [dispatch]);
+    };
 
     useEffect(() => {
         if (isPlaying) {
             setTimeout(() => tripper(), interval);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isPlaying, tripper, advanceTrigger]);
 
     const trySetInterval = (newInterval: number) => {
@@ -51,6 +47,7 @@ export const LifeGame: React.FC<{}> = () => {
 
             return () => observer.disconnect();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [shellRef]);
 
     return (
