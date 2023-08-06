@@ -4,10 +4,6 @@
     border-radius: 5px;
 }
 
-.cardHidden {
-    background-color: aqua;
-}
-
 .red {
     color: crimson;
 }
@@ -35,4 +31,10 @@
 .stacked > div {
     position: absolute;
     background-color: #fff; /* makes it non-transparent */
+}
+
+.cardContainer > img {
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
 }

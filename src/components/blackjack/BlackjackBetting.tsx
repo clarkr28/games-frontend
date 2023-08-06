@@ -1,11 +1,13 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
     finalizeBet,
     selectBlackjackPlayerBank,
 } from "../../features/blackjackSlice";
 import { useDispatch } from "react-redux";
-import { IncrementChange } from "../common/IncrementChange";
+import { IncrementChange } from "../common/IncrementChange/IncrementChange";
+import { IconButton, IconButtonColor } from "../common/IconButton/IconButton";
+import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
 export interface IBlackjackBetting {
     betAmount: number;
@@ -18,33 +20,33 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
     const playerBank = useAppSelector(selectBlackjackPlayerBank);
     const dispatch = useDispatch();
 
-    const trySetBet = useCallback(
-        (delta: number) => {
-            const newBetAmount = betAmount + delta;
+    const trySetBet = (delta: number) => {
+        const newBetAmount = betAmount + delta;
 
-            // don't let a player bet more than what is in their bank
-            if (newBetAmount > playerBank) {
-                setBetAmount(playerBank);
-                return;
-            }
+        // don't let a player bet more than what is in their bank
+        if (newBetAmount > playerBank) {
+            setBetAmount(playerBank);
+            return;
+        }
 
-            // don't let a player bet a negative amount
-            if (newBetAmount < 0) {
-                setBetAmount(0);
-                return;
-            }
+        // don't let a player bet a negative amount
+        if (newBetAmount < 0) {
+            setBetAmount(0);
+            return;
+        }
 
-            setBetAmount(newBetAmount);
-        },
-        [betAmount, playerBank]
-    );
+        setBetAmount(newBetAmount);
+    };
 
     return (
         <div>
-            <div>{`Bet Amount: ${betAmount}`}</div>
-            <button onClick={() => dispatch(finalizeBet(betAmount))}>
-                Place Bet
-            </button>
+            <IconButton
+                displayText="Place Bet"
+                clickCallback={() => dispatch(finalizeBet(betAmount))}
+                color={IconButtonColor.Green}
+                icon={solid("coins")}
+                disabled={betAmount <= 0}
+            />
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <IncrementChange
                     changeIncrement={1}
@@ -55,11 +57,15 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
                     tryChangeValue={trySetBet}
                 />
                 <IncrementChange
-                    changeIncrement={10}
+                    changeIncrement={25}
+                    tryChangeValue={trySetBet}
+                />
+                <IncrementChange
+                    changeIncrement={50}
                     tryChangeValue={trySetBet}
                 />
             </div>
-            <div>{`Bank: ${playerBank}`}</div>
+            <div>{`Bank: $${playerBank}`}</div>
         </div>
     );
 };

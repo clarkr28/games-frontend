@@ -99,7 +99,8 @@ export function matchesTRBL(board: C4CellState[][], startX: number, startY: numb
     }
 
     // check the bottom-left direction 
-    x = startX - 1, y = startY - 1;
+    x = startX - 1;
+    y = startY - 1;
     while (x >= 0 && y >= 0 && board[x][y] === matchValue) {
         matchingPoints.push({X: x, Y: y});
         x--;
@@ -123,7 +124,8 @@ export function matchesBRTL(board: C4CellState[][], startX: number, startY: numb
     }
 
     // check the top-left direction 
-    x = startX - 1, y = startY + 1;
+    x = startX - 1;
+    y = startY + 1;
     while (x >= 0 && y < C4_ROWS && board[x][y] === matchValue) {
         matchingPoints.push({X: x, Y: y});
         x--;

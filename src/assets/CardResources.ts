@@ -121,6 +121,7 @@ export function cardValueToString(value: CardValue): string {
     return "";
 }
 
+/** face cards are 10, Aces are 11 */
 export function cardValueToInt(value: CardValue): number {
     switch (value) {
         case CardValue.Two:
@@ -165,4 +166,26 @@ export function scoreBlackjackHand(cards: PlayingCard[]): number {
     });
 
     return total;
+}
+
+/** return how much money the player should be awarded at the end of a blackjack round */
+export function getBlackjackWinnings(playerScore: number, playerHandLength: number, dealerScore: number, betAmount: number): number {
+    if (playerScore === 21 && playerHandLength === 2) {
+        // Blackjack!
+        return Math.ceil(betAmount * 2.5);
+    }
+    else if (dealerScore > 21 && playerScore <= 21) {
+        // dealer busted and player didn't
+        return betAmount * 2;
+    }
+    else if (playerScore > dealerScore && playerScore <= 21) {
+        // player bet the dealer without busting
+        return betAmount * 2;
+    }
+    else if (playerScore === dealerScore && playerScore <= 21) {
+        // player and dealer tied without busting
+        return betAmount;
+    }
+
+    return 0; // player must have lost
 }

@@ -1,12 +1,12 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Deck, PlayingCard, createRandomDeck, drawCard, scoreBlackjackHand } from "../assets/CardResources";
+import { Deck, PlayingCard, createRandomDeck, drawCard, getBlackjackWinnings, scoreBlackjackHand } from "../assets/CardResources";
 import { RootState } from "../app/store";
 
 export enum BlackjackStatus {
     Betting,
     Hitting,
     DealerPlaying,
-    FinalScoring,
+    AwaitNextRound,
 }
 
 interface BlackjackState {
@@ -53,12 +53,14 @@ export const blackjackSlice = createSlice({
             state.dealerHand.push(drawCard(state.deck));
             state.dealerHandValue = scoreBlackjackHand(state.dealerHand);
             if (state.dealerHandValue >= 17) {
-                state.gameStatus = BlackjackStatus.FinalScoring;
+                state.betPool = getBlackjackWinnings(state.playerHandValue, state.playerHand.length, state.dealerHandValue, state.betPool);
+                state.gameStatus = BlackjackStatus.AwaitNextRound;
             }
         },
         standDealer: (state) => {
             if (state.gameStatus === BlackjackStatus.DealerPlaying) {
-                state.gameStatus = BlackjackStatus.FinalScoring;
+                state.betPool = getBlackjackWinnings(state.playerHandValue, state.playerHand.length, state.dealerHandValue, state.betPool);
+                state.gameStatus = BlackjackStatus.AwaitNextRound;
             }
         },
         finalizeBet: (state, action: PayloadAction<number>) => {
@@ -79,23 +81,9 @@ export const blackjackSlice = createSlice({
                 state.gameStatus = BlackjackStatus.Hitting;
             }
         },
-        finalScoringAndReset: (state) => {
-            if (state.playerHandValue === 21 && state.playerHand.length === 2) {
-                // Blackjack!
-                state.playerBank += Math.ceil(state.betPool * 2.5);
-            }
-            else if (state.dealerHandValue > 21 && state.playerHandValue <= 21) {
-                // dealer busted and player didn't
-                state.playerBank += state.betPool + state.betPool;
-            }
-            else if (state.playerHandValue > state.dealerHandValue && state.playerHandValue <= 21) {
-                // player bet the dealer without busting
-                state.playerBank += state.betPool + state.betPool;
-            }
-            else if (state.playerHandValue === state.dealerHandValue && state.playerHandValue <= 21) {
-                // player and dealer tied without busting
-                state.playerBank += state.betPool;
-            }
+        nextRound: (state) => {
+            // the bet pool has already been adjusted to show how much money the player should be given
+            state.playerBank += state.betPool;
 
             // reset state for the next round
             state.betPool = 0;
@@ -108,7 +96,7 @@ export const blackjackSlice = createSlice({
     }
 });
 
-export const {hitPlayer, standPlayer, hitDealer, standDealer, finalizeBet, finalScoringAndReset} = blackjackSlice.actions;
+export const {hitPlayer, standPlayer, hitDealer, standDealer, finalizeBet, nextRound} = blackjackSlice.actions;
 
 export const selectBlackjackStatus = (state: RootState) => state.blackjack.gameStatus;
 export const selectBlackjackDealerHand = (state: RootState) => state.blackjack.dealerHand;
