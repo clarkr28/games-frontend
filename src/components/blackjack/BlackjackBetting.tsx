@@ -45,6 +45,7 @@ export const BlackjackBetting: React.FC<IBlackjackBetting> = (props) => {
                 clickCallback={() => dispatch(finalizeBet(betAmount))}
                 color={IconButtonColor.Green}
                 icon={solid("coins")}
+                disabled={betAmount <= 0}
             />
             <div style={{ display: "flex", justifyContent: "center" }}>
                 <IncrementChange

@@ -40,7 +40,7 @@ export const PlayingCardFC: React.FC<IPlayingCardProps> = (props) => {
             className={containerClasses.join(" ")}
         >
             {hidden ? (
-                <img src={cardBackground} />
+                <img src={cardBackground} alt="back of card" />
             ) : (
                 <>
                     <div className={styles.cardHeader}>
