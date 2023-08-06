@@ -7,6 +7,7 @@ import { HomePage } from "./components/HomePage";
 import { ConnectFourGame } from "./components/connect-four/ConnectFourGame";
 import { BlackjackGame } from "./components/blackjack/BlackjackGame";
 import { LifeGame } from "./components/life/LifeGame";
+import { CarcassonneGame } from "./components/carcassonne/CarcassoneGame/CarcassonneGame";
 
 function App() {
     return (
@@ -32,6 +33,12 @@ function App() {
                     )}
                     {process.env.REACT_APP_ENABLE_LIFE && (
                         <Route path="/life" element={<LifeGame />} />
+                    )}
+                    {process.env.REACT_APP_ENABLE_CARCASSONNE && (
+                        <Route
+                            path="/carcassonne"
+                            element={<CarcassonneGame />}
+                        />
                     )}
                 </Routes>
             </div>

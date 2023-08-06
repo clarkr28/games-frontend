@@ -36,6 +36,13 @@ export const HomePage: React.FC<{}> = () => {
                     display={lifeDisplay}
                 />
             )}
+            {process.env.REACT_APP_ENABLE_CARCASSONNE && (
+                <GameCard
+                    buttonLabel="Play Carcassonne"
+                    route="carcassonne"
+                    display={<div>todo</div>}
+                />
+            )}
         </div>
     );
 };
