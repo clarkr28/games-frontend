@@ -1,0 +1,17 @@
+$tileWidth: 75px;
+$tileHeight: $tileWidth;
+
+.tileContainer {
+    border: 1px solid #555;
+    border-radius: 3px;
+    width: $tileWidth;
+    height: $tileHeight;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.middleRow {
+    display: flex;
+    justify-content: space-between;
+}
