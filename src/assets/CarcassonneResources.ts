@@ -63,7 +63,67 @@ export const SAMPLE_TILE_2: ICarcassonneTile = {
             type: CarcassonneEdgeType.Field,
         },
         {
+            type: CarcassonneEdgeType.Road,
+        },
+    ]
+};
+
+export const SAMPLE_TILE_3: ICarcassonneTile = {
+    edges: [
+        {
+            type: CarcassonneEdgeType.Road,
+            connectedEdges: [2],
+        },
+        {
+            type: CarcassonneEdgeType.City,
+        },
+        {
+            type: CarcassonneEdgeType.Road,
+            connectedEdges: [0],
+        },
+        {
             type: CarcassonneEdgeType.Field,
+        },
+    ]
+};
+
+export const SAMPLE_TILE_4: ICarcassonneTile = {
+    edges: [
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [1,2],
+        },
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [0,2],
+        },
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [0,1],
+        },
+        {
+            type: CarcassonneEdgeType.Field,
+        },
+    ]
+};
+
+export const SAMPLE_TILE_5: ICarcassonneTile = {
+    edges: [
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [1,2,3],
+        },
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [0,2,3],
+        },
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [0,1,3],
+        },
+        {
+            type: CarcassonneEdgeType.City,
+            connectedEdges: [0,1,2],
         },
     ]
 };
@@ -72,5 +132,20 @@ export function getEdgeType(tile: ICarcassonneTile, edge: number): CarcassonneEd
     return tile.edges[edge].type;
 }
 
+/**
+ * determine the type of connection between two edges of a tile
+ * @param tile the tile to determine the adjacency type for
+ * @param firstEdge the first edge of the tile to compare against
+ * @param secondEdge the second edge of the tile to compare against
+ * @returns the type of connection between the two edges
+ */
+export function getAdjacencyType(tile: ICarcassonneTile, firstEdge: number, secondEdge: number): CarcassonneEdgeType {
+    if (tile.edges[firstEdge].type === CarcassonneEdgeType.Field) {
+        return CarcassonneEdgeType.Field; // field doesn't have any adjacencies
+    }
 
+    return tile.edges[firstEdge].connectedEdges?.some(edge => edge === secondEdge) 
+    ? tile.edges[firstEdge].type 
+    : CarcassonneEdgeType.Field;
+}
 

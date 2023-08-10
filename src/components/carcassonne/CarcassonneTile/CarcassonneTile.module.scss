@@ -9,9 +9,19 @@ $tileHeight: $tileWidth;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    font-size: 12px;
+
+    & > div {
+        height: calc($tileHeight / 5);
+    }
 }
 
 .middleRow {
     display: flex;
     justify-content: space-between;
+}
+
+.adjacencyRow {
+    display: flex;
+    justify-content: space-around;
 }

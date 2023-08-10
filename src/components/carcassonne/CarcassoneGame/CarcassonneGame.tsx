@@ -1,15 +1,34 @@
 import React from "react";
-import { CarcassonneTile } from "../CarcassonneTile/CarcassonneTile";
 import {
     SAMPLE_TILE_1,
     SAMPLE_TILE_2,
+    SAMPLE_TILE_3,
+    SAMPLE_TILE_4,
+    SAMPLE_TILE_5,
 } from "../../../assets/CarcassonneResources";
+import { CarcassonneGrid } from "../CarcassonneGrid/CarcassonneGrid";
 
 export const CarcassonneGame: React.FC<{}> = () => {
+    const gridData = [
+        [
+            SAMPLE_TILE_1,
+            SAMPLE_TILE_1,
+            SAMPLE_TILE_2,
+            SAMPLE_TILE_2,
+            SAMPLE_TILE_3,
+        ],
+        [
+            SAMPLE_TILE_1,
+            SAMPLE_TILE_2,
+            SAMPLE_TILE_3,
+            SAMPLE_TILE_4,
+            SAMPLE_TILE_5,
+        ],
+    ];
+
     return (
         <div>
-            <CarcassonneTile tile={SAMPLE_TILE_1} />
-            <CarcassonneTile tile={SAMPLE_TILE_2} />
+            <CarcassonneGrid gridData={gridData} />
         </div>
     );
 };
