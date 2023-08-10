@@ -38,8 +38,8 @@ export const HomePage: React.FC<{}> = () => {
             )}
             {process.env.REACT_APP_ENABLE_CARCASSONNE && (
                 <GameCard
-                    buttonLabel="Play Carcassonne"
-                    route="carcassonne"
+                    buttonLabel="Play Avila"
+                    route="avila"
                     display={<div>todo</div>}
                 />
             )}

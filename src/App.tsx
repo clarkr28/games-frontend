@@ -7,7 +7,7 @@ import { HomePage } from "./components/HomePage";
 import { ConnectFourGame } from "./components/connect-four/ConnectFourGame";
 import { BlackjackGame } from "./components/blackjack/BlackjackGame";
 import { LifeGame } from "./components/life/LifeGame";
-import { CarcassonneGame } from "./components/carcassonne/CarcassoneGame/CarcassonneGame";
+import { AvilaGame } from "./components/carcassonne/AvilaGame/AvilaGame";
 
 function App() {
     return (
@@ -35,10 +35,7 @@ function App() {
                         <Route path="/life" element={<LifeGame />} />
                     )}
                     {process.env.REACT_APP_ENABLE_CARCASSONNE && (
-                        <Route
-                            path="/carcassonne"
-                            element={<CarcassonneGame />}
-                        />
+                        <Route path="/avila" element={<AvilaGame />} />
                     )}
                 </Routes>
             </div>

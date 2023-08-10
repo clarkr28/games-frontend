@@ -17,7 +17,7 @@ export const NavBar: React.FC<{}> = () => {
             )}
             {process.env.REACT_APP_ENABLE_LIFE && <Link to="/life">Life</Link>}
             {process.env.REACT_APP_ENABLE_CARCASSONNE && (
-                <Link to="/carcassonne">Carcassonne</Link>
+                <Link to="/avila">Avila</Link>
             )}
         </nav>
     );

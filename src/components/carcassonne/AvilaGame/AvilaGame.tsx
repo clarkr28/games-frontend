@@ -5,10 +5,10 @@ import {
     SAMPLE_TILE_3,
     SAMPLE_TILE_4,
     SAMPLE_TILE_5,
-} from "../../../assets/CarcassonneResources";
-import { CarcassonneGrid } from "../CarcassonneGrid/CarcassonneGrid";
+} from "../../../assets/AvilaResources";
+import { AvilaGrid } from "../AvilaGrid/AvilaGrid";
 
-export const CarcassonneGame: React.FC<{}> = () => {
+export const AvilaGame: React.FC<{}> = () => {
     const gridData = [
         [
             SAMPLE_TILE_1,
@@ -28,7 +28,7 @@ export const CarcassonneGame: React.FC<{}> = () => {
 
     return (
         <div>
-            <CarcassonneGrid gridData={gridData} />
+            <AvilaGrid gridData={gridData} />
         </div>
     );
 };

@@ -6,129 +6,129 @@
  * to traversing a graph.  
  */
 
-export enum CarcassonneEdgeType {
+export enum AvilaFeature {
     Field = "1",
     City = "2",
     Road = "3"
 }
 
-export interface ICarcassonneEdge {
-    type: CarcassonneEdgeType;
+export interface IAvilaEdge {
+    type: AvilaFeature;
     connectedEdges?: number[];
 }
 
 
 /**
- * representation of a carcassonne tile:
+ * representation of an Avila tile:
  *             edges[0] 
  *          |----------|
  * edges[3] |          | edges[1]
  *          |__________|
  *             edges[2]
  */
-export interface ICarcassonneTile {
-    edges: ICarcassonneEdge[];
+export interface IAvilaTile {
+    edges: IAvilaEdge[];
 }
 
-export const SAMPLE_TILE_1: ICarcassonneTile = {
+export const SAMPLE_TILE_1: IAvilaTile = {
     edges: [
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
         },
         {
-            type: CarcassonneEdgeType.Road,
+            type: AvilaFeature.Road,
             connectedEdges: [2],
         },
         {
-            type: CarcassonneEdgeType.Road,
+            type: AvilaFeature.Road,
             connectedEdges: [1],
         },
         {
-            type: CarcassonneEdgeType.Field,
+            type: AvilaFeature.Field,
         },
     ]
 };
 
-export const SAMPLE_TILE_2: ICarcassonneTile = {
+export const SAMPLE_TILE_2: IAvilaTile = {
     edges: [
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [1],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [0],
         },
         {
-            type: CarcassonneEdgeType.Field,
+            type: AvilaFeature.Field,
         },
         {
-            type: CarcassonneEdgeType.Road,
+            type: AvilaFeature.Road,
         },
     ]
 };
 
-export const SAMPLE_TILE_3: ICarcassonneTile = {
+export const SAMPLE_TILE_3: IAvilaTile = {
     edges: [
         {
-            type: CarcassonneEdgeType.Road,
+            type: AvilaFeature.Road,
             connectedEdges: [2],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
         },
         {
-            type: CarcassonneEdgeType.Road,
+            type: AvilaFeature.Road,
             connectedEdges: [0],
         },
         {
-            type: CarcassonneEdgeType.Field,
+            type: AvilaFeature.Field,
         },
     ]
 };
 
-export const SAMPLE_TILE_4: ICarcassonneTile = {
+export const SAMPLE_TILE_4: IAvilaTile = {
     edges: [
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [1,2],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [0,2],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [0,1],
         },
         {
-            type: CarcassonneEdgeType.Field,
+            type: AvilaFeature.Field,
         },
     ]
 };
 
-export const SAMPLE_TILE_5: ICarcassonneTile = {
+export const SAMPLE_TILE_5: IAvilaTile = {
     edges: [
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [1,2,3],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [0,2,3],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [0,1,3],
         },
         {
-            type: CarcassonneEdgeType.City,
+            type: AvilaFeature.City,
             connectedEdges: [0,1,2],
         },
     ]
 };
 
-export function getEdgeType(tile: ICarcassonneTile, edge: number): CarcassonneEdgeType {
+export function getEdgeType(tile: IAvilaTile, edge: number): AvilaFeature {
     return tile.edges[edge].type;
 }
 
@@ -139,13 +139,13 @@ export function getEdgeType(tile: ICarcassonneTile, edge: number): CarcassonneEd
  * @param secondEdge the second edge of the tile to compare against
  * @returns the type of connection between the two edges
  */
-export function getAdjacencyType(tile: ICarcassonneTile, firstEdge: number, secondEdge: number): CarcassonneEdgeType {
-    if (tile.edges[firstEdge].type === CarcassonneEdgeType.Field) {
-        return CarcassonneEdgeType.Field; // field doesn't have any adjacencies
+export function getAdjacencyType(tile: IAvilaTile, firstEdge: number, secondEdge: number): AvilaFeature {
+    if (tile.edges[firstEdge].type === AvilaFeature.Field) {
+        return AvilaFeature.Field; // field doesn't have any adjacencies
     }
 
     return tile.edges[firstEdge].connectedEdges?.some(edge => edge === secondEdge) 
     ? tile.edges[firstEdge].type 
-    : CarcassonneEdgeType.Field;
+    : AvilaFeature.Field;
 }
 

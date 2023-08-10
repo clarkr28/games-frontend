@@ -1,19 +1,19 @@
 import React from "react";
 import {
-    CarcassonneEdgeType,
-    ICarcassonneTile,
+    AvilaFeature,
+    IAvilaTile,
     getAdjacencyType,
     getEdgeType,
-} from "../../../assets/CarcassonneResources";
+} from "../../../assets/AvilaResources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import styles from "./CarcassonneTile.module.scss";
+import styles from "./AvilaTile.module.scss";
 
-export interface ICarcassonneTileProps {
-    tile: ICarcassonneTile;
+export interface IAvilaTileProps {
+    tile: IAvilaTile;
 }
 
-export const CarcassonneTile: React.FC<ICarcassonneTileProps> = (props) => {
+export const AvilaTile: React.FC<IAvilaTileProps> = (props) => {
     const { tile } = props;
 
     const possibleMiddleCells = [
@@ -21,7 +21,7 @@ export const CarcassonneTile: React.FC<ICarcassonneTileProps> = (props) => {
         getAdjacencyType(tile, 1, 3),
     ];
     const middleCell = possibleMiddleCells.filter(
-        (val) => val !== CarcassonneEdgeType.Field
+        (val) => val !== AvilaFeature.Field
     );
 
     return (
@@ -49,13 +49,13 @@ export const CarcassonneTile: React.FC<ICarcassonneTileProps> = (props) => {
     );
 };
 
-function getEdgeDisplayIcon(edge: CarcassonneEdgeType): JSX.Element | null {
+function getEdgeDisplayIcon(edge: AvilaFeature): JSX.Element | null {
     switch (edge) {
-        case CarcassonneEdgeType.City:
+        case AvilaFeature.City:
             return <FontAwesomeIcon icon={solid("city")} />;
-        case CarcassonneEdgeType.Road:
+        case AvilaFeature.Road:
             return <FontAwesomeIcon icon={solid("road")} />;
-        case CarcassonneEdgeType.Field:
+        case AvilaFeature.Field:
             //return <FontAwesomeIcon icon={solid("wheat-awn")} />;
             return null;
     }
