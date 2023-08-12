@@ -11,12 +11,12 @@ export const AvilaGrid: React.FC<{}> = () => {
     return (
         <div className={styles.grid}>
             {gridData.map((gridRow, row) => (
-                <div>
+                <div key={row}>
                     {gridRow.map((cell, col) =>
                         cell ? (
-                            <AvilaTile tile={cell} />
+                            <AvilaTile key={col} tile={cell} />
                         ) : (
-                            <AvilaEmptyTile row={row} col={col} />
+                            <AvilaEmptyTile key={col} row={row} col={col} />
                         )
                     )}
                 </div>

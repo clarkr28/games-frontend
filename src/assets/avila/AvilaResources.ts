@@ -167,3 +167,33 @@ export function createEmptyBoard(width: number, height: number): AvilaBoard {
 
     return board;
 }
+
+
+/**
+ * 
+ * Player Resources 
+ * 
+ */
+
+export interface IAvilaPlayer {
+    score: number;
+    availableMeeple: number;
+    color: AvilaPlayerColor;
+}
+
+export enum AvilaPlayerColor {
+    Black,
+    Red,
+    Yellow,
+    Blue,
+    Green,
+}
+
+export function createPlayer(color: AvilaPlayerColor): IAvilaPlayer {
+    return {
+        score: 0,
+        availableMeeple: 7,
+        color: color,
+    };
+}
+
