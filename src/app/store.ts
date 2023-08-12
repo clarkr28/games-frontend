@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import connectFourSlice from "../features/connectFourSlice";
 import blackjackSlice from "../features/blackjackSlice";
 import lifeSlice from "../features/lifeSlice";
+import avilaSlice from "../features/avilaSlice";
 
 
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
         connectFour: connectFourSlice, // this is the reducer, not the slice
         blackjack: blackjackSlice,
         life: lifeSlice,
+        avila: avilaSlice,
     },
 });
 

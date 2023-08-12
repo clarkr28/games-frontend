@@ -1,4 +1,10 @@
 .grid {
-    display: grid;
-    grid-template-columns: repeat(5, 75px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    & > div {
+        display: flex;
+        justify-content: center;
+    }
 }

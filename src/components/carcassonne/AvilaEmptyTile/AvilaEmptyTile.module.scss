@@ -1,0 +1,12 @@
+@import "../AvilaTile/AvilaTile.module.scss";
+
+.tile {
+    border: 1px solid #ccc;
+    width: $tileWidth;
+    height: $tileHeight;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #eee;
+    }
+}

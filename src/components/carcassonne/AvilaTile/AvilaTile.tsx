@@ -4,7 +4,7 @@ import {
     IAvilaTile,
     getAdjacencyType,
     getEdgeType,
-} from "../../../assets/AvilaResources";
+} from "../../../assets/avila/AvilaResources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styles from "./AvilaTile.module.scss";

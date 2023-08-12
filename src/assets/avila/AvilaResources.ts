@@ -128,6 +128,14 @@ export const SAMPLE_TILE_5: IAvilaTile = {
     ]
 };
 
+export const SAMPLE_TILES = [
+    SAMPLE_TILE_1,
+    SAMPLE_TILE_2,
+    SAMPLE_TILE_3,
+    SAMPLE_TILE_4,
+    SAMPLE_TILE_5,
+];
+
 export function getEdgeType(tile: IAvilaTile, edge: number): AvilaFeature {
     return tile.edges[edge].type;
 }
@@ -149,3 +157,13 @@ export function getAdjacencyType(tile: IAvilaTile, firstEdge: number, secondEdge
     : AvilaFeature.Field;
 }
 
+export type AvilaBoard = (IAvilaTile | undefined)[][];
+
+export function createEmptyBoard(width: number, height: number): AvilaBoard {
+    const board: AvilaBoard = [];
+    for (let i = 0; i < height; i++) {
+        board.push(new Array<IAvilaTile | undefined>(width).fill(undefined));
+    }
+
+    return board;
+}
