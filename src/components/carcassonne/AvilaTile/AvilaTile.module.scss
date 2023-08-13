@@ -14,6 +14,10 @@ $tileHeight: $tileWidth;
     & > div {
         height: calc($tileHeight / 5);
     }
+
+    &.hasShield {
+        background-color: lightblue;
+    }
 }
 
 .middleRow {

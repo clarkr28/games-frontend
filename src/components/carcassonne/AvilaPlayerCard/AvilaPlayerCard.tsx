@@ -1,5 +1,5 @@
 import React from "react";
-import { IAvilaPlayer, IAvilaTile } from "../../../assets/avila/AvilaResources";
+import { IAvilaPlayer, IAvilaTile } from "../../../assets/avila/Resources";
 import { AvilaTile } from "../AvilaTile/AvilaTile";
 import styles from "./AvilaPlayerCard.module.scss";
 

@@ -19,6 +19,9 @@ export const NavBar: React.FC<{}> = () => {
             {process.env.REACT_APP_ENABLE_CARCASSONNE && (
                 <Link to="/avila">Avila</Link>
             )}
+            {process.env.REACT_APP_AVILA_TILE_TEST && (
+                <Link to="/avila-tile-test">Tile Tester</Link>
+            )}
         </nav>
     );
 };

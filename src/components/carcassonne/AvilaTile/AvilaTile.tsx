@@ -4,10 +4,12 @@ import {
     IAvilaTile,
     getAdjacencyType,
     getEdgeType,
-} from "../../../assets/avila/AvilaResources";
+} from "../../../assets/avila/Resources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import styles from "./AvilaTile.module.scss";
+
+const Monestary = <FontAwesomeIcon icon={solid("place-of-worship")} />;
 
 export interface IAvilaTileProps {
     tile: IAvilaTile;
@@ -25,7 +27,11 @@ export const AvilaTile: React.FC<IAvilaTileProps> = (props) => {
     );
 
     return (
-        <div className={styles.tileContainer}>
+        <div
+            className={`${styles.tileContainer} ${
+                tile.shield ? styles.hasShield : ""
+            }`}
+        >
             <div>{getEdgeDisplayIcon(getEdgeType(tile, 0))}</div>
             <div className={styles.adjacencyRow}>
                 <div>{getEdgeDisplayIcon(getAdjacencyType(tile, 3, 0))}</div>
@@ -34,7 +40,9 @@ export const AvilaTile: React.FC<IAvilaTileProps> = (props) => {
             <div className={styles.middleRow}>
                 <div>{getEdgeDisplayIcon(getEdgeType(tile, 3))}</div>
                 <div>
-                    {middleCell.length
+                    {tile.monestary
+                        ? Monestary
+                        : middleCell.length
                         ? getEdgeDisplayIcon(middleCell[0])
                         : null}
                 </div>

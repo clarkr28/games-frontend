@@ -8,6 +8,7 @@ import { ConnectFourGame } from "./components/connect-four/ConnectFourGame";
 import { BlackjackGame } from "./components/blackjack/BlackjackGame";
 import { LifeGame } from "./components/life/LifeGame";
 import { AvilaGame } from "./components/carcassonne/AvilaGame/AvilaGame";
+import { TileTester } from "./components/carcassonne/TileTester/TileTester";
 
 function App() {
     return (
@@ -36,6 +37,12 @@ function App() {
                     )}
                     {process.env.REACT_APP_ENABLE_CARCASSONNE && (
                         <Route path="/avila" element={<AvilaGame />} />
+                    )}
+                    {process.env.REACT_APP_AVILA_TILE_TEST && (
+                        <Route
+                            path="/avila-tile-test"
+                            element={<TileTester />}
+                        />
                     )}
                 </Routes>
             </div>

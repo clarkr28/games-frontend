@@ -1,12 +1,15 @@
 import React from "react";
 import styles from "./AvilaGrid.module.scss";
 import { AvilaTile } from "../AvilaTile/AvilaTile";
-import { useAppSelector } from "../../../app/hooks";
-import { selectAvilaBoard } from "../../../features/avilaSlice";
 import { AvilaEmptyTile } from "../AvilaEmptyTile/AvilaEmptyTile";
+import { AvilaBoard } from "../../../assets/avila/Resources";
 
-export const AvilaGrid: React.FC<{}> = () => {
-    const gridData = useAppSelector(selectAvilaBoard);
+export interface IAvilaGridProps {
+    gridData: AvilaBoard;
+}
+
+export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
+    const { gridData } = props;
 
     return (
         <div className={styles.grid}>

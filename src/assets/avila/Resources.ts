@@ -1,4 +1,10 @@
 
+export enum AvilaGameStatus {
+    Pregame,
+    Playing,
+    Done,
+}
+
 /* Have field be the assumed default value. Instead of discretely keeping track
  * of what every edge type is, and if two adjacent city edges or road edges
  * are connected to each other or not, just keep track of what other edges 
@@ -28,6 +34,8 @@ export interface IAvilaEdge {
  */
 export interface IAvilaTile {
     edges: IAvilaEdge[];
+    shield?: boolean;
+    monestary?: boolean;
 }
 
 export const SAMPLE_TILE_1: IAvilaTile = {
