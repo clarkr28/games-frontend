@@ -1,3 +1,4 @@
+import { Point } from "../ConnectFourResources";
 
 export enum AvilaGameStatus {
     Pregame,
@@ -171,6 +172,38 @@ export function createEmptyBoard(width: number, height: number): AvilaBoard {
     const board: AvilaBoard = [];
     for (let i = 0; i < height; i++) {
         board.push(new Array<IAvilaTile | undefined>(width).fill(undefined));
+    }
+
+    return board;
+}
+
+/**
+ * expand the edges of the board if a tile was placed on the edge
+ * @param board a board that just had a tile placed
+ * @param placedTileLocation the point where the last tile was placed
+ * @returns the board with its edges potentially expanded
+ */
+export function expandBoard(board: AvilaBoard, placedTileLocation: Point): AvilaBoard {
+    // reminder: board[Y][X]
+    if (placedTileLocation.X + 1 === board[0].length) {
+        // expand board to the right 
+        for (let i = 0; i < board.length; i++) {
+            board[i].push(undefined);
+        }
+    }
+    if (placedTileLocation.Y + 1 === board.length) {
+        // expand board down
+        board.push(new Array<IAvilaTile | undefined>(board[0].length).fill(undefined));
+    }
+    if (placedTileLocation.X === 0) {
+        // expand board to the left
+        for (let i = 0; i < board.length; i++) {
+            board[i].unshift(undefined);
+        }
+    }
+    if (placedTileLocation.Y === 0) {
+        // expand board up
+        board.unshift(new Array<IAvilaTile | undefined>(board[0].length).fill(undefined));
     }
 
     return board;

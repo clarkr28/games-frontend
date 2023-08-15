@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, createEmptyBoard, createPlayer } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, createEmptyBoard, createPlayer, expandBoard } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -14,7 +14,7 @@ export interface AvilaState {
 }
 
 const initialState: AvilaState = {
-    board: createEmptyBoard(5, 5),
+    board: createEmptyBoard(1, 1),
     currentTurn: 0,
     currentTile: undefined,
     remainingTiles: [],
@@ -32,6 +32,7 @@ export const avilaSlice = createSlice({
             if (state.board[y][x] === undefined) {
                 // place the tile on the board
                 state.board[y][x] = state.currentTile;
+                state.board = expandBoard(state.board, action.payload);
                 // set the next tile
                 state.currentTile = state.remainingTiles.pop();
                 state.remainingTiles = [...state.remainingTiles];
