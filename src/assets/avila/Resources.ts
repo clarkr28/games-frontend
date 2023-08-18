@@ -1,3 +1,4 @@
+import { title } from "process";
 import { Point } from "../ConnectFourResources";
 
 export enum AvilaGameStatus {
@@ -149,6 +150,22 @@ export function getEdgeType(tile: IAvilaTile, edge: number): AvilaFeature {
     return tile.edges[edge].type;
 }
 
+export function getTopEdge(tile: IAvilaTile): AvilaFeature {
+    return getEdgeType(tile, 0);
+}
+
+export function getRightEdge(tile: IAvilaTile): AvilaFeature {
+    return getEdgeType(tile, 1);
+}
+
+export function getBottomEdge(tile: IAvilaTile): AvilaFeature {
+    return getEdgeType(tile, 2);
+}
+
+export function getLeftEdge(tile: IAvilaTile): AvilaFeature {
+    return getEdgeType(tile, 3);
+}
+
 /**
  * determine the type of connection between two edges of a tile
  * @param tile the tile to determine the adjacency type for
@@ -207,6 +224,59 @@ export function expandBoard(board: AvilaBoard, placedTileLocation: Point): Avila
     }
 
     return board;
+}
+
+export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IAvilaTile): boolean {
+    // don't place a tile if there's already a tile there
+    if (board[tileLocation.Y][tileLocation.X] !== undefined) {
+        return false;
+    }
+
+    // special case when the board is a 1x1 grid
+    if (board.length === 1 && board[0].length === 1) {
+        return true;
+    }
+
+    let hasAdjacentTile = false;
+
+    // check up
+    const adjacentUp = board[tileLocation.Y - 1] && board[tileLocation.Y - 1][tileLocation.X];
+    if (tileLocation.Y > 0 && adjacentUp) {
+        hasAdjacentTile = true;
+        // check edge compatibility
+        if (getTopEdge(newTile) !== getBottomEdge(adjacentUp)) {
+            return false;
+        }
+    }
+
+    // check down
+    const adjacentDown = board[tileLocation.Y + 1] && board[tileLocation.Y][tileLocation.X];
+    if (tileLocation.Y < board.length - 1 && adjacentDown) {
+        hasAdjacentTile = true;
+        if (getBottomEdge(newTile) !== getTopEdge(adjacentDown)) {
+            return false;
+        }
+    }
+
+    // check left
+    const adjacentLeft = board[tileLocation.Y][tileLocation.X - 1];
+    if (tileLocation.X > 0 && adjacentLeft) {
+        hasAdjacentTile = true;
+        if (getLeftEdge(newTile) !== getRightEdge(adjacentLeft)) {
+            return false;
+        }
+    }
+
+    // check right
+    const adjacentRight = board[tileLocation.Y][tileLocation.X + 1];
+    if (tileLocation.X < board[0].length - 1 && adjacentRight) {
+        hasAdjacentTile = true;
+        if (getRightEdge(newTile) !== getLeftEdge(adjacentRight)) {
+            return false;
+        }
+    }
+
+    return hasAdjacentTile;
 }
 
 

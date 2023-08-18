@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, createEmptyBoard, createPlayer, expandBoard } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, createEmptyBoard, createPlayer, expandBoard } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -29,7 +29,7 @@ export const avilaSlice = createSlice({
         recordMove: (state, action: PayloadAction<Point>) => {
             const x = action.payload.X;
             const y = action.payload.Y;
-            if (state.board[y][x] === undefined) {
+            if (state.currentTile && canPlaceTile(state.board, action.payload, state.currentTile)) {
                 // place the tile on the board
                 state.board[y][x] = state.currentTile;
                 state.board = expandBoard(state.board, action.payload);
