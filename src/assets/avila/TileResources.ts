@@ -150,7 +150,7 @@ STANDARD_TILES.push(tileGenerator("R_R_R_R"));
  * @param tiles the tiles to shuffle
  */
 export function shuffleTiles(tiles: IAvilaTile[]): void {
-    for (let i = tiles.length; i >= 0; i--) {
+    for (let i = tiles.length - 1; i >= 0; i--) {
         const randIndex = Math.floor(Math.random() * i);
         const temp = tiles[randIndex];
         tiles[randIndex] = tiles[i];
