@@ -40,111 +40,29 @@ export interface IAvilaTile {
     monestary?: boolean;
 }
 
-export const SAMPLE_TILE_1: IAvilaTile = {
-    edges: [
-        {
-            type: AvilaFeature.City,
-        },
-        {
-            type: AvilaFeature.Road,
-            connectedEdges: [2],
-        },
-        {
-            type: AvilaFeature.Road,
-            connectedEdges: [1],
-        },
-        {
-            type: AvilaFeature.Field,
-        },
-    ]
-};
+/**
+ * rotate a tile clockwise 
+ * @param tile the tile to rotate
+ * @returns a new tile object that has been rotated clockwise
+ */
+export function rotateTile(tile: IAvilaTile): IAvilaTile {
+    const newTile: IAvilaTile = { 
+        ...tile, 
+        edges: [
+            tile.edges[3],
+            tile.edges[0],
+            tile.edges[1],
+            tile.edges[2],
+        ]
+    };
 
-export const SAMPLE_TILE_2: IAvilaTile = {
-    edges: [
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [1],
-        },
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [0],
-        },
-        {
-            type: AvilaFeature.Field,
-        },
-        {
-            type: AvilaFeature.Road,
-        },
-    ]
-};
+    // rotate the edge connections
+    for (let edgeIndex = 0; edgeIndex < 4; edgeIndex++) {
+        newTile.edges[edgeIndex].connectedEdges = newTile.edges[edgeIndex].connectedEdges?.map(connection => (connection + 1) % 4);
+    }
 
-export const SAMPLE_TILE_3: IAvilaTile = {
-    edges: [
-        {
-            type: AvilaFeature.Road,
-            connectedEdges: [2],
-        },
-        {
-            type: AvilaFeature.City,
-        },
-        {
-            type: AvilaFeature.Road,
-            connectedEdges: [0],
-        },
-        {
-            type: AvilaFeature.Field,
-        },
-    ]
-};
-
-export const SAMPLE_TILE_4: IAvilaTile = {
-    edges: [
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [1,2],
-        },
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [0,2],
-        },
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [0,1],
-        },
-        {
-            type: AvilaFeature.Field,
-        },
-    ]
-};
-
-export const SAMPLE_TILE_5: IAvilaTile = {
-    edges: [
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [1,2,3],
-        },
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [0,2,3],
-        },
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [0,1,3],
-        },
-        {
-            type: AvilaFeature.City,
-            connectedEdges: [0,1,2],
-        },
-    ]
-};
-
-export const SAMPLE_TILES = [
-    SAMPLE_TILE_1,
-    SAMPLE_TILE_2,
-    SAMPLE_TILE_3,
-    SAMPLE_TILE_4,
-    SAMPLE_TILE_5,
-];
+    return newTile;
+}
 
 export function getEdgeType(tile: IAvilaTile, edge: number): AvilaFeature {
     return tile.edges[edge].type;
@@ -250,7 +168,7 @@ export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IA
     }
 
     // check down
-    const adjacentDown = board[tileLocation.Y + 1] && board[tileLocation.Y][tileLocation.X];
+    const adjacentDown = board[tileLocation.Y + 1] && board[tileLocation.Y + 1][tileLocation.X];
     if (tileLocation.Y < board.length - 1 && adjacentDown) {
         hasAdjacentTile = true;
         if (getBottomEdge(newTile) !== getTopEdge(adjacentDown)) {

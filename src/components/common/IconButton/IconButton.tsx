@@ -12,7 +12,7 @@ export interface IIconButtonProps {
     displayText: string;
     icon: IconProp;
     color: IconButtonColor;
-    clickCallback: () => void;
+    clickCallback?: () => void;
     disabled?: boolean;
 }
 
@@ -23,7 +23,7 @@ export const IconButton: React.FC<IIconButtonProps> = (props) => {
             className={`${styles.iconButton} ${colorToStyle(color)} ${
                 disabled ? styles.disabled : ""
             }`}
-            onClick={clickCallback}
+            onClick={() => clickCallback && clickCallback()}
             disabled={disabled}
         >
             <FontAwesomeIcon icon={icon} />

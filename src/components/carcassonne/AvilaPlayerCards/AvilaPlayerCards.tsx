@@ -1,6 +1,7 @@
 import React from "react";
-import { useAppSelector } from "../../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+    rotateCurrentTile,
     selectAvilaCurrentTile,
     selectAvilaCurrentTurn,
     selectAvilaPlayerData,
@@ -11,6 +12,7 @@ export const AvilaPlayerCards: React.FC<{}> = () => {
     const players = useAppSelector(selectAvilaPlayerData);
     const turnIndex = useAppSelector(selectAvilaCurrentTurn);
     const currentTile = useAppSelector(selectAvilaCurrentTile);
+    const dispatch = useAppDispatch();
 
     return (
         <div>
@@ -20,6 +22,7 @@ export const AvilaPlayerCards: React.FC<{}> = () => {
                     playerData={player}
                     playerName={`Player ${index + 1}`}
                     tile={turnIndex === index ? currentTile : undefined}
+                    rotateCallback={() => dispatch(rotateCurrentTile())}
                 />
             ))}
         </div>

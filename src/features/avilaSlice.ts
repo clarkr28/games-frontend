@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, createEmptyBoard, createPlayer, expandBoard } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, createEmptyBoard, createPlayer, expandBoard, rotateTile } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -38,20 +38,25 @@ export const avilaSlice = createSlice({
                 state.remainingTiles = [...state.remainingTiles];
                 // advance turn to the next player
                 state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
+                console.log(`remaining tiles: ${state.remainingTiles.length}`); // trying to debug issue
             }    
         },
         startGame: (state) => {
-            console.log('hit');
             state.status = AvilaGameStatus.Playing;
             // create the shuffled tiles and set the current tiles
             const tiles = createTiles(true, true);
             state.currentTile = tiles.pop(); 
             state.remainingTiles = tiles;
+        },
+        rotateCurrentTile: (state) => {
+            if (state.currentTile) {
+                state.currentTile = rotateTile(state.currentTile);
+            }
         }
     }
 });
 
-export const { recordMove, startGame } = avilaSlice.actions;
+export const { recordMove, startGame, rotateCurrentTile } = avilaSlice.actions;
 
 export const selectAvilaBoard = (state: RootState) => state.avila.board;
 export const selectAvilaCurrentTurn = (state: RootState) => state.avila.currentTurn;
