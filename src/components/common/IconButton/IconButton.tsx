@@ -11,16 +11,17 @@ export enum IconButtonColor {
 export interface IIconButtonProps {
     displayText: string;
     icon: IconProp;
-    color: IconButtonColor;
+    color?: IconButtonColor;
     clickCallback?: () => void;
     disabled?: boolean;
 }
 
 export const IconButton: React.FC<IIconButtonProps> = (props) => {
     const { displayText, icon, clickCallback, color, disabled } = props;
+    const colorToUse = color || IconButtonColor.Grey;
     return (
         <button
-            className={`${styles.iconButton} ${colorToStyle(color)} ${
+            className={`${styles.iconButton} ${colorToStyle(colorToUse)} ${
                 disabled ? styles.disabled : ""
             }`}
             onClick={() => clickCallback && clickCallback()}

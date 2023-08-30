@@ -1,3 +1,6 @@
+@import "../../common/Colors.module.scss";
+
+// constants 
 $tileWidth: 75px;
 $tileHeight: $tileWidth;
 
@@ -10,6 +13,7 @@ $tileHeight: $tileWidth;
     flex-direction: column;
     justify-content: space-between;
     font-size: 12px;
+    background-color: white;
 
     & > div {
         height: calc($tileHeight / 5);
@@ -28,4 +32,48 @@ $tileHeight: $tileWidth;
 .adjacencyRow {
     display: flex;
     justify-content: space-around;
+}
+
+.canPlace:hover {
+    cursor: pointer;
+
+    &.greenHover {
+        color: $greenBackground;
+    }
+
+    &.redHover {
+        color: $redBackground;
+    }
+
+    &.purpleHover {
+        color: $purpleBackground;
+    }
+
+    &.yellowHover {
+        color: $yellowBackground;
+    }
+
+    &.blueHover {
+        color: $blueBackground;
+    }
+}
+
+.green {
+    color: $greenBackground;
+}
+
+.red {
+    color: $redBackground;
+}
+
+.purple {
+    color: $purpleBackground;
+}
+
+.yellow {
+    color: $yellowBackground;
+}
+
+.blue {
+    color: $blueBackground;
 }

@@ -5,8 +5,10 @@
     width: $tileWidth;
     height: $tileHeight;
 
-    &:hover {
-        cursor: pointer;
-        background-color: #eee;
+    &.hoverable {
+        &:hover {
+            cursor: pointer;
+            background-color: #eee;
+        }
     }
 }

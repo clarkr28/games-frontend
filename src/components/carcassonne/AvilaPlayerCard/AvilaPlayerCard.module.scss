@@ -1,9 +1,12 @@
+@import "../../common/Colors.module.scss";
+
 .playerCard {
     border: 2px solid black;
     border-radius: 1rem;
     box-shadow: 0 0 6px 4px #ccc;
     margin: 1rem;
     padding: 1rem;
+    width: 120px;
 
     p {
         margin: 0.2rem;
@@ -11,5 +14,29 @@
 
     .tileWrapper {
         margin-bottom: 0.5rem;
+
+        & > div {
+            margin: 0 auto;
+        }
     }
+}
+
+.green {
+    background-color: $greenBackground;
+}
+
+.red {
+    background-color: $redBackground;
+}
+
+.purple {
+    background-color: $purpleBackground;
+}
+
+.yellow {
+    background-color: $yellowBackground;
+}
+
+.blue {
+    background-color: $blueBackground;
 }

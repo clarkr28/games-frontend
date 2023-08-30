@@ -2,14 +2,25 @@ import React from "react";
 import styles from "./AvilaGrid.module.scss";
 import { AvilaTile } from "../AvilaTile/AvilaTile";
 import { AvilaEmptyTile } from "../AvilaEmptyTile/AvilaEmptyTile";
-import { AvilaBoard } from "../../../assets/avila/Resources";
+import { AvilaBoard, AvilaPlayerColor } from "../../../assets/avila/Resources";
+import { Point } from "../../../assets/ConnectFourResources";
 
 export interface IAvilaGridProps {
     gridData: AvilaBoard;
+    placingTile?: boolean;
+    placingMeeple?: boolean;
+    lastTilePlaced?: Point;
+    playerTurnColor?: AvilaPlayerColor;
 }
 
 export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
-    const { gridData } = props;
+    const {
+        gridData,
+        placingTile,
+        placingMeeple,
+        lastTilePlaced,
+        playerTurnColor,
+    } = props;
 
     return (
         <div className={styles.grid}>
@@ -17,9 +28,24 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                 <div key={row}>
                     {gridRow.map((cell, col) =>
                         cell ? (
-                            <AvilaTile key={col} tile={cell} />
+                            <AvilaTile
+                                key={col}
+                                tile={cell}
+                                placeMeepleColor={
+                                    lastTilePlaced?.X === col &&
+                                    lastTilePlaced?.Y === row &&
+                                    placingMeeple
+                                        ? playerTurnColor
+                                        : undefined
+                                }
+                            />
                         ) : (
-                            <AvilaEmptyTile key={col} row={row} col={col} />
+                            <AvilaEmptyTile
+                                key={col}
+                                row={row}
+                                col={col}
+                                canPlaceTile={placingTile || false}
+                            />
                         )
                     )}
                 </div>

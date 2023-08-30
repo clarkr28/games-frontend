@@ -1,9 +1,10 @@
-import { title } from "process";
 import { Point } from "../ConnectFourResources";
 
 export enum AvilaGameStatus {
     Pregame,
-    Playing,
+    PlacingTile,
+    PlacingMeeple,
+    TriggerFinishMove,
     Done,
 }
 
@@ -25,6 +26,15 @@ export interface IAvilaEdge {
     connectedEdges?: number[];
 }
 
+export interface IMeeplePlacement {
+    playerIndex: number;
+    playerColor: AvilaPlayerColor;
+    // optional when placed on monestary
+    edgeIndex?: number;
+    // monestaries don't be belong to an edge
+    onMonestary?: boolean; 
+}
+
 
 /**
  * representation of an Avila tile:
@@ -38,6 +48,7 @@ export interface IAvilaTile {
     edges: IAvilaEdge[];
     shield?: boolean;
     monestary?: boolean;
+    meeple?: IMeeplePlacement;
 }
 
 /**
@@ -197,6 +208,10 @@ export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IA
     return hasAdjacentTile;
 }
 
+export function awardPoints(board: AvilaBoard, tileLocation: Point): number {
+    return 0;
+}
+
 
 /**
  * 
@@ -211,11 +226,11 @@ export interface IAvilaPlayer {
 }
 
 export enum AvilaPlayerColor {
-    Black,
-    Red,
-    Yellow,
-    Blue,
-    Green,
+    Red = 'red',
+    Yellow = 'yellow',
+    Blue = 'blue',
+    Green = 'green',
+    Purple = 'purple'
 }
 
 export function createPlayer(color: AvilaPlayerColor): IAvilaPlayer {

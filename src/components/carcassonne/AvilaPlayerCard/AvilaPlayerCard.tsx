@@ -12,14 +12,27 @@ export interface IAvilaPlayerCardProps {
     playerData: IAvilaPlayer;
     tile?: IAvilaTile;
     playerName: string;
-    rotateCallback?: () => void;
+    rotateCallback: () => void;
+    placingMeeple: boolean;
+    skipMeepleCallback: () => void;
 }
 
 export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
-    const { playerData, tile, playerName, rotateCallback } = props;
+    const {
+        playerData,
+        tile,
+        playerName,
+        rotateCallback,
+        placingMeeple,
+        skipMeepleCallback,
+    } = props;
 
     return (
-        <div className={styles.playerCard}>
+        <div
+            className={`${styles.playerCard} ${
+                styles[playerData.color.toString()]
+            }`}
+        >
             <p>
                 <strong>{playerName}</strong>
             </p>
@@ -30,8 +43,14 @@ export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
                 <IconButton
                     displayText="Rotate"
                     icon={solid("rotate")}
-                    color={IconButtonColor.Grey}
                     clickCallback={rotateCallback}
+                />
+            )}
+            {placingMeeple && (
+                <IconButton
+                    displayText="Skip Meeple"
+                    icon={solid("ban")}
+                    clickCallback={skipMeepleCallback}
                 />
             )}
             <p>{`Meeple: ${playerData.availableMeeple}`}</p>
