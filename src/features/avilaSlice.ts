@@ -36,10 +36,21 @@ export const avilaSlice = createSlice({
             const x = action.payload.X;
             const y = action.payload.Y;
             if (state.currentTile && canPlaceTile(state.board, action.payload, state.currentTile)) {
+                // save the board width and height before placing the tile
+                const startWidth = state.board[0].length;
+                const startHeight = state.board.length;
                 // place the tile on the board
                 state.board[y][x] = state.currentTile;
                 state.lastTilePlaced = action.payload;
                 state.board = expandBoard(state.board, action.payload);
+                // adjust the X value of the last placed tile if necessary
+                if (state.lastTilePlaced.X === 0 && state.board[0].length > startWidth) {
+                    state.lastTilePlaced.X++;
+                }
+                // adjust the Y value of the last placed tile if necessary
+                if (state.lastTilePlaced.Y === 0 && state.board.length > startHeight) {
+                    state.lastTilePlaced.Y++;
+                }
 
                 // set to placing meeple if they have one to place
                 state.status = state.playerData[state.currentTurn].availableMeeple 
@@ -56,6 +67,9 @@ export const avilaSlice = createSlice({
                     edgeIndex: action.payload.edgeIndex,
                     onMonestary: action.payload.onMonestary,
                 };
+
+                // decrease meeple count for the player that placed it
+                state.playerData[state.currentTurn].availableMeeple--; 
 
                 // trigger advance turn to the next player
                 state.status = AvilaGameStatus.TriggerFinishMove;
