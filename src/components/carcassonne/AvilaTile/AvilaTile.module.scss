@@ -38,42 +38,42 @@ $tileHeight: $tileWidth;
     cursor: pointer;
 
     &.greenHover {
-        color: $greenBackground;
+        color: $greenPlayerAccent;
     }
 
     &.redHover {
-        color: $redBackground;
+        color: $redPlayerAccent;
     }
 
     &.purpleHover {
-        color: $purpleBackground;
+        color: $purplePlayerAccent;
     }
 
-    &.yellowHover {
-        color: $yellowBackground;
+    &.orangeHover {
+        color: $orangePlayerAccent;
     }
 
     &.blueHover {
-        color: $blueBackground;
+        color: $bluePlayerAccent;
     }
 }
 
 .green {
-    color: $greenBackground;
+    color: $greenPlayerAccent;
 }
 
 .red {
-    color: $redBackground;
+    color: $redPlayerAccent;
 }
 
 .purple {
-    color: $purpleBackground;
+    color: $purplePlayerAccent;
 }
 
-.yellow {
-    color: $yellowBackground;
+.orange {
+    color: $orangePlayerAccent;
 }
 
 .blue {
-    color: $blueBackground;
+    color: $bluePlayerAccent;
 }

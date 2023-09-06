@@ -227,7 +227,7 @@ export interface IAvilaPlayer {
 
 export enum AvilaPlayerColor {
     Red = 'red',
-    Yellow = 'yellow',
+    Orange = 'orange',
     Blue = 'blue',
     Green = 'green',
     Purple = 'purple'

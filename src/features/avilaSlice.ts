@@ -20,7 +20,7 @@ const initialState: AvilaState = {
     currentTile: undefined,
     remainingTiles: [],
     status: AvilaGameStatus.Pregame,
-    playerData: [createPlayer(AvilaPlayerColor.Green), createPlayer(AvilaPlayerColor.Blue), createPlayer(AvilaPlayerColor.Purple), createPlayer(AvilaPlayerColor.Red), createPlayer(AvilaPlayerColor.Yellow)],
+    playerData: [createPlayer(AvilaPlayerColor.Green), createPlayer(AvilaPlayerColor.Blue), createPlayer(AvilaPlayerColor.Purple), createPlayer(AvilaPlayerColor.Red), createPlayer(AvilaPlayerColor.Orange)],
 };
 
 export interface PlaceMeepleData {

@@ -12,6 +12,13 @@
         margin: 0.2rem;
     }
 
+    .playerName {
+        display: inline-block;
+        padding: 2px 13px;
+        border-radius: 7px;
+        color: white;
+    }
+
     .tileWrapper {
         margin-bottom: 0.5rem;
 
@@ -22,21 +29,21 @@
 }
 
 .green {
-    background-color: $greenBackground;
+    background-color: $greenPlayerAccent;
 }
 
 .red {
-    background-color: $redBackground;
+    background-color: $redPlayerAccent;
 }
 
 .purple {
-    background-color: $purpleBackground;
+    background-color: $purplePlayerAccent;
 }
 
-.yellow {
-    background-color: $yellowBackground;
+.orange {
+    background-color: $orangePlayerAccent;
 }
 
 .blue {
-    background-color: $blueBackground;
+    background-color: $bluePlayerAccent;
 }

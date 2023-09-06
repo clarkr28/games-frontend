@@ -28,12 +28,12 @@ export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
     } = props;
 
     return (
-        <div
-            className={`${styles.playerCard} ${
-                styles[playerData.color.toString()]
-            }`}
-        >
-            <p>
+        <div className={styles.playerCard}>
+            <p
+                className={`${styles.playerName} ${
+                    styles[playerData.color.toString()]
+                }`}
+            >
                 <strong>{playerName}</strong>
             </p>
             <div className={tile ? styles.tileWrapper : ""}>
