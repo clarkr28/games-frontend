@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, createEmptyBoard, createPlayer, expandBoard, rotateTile } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, createEmptyBoard, createPlayer, expandBoard, isFeatureOccupied, rotateTile } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -58,21 +58,35 @@ export const avilaSlice = createSlice({
             }    
         },
         placeMeeple: (state, action: PayloadAction<PlaceMeepleData>) => {
-            // TODO: make sure the meeple can actually be placed
             if (state.lastTilePlaced) {
                 const { X, Y } = state.lastTilePlaced;
-                state.board[Y][X]!.meeple = { 
-                    playerIndex: state.currentTurn, 
-                    playerColor: state.playerData[state.currentTurn].color,
-                    edgeIndex: action.payload.edgeIndex,
-                    onMonestary: action.payload.onMonestary,
-                };
+                let meeplePlaced = false;
+                if (action.payload.onMonestary) {
+                    // the last tile placed was a monestary, we can assume the monestary is unoccupied
+                    meeplePlaced = true;
+                    state.board[Y][X]!.meeple = { 
+                        playerIndex: state.currentTurn, 
+                        playerColor: state.playerData[state.currentTurn].color,
+                        edgeIndex: action.payload.edgeIndex,
+                        onMonestary: action.payload.onMonestary,
+                    };
+                } else if (action.payload.edgeIndex !== undefined && !isFeatureOccupied(state.board, state.lastTilePlaced, action.payload.edgeIndex)) {
+                    meeplePlaced = true;
+                    state.board[Y][X]!.meeple = { 
+                        playerIndex: state.currentTurn, 
+                        playerColor: state.playerData[state.currentTurn].color,
+                        edgeIndex: action.payload.edgeIndex,
+                        onMonestary: action.payload.onMonestary,
+                    };
+                }
 
-                // decrease meeple count for the player that placed it
-                state.playerData[state.currentTurn].availableMeeple--; 
 
-                // trigger advance turn to the next player
-                state.status = AvilaGameStatus.TriggerFinishMove;
+                if (meeplePlaced) {
+                    // decrease meeple count for the player that placed it
+                    state.playerData[state.currentTurn].availableMeeple--; 
+                    // trigger advance turn to the next player
+                    state.status = AvilaGameStatus.TriggerFinishMove;
+                }
             }
         },
         finishMove: (state) => {

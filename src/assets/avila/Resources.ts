@@ -208,6 +208,93 @@ export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IA
     return hasAdjacentTile;
 }
 
+/**
+ * determine if a feature is occupied
+ * @param board the board to process
+ * @param tileLocation the location of the piece to process
+ * @param edgeIndex the edge of the tileLocation to check if the feature is free
+ * @returns true if the feature is occupied 
+ */
+export function isFeatureOccupied(board: AvilaBoard, tileLocation: Point, edgeIndex: number): boolean {
+    // when implementing, give careful consideration to cyclical pieces. A cache will have to be kept of visited tiles.
+    return searchFeatureForOccupation(board, tileLocation, edgeIndex, new Map<string, boolean>());
+}
+
+const encodeLocation = (location: Point) => `${location.X},${location.Y}`
+
+/**
+ * recursively search a feature across the board to see if it is already occupied
+ * @param board the board to process
+ * @param tileLoc location of the tile to process
+ * @param entryEdge edge of the tile that the call was entered from
+ * @param pastTiles keeps track of the tiles that have already been processed
+ * @returns true if the feature is occupied
+ */
+function searchFeatureForOccupation(board: AvilaBoard, tileLoc: Point, entryEdge: number, pastTiles: Map<string, boolean>): boolean {
+    // make sure the tile location is valid
+    if (tileLoc.X < 0 || tileLoc.Y < 0 || tileLoc.Y >= board.length || tileLoc.X >= board[0].length) {
+        return false;
+    }
+
+    // make sure the tile is defined
+    const tile = board[tileLoc.Y][tileLoc.X];
+    if (tile === undefined) {
+        return false;
+    }
+
+    // make sure the tile hasn't been processed already
+    const encodedLocation = encodeLocation(tileLoc);
+    if (pastTiles.has(encodedLocation)) {
+        return false; 
+    }
+    const isFirstCall = pastTiles.keys().next().done;
+    // the tile is valid and unprocessed, store it in the map
+    pastTiles.set(encodedLocation, true);
+
+    // see if the feature on this tile is occupied
+    if (tile.meeple?.edgeIndex !== undefined) {
+        if (tile.meeple.edgeIndex === entryEdge || tile.edges[entryEdge].connectedEdges?.indexOf(tile.meeple.edgeIndex) !== -1) {
+            return true;
+        }
+    }
+
+    if (isFirstCall && searchAdjacentTile(board, entryEdge, tileLoc, pastTiles)) {
+        return true;
+    }
+
+    // search adjacent tiles that aren't from the edge we got here from
+    return tile.edges[entryEdge].connectedEdges?.some(conEdge => 
+        searchAdjacentTile(board, conEdge, tileLoc, pastTiles)
+    ) || false;
+}
+
+/**
+ * search the tile adjacent to this edge to see if its feature is already occupied
+ * @param board the board to process
+ * @param conEdge the edge of a tile to recursively search in that direction
+ * @param originalLocation the tile currently being processed
+ * @param pastTiles keeps track of tiles that have already been processed
+ * @returns true if the feature already has a meeple on it
+ */
+function searchAdjacentTile(board: AvilaBoard, conEdge: number, originalLocation: Point, pastTiles: Map<string, boolean>): boolean {
+    const newLocation: Point = {X: originalLocation.X, Y: originalLocation.Y};
+    let newEntryEdge = 0;
+    if (conEdge === 0) {
+        newLocation.Y--;
+        newEntryEdge = 2; // entering from the bottom
+    } else if (conEdge === 1) {
+        newLocation.X++;
+        newEntryEdge = 3; // entering from the left
+    } else if (conEdge === 2) {
+        newLocation.Y++;
+        newEntryEdge = 0; // entering from the top
+    } else if (conEdge === 3) {
+        newLocation.X--;
+        newEntryEdge = 1; // entering from the right
+    }
+    return searchFeatureForOccupation(board, newLocation, newEntryEdge, pastTiles);
+}
+
 export function awardPoints(board: AvilaBoard, tileLocation: Point): number {
     return 0;
 }
