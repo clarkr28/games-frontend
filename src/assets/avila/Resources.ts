@@ -433,11 +433,13 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
 
     // search edge we came from if it's the first time
     let connectivityTotal = 0;
-    const firstEdgeValue = recurseCompletedFeatureHelper(board, entryEdge, tileLoc, meeples, pastTiles);
-    if (firstEdgeValue === -1) {
-        return -1;
+    if (isFirstCall) {
+        const firstEdgeValue = recurseCompletedFeatureHelper(board, entryEdge, tileLoc, meeples, pastTiles);
+        if (firstEdgeValue === -1) {
+            return -1;
+        }
+        connectivityTotal += firstEdgeValue;
     }
-    connectivityTotal += firstEdgeValue;
 
     // search connected edges and count their points
     for (const conEdge of tile.edges[entryEdge].connectedEdges || []) {
