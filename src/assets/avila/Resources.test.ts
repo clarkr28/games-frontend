@@ -3,10 +3,6 @@ import { AvilaBoard, AvilaPlayerColor, IAvilaPlayer, completedFeatureSearch, cre
 import { tileGenerator } from "./TileResources";
 
 
-it("poc", () => {
-    expect(true).toBe(true);
-});
-
 it("Score Feature - cyclical where last piece is split", () => {
     const board: AvilaBoard = [];
     board.push([undefined, undefined, undefined, undefined]);
@@ -14,18 +10,24 @@ it("Score Feature - cyclical where last piece is split", () => {
     board.push([undefined, tileGenerator("RR_F_F"), tileGenerator("R_F_F_R"), undefined]);
     board.push([undefined, undefined, undefined, undefined]);
 
-    // place a meeple
-    board[1][1]!.meeple = {playerIndex: 0, playerColor: AvilaPlayerColor.Green, edgeIndex: 1};
-
     const playerData: IAvilaPlayer[] = [
         createPlayer(AvilaPlayerColor.Green),
         createPlayer(AvilaPlayerColor.Orange)
     ];
+    const startingMeepleCount = playerData[0].availableMeeple;
+
+    // place a meeple
+    board[1][1]!.meeple = {playerIndex: 0, playerColor: AvilaPlayerColor.Green, edgeIndex: 1};
+    playerData[0].availableMeeple--;
 
     // tile that was placed last
     const lastPlacedTile: Point = {Y: 2, X: 2};
     const results = completedFeatureSearch(board, lastPlacedTile, playerData);
 
     expect(board[1][1]!.meeple).toBe(undefined);
+    expect(results?.newPlayerData[1].score).toBe(0);
+    expect(results?.newPlayerData[0].availableMeeple).toBe(startingMeepleCount);
     expect(results?.newPlayerData[0].score).toBe(4);
-})
+});
+
+// TODO: add unit test for montestary completeness
