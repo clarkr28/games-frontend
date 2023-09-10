@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, createEmptyBoard, createPlayer, expandBoard, isFeatureOccupied, rotateTile } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, completedFeatureSearch, createEmptyBoard, createPlayer, expandBoard, isFeatureOccupied, rotateTile } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -91,6 +91,13 @@ export const avilaSlice = createSlice({
         },
         finishMove: (state) => {
             // TODO: completed features should be scored
+            if (state.lastTilePlaced) {
+                const results = completedFeatureSearch(state.board, state.lastTilePlaced, state.playerData);
+                if (results) {
+                    state.board = results.newBoard;
+                    state.playerData = results.newPlayerData;
+                }
+            }
             // advance turn to the next player, set the next tile
             state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
             state.currentTile = state.remainingTiles.pop();
