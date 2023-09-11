@@ -222,6 +222,8 @@ export function isFeatureOccupied(board: AvilaBoard, tileLocation: Point, edgeIn
 
 const encodeLocation = (location: Point) => `${location.X},${location.Y}`
 
+const encodeLocationEdge = (location: Point, edge: number) => `${location.X},${location.Y},${edge}`;
+
 /**
  * validate that a point is on the board
  * @param location the location on the board to validate 
@@ -335,6 +337,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
 
     // evaluate all edges to determine if any features were completed
     const featureResults: ICompleteEdgeData[] = [];
+    const pastTiles = new Map<string, boolean>();
     for (let i = 0; i < 4; i++) {
         if (tile.edges[i].type === AvilaFeature.Field) {
             continue; // fields are worthless
@@ -347,7 +350,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
 
         console.log(`searching edge ${i}`);
         const meeples = new Map<number, Point[]>();
-        const points = recurseCompletedFeature(board, tileLoc, i, meeples, new Map<string, boolean>());
+        const points = recurseCompletedFeature(board, tileLoc, i, meeples, pastTiles);
         console.log(points);
         if (points > -1 && meeples.size) {
             featureResults.push({
