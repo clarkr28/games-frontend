@@ -222,8 +222,6 @@ export function isFeatureOccupied(board: AvilaBoard, tileLocation: Point, edgeIn
 
 const encodeLocation = (location: Point) => `${location.X},${location.Y}`
 
-const encodeLocationEdge = (location: Point, edge: number) => `${location.X},${location.Y},${edge}`;
-
 /**
  * validate that a point is on the board
  * @param location the location on the board to validate 
@@ -348,10 +346,8 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
             continue;
         }
 
-        console.log(`searching edge ${i}`);
         const meeples = new Map<number, Point[]>();
         const points = recurseCompletedFeature(board, tileLoc, i, meeples, pastTiles);
-        console.log(points);
         if (points > -1 && meeples.size) {
             featureResults.push({
                 points: points,
@@ -359,6 +355,19 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
             });
         }
     } 
+
+    // evaluate any affected monestaries
+    const affectedMonestaries = findAffectedMonestaries(board, tileLoc);
+    affectedMonestaries.forEach(monPoint => {
+        if (monestaryNeedsScoring(board, monPoint)) {
+            const meepleMap: Map<number, Point[]> = new Map();
+            meepleMap.set(board[monPoint.Y][monPoint.X]!.meeple!.playerIndex, [monPoint]);
+            featureResults.push({
+                points: 9,
+                meepleMap: meepleMap
+            });
+        }
+    });
 
     // for any completed features, remove meeples from the board and update point totals
     featureResults.forEach(result => {
@@ -490,6 +499,55 @@ function recurseCompletedFeatureHelper(board: AvilaBoard, conEdge: number, origi
         newEntryEdge = 1; // entering from the right
     }
     return recurseCompletedFeature(board, newLocation, newEntryEdge, meeples, pastTiles);
+}
+
+const MonestaryOffsets: Point[] = [
+    {X: -1, Y: -1},
+    {X: 0, Y: -1},
+    {X: 1, Y: -1},
+    {X: -1, Y: 0},
+    {X: 0, Y: 0},
+    {X: 1, Y: 0},
+    {X: -1, Y: 1},
+    {X: 0, Y: 1},
+    {X: 1, Y: 1},
+];
+
+/**
+ * find monestaries around a point that have meeples
+ * @param board the board to search
+ * @param startPoint the point to search around 
+ * @returns points around the starting point that are monestaries and have meeples, including the starting point
+ */
+export function findAffectedMonestaries(board: AvilaBoard, startPoint: Point): Point[] {
+    const monestaries: Point[] = [];
+    MonestaryOffsets.forEach(offset => {
+        const x = startPoint.X + offset.X;
+        const y = startPoint.Y + offset.Y;
+        const tile = board[y][x];
+        if (tile && tile.monestary && tile.meeple?.onMonestary) {
+            monestaries.push({Y: y, X: x});
+        }
+    })
+    return monestaries;
+}
+
+/**
+ * determine if a monestary needs to be scored
+ * @param board the board to search
+ * @param loc the location of a monestary
+ * @returns true if the monestary is complete and still has a meeple on it
+ */
+export function monestaryNeedsScoring(board: AvilaBoard, loc: Point): boolean {
+    const tile = board[loc.Y][loc.X];
+    // false if the tile isn't a monestary or the tile isn't occupied
+    if (!tile || !tile.monestary || !tile.meeple) {
+        return false
+    }
+
+    return MonestaryOffsets.every(offset => {
+        return board[loc.Y + offset.Y][loc.X + offset.X]; // evaluates to true if it exists
+    })
 }
 
 
