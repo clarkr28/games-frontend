@@ -347,7 +347,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
         }
 
         const meeples = new Map<number, Point[]>();
-        const points = recurseCompletedFeature(board, tileLoc, i, meeples, pastTiles);
+        const points = recurseCompletedFeature(board, tileLoc, i, meeples, pastTiles, true);
         pastTiles.delete(encodeLocation(tileLoc));
         if (points > -1 && meeples.size) {
             featureResults.push({
@@ -411,7 +411,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
     };
 }
 
-function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: number, meeples: Map<number, Point[]>, pastTiles: Map<string, boolean>): number {
+function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: number, meeples: Map<number, Point[]>, pastTiles: Map<string, boolean>, firstCall?: boolean): number {
     // make sure the tile location is valid
     if (!isLocationValid(tileLoc, board)) {
         return -1;
@@ -428,7 +428,6 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
     if (pastTiles.has(encodedLocation)) {
         return 0; 
     }
-    const isFirstCall = pastTiles.size === 0;
     // the tile is valid and unprocessed, store it in the map
     pastTiles.set(encodedLocation, true);
 
@@ -446,7 +445,7 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
 
     // search edge we came from if it's the first time
     let connectivityTotal = 0;
-    if (isFirstCall) {
+    if (firstCall) {
         const firstEdgeValue = recurseCompletedFeatureHelper(board, entryEdge, tileLoc, meeples, pastTiles);
         if (firstEdgeValue === -1) {
             return -1;

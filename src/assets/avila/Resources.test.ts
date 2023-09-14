@@ -125,3 +125,87 @@ it("City Scoring Bug", () => {
     expect(results?.newPlayerData[0].availableMeeple).toBe(startingMeepleCount - 1); 
     expect(results?.newPlayerData[0].score).toBe(14);
 });
+
+it("score complete, independent features in all directions", () => {
+    const board: AvilaBoard = [];
+    board.push(new Array(5).fill(undefined));
+    board.push([undefined, undefined, tileGenerator("F_F_C_F"), undefined, undefined]);
+    board.push([undefined, tileGenerator("F_C_F_F"), tileGenerator("C_C_C_C"), tileGenerator("F_F_F_C"), undefined]);
+    board.push([undefined, undefined, tileGenerator("C_F_F_F"), undefined, undefined]);
+    board.push(new Array(5).fill(undefined));
+
+    // create player data and place meeples
+    const playerData: IAvilaPlayer[] = [
+        createPlayer(AvilaPlayerColor.Green),
+        createPlayer(AvilaPlayerColor.Orange),
+        createPlayer(AvilaPlayerColor.Blue),
+        createPlayer(AvilaPlayerColor.Purple),
+        createPlayer(AvilaPlayerColor.Red),
+    ];
+    const startingMeepleCount = playerData[0].availableMeeple;
+    board[1][2]!.meeple = {playerIndex: 0, edgeIndex: 2, playerColor: AvilaPlayerColor.Green};
+    playerData[0].availableMeeple--;
+    board[2][3]!.meeple = {playerIndex: 1, edgeIndex: 3, playerColor: AvilaPlayerColor.Orange};
+    playerData[1].availableMeeple--;
+    board[2][1]!.meeple = {playerIndex: 2, edgeIndex: 1, playerColor: AvilaPlayerColor.Blue};
+    playerData[2].availableMeeple--;
+    board[3][2]!.meeple = {playerIndex: 3, edgeIndex: 0, playerColor: AvilaPlayerColor.Blue};
+    playerData[3].availableMeeple--;
+
+    // tile that was last placed
+    const lastTile: Point = {X: 2, Y: 2};
+    const results = completedFeatureSearch(board, lastTile, playerData);
+
+    expect(results?.newPlayerData[0].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[1].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[2].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[3].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[4].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[0].score).toBe(4);
+    expect(results?.newPlayerData[1].score).toBe(4);
+    expect(results?.newPlayerData[2].score).toBe(4);
+    expect(results?.newPlayerData[3].score).toBe(4);
+    expect(results?.newPlayerData[4].score).toBe(0);
+});
+
+it("score complete, merged features in all directions", () => {
+    const board: AvilaBoard = [];
+    board.push(new Array(5).fill(undefined));
+    board.push([undefined, undefined, tileGenerator("F_F_C_F"), undefined, undefined]);
+    board.push([undefined, tileGenerator("F_C_F_F"), tileGenerator("CCCC"), tileGenerator("F_F_F_C"), undefined]);
+    board.push([undefined, undefined, tileGenerator("C_F_F_F"), undefined, undefined]);
+    board.push(new Array(5).fill(undefined));
+
+    // create player data and place meeples
+    const playerData: IAvilaPlayer[] = [
+        createPlayer(AvilaPlayerColor.Green),
+        createPlayer(AvilaPlayerColor.Orange),
+        createPlayer(AvilaPlayerColor.Blue),
+        createPlayer(AvilaPlayerColor.Purple),
+        createPlayer(AvilaPlayerColor.Red),
+    ];
+    const startingMeepleCount = playerData[0].availableMeeple;
+    board[1][2]!.meeple = {playerIndex: 0, edgeIndex: 2, playerColor: AvilaPlayerColor.Green};
+    playerData[0].availableMeeple--;
+    board[2][3]!.meeple = {playerIndex: 1, edgeIndex: 3, playerColor: AvilaPlayerColor.Orange};
+    playerData[1].availableMeeple--;
+    board[2][1]!.meeple = {playerIndex: 2, edgeIndex: 1, playerColor: AvilaPlayerColor.Blue};
+    playerData[2].availableMeeple--;
+    board[3][2]!.meeple = {playerIndex: 3, edgeIndex: 0, playerColor: AvilaPlayerColor.Blue};
+    playerData[3].availableMeeple--;
+
+    // tile that was last placed
+    const lastTile: Point = {X: 2, Y: 2};
+    const results = completedFeatureSearch(board, lastTile, playerData);
+
+    expect(results?.newPlayerData[0].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[1].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[2].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[3].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[4].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[0].score).toBe(10);
+    expect(results?.newPlayerData[1].score).toBe(10);
+    expect(results?.newPlayerData[2].score).toBe(10);
+    expect(results?.newPlayerData[3].score).toBe(10);
+    expect(results?.newPlayerData[4].score).toBe(0);
+})
