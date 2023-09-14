@@ -348,6 +348,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
 
         const meeples = new Map<number, Point[]>();
         const points = recurseCompletedFeature(board, tileLoc, i, meeples, pastTiles);
+        pastTiles.delete(encodeLocation(tileLoc));
         if (points > -1 && meeples.size) {
             featureResults.push({
                 points: points,

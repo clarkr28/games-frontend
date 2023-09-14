@@ -1,6 +1,6 @@
 import { Point } from "../ConnectFourResources";
-import { AvilaBoard, AvilaPlayerColor, IAvilaPlayer, completedFeatureSearch, createPlayer, findAffectedMonestaries} from "./Resources";
-import { tileGenerator } from "./TileResources";
+import { AvilaBoard, AvilaPlayerColor, IAvilaPlayer, completedFeatureSearch, createPlayer, findAffectedMonestaries, rotateTile} from "./Resources";
+import { C_F_C_F, tileGenerator } from "./TileResources";
 
 
 it("Score Feature - cyclical where last piece is split", () => {
@@ -90,4 +90,38 @@ it("Score Feature - complete monestary", () => {
     expect(results?.newPlayerData[1].availableMeeple).toBe(startingMeepleCount);
     expect(results?.newPlayerData[0].score).toBe(9);
     expect(results?.newPlayerData[1].score).toBe(0);
+});
+
+it("City Scoring Bug", () => {
+    const board: AvilaBoard = [];
+    board.push(new Array(5).fill(undefined));
+    board.push([undefined, tileGenerator("R_R_C_R"), undefined, undefined, undefined]);
+    board.push([undefined, tileGenerator("CCC_F"), tileGenerator("F_C_F_C"), undefined, undefined]);
+    board.push([
+        undefined, 
+        tileGenerator("CC_RR"), 
+        {...rotateTile(C_F_C_F), shield: true}, 
+        tileGenerator("F_C_F_C"), 
+        undefined
+    ]);
+    board.push(new Array(5).fill(undefined));
+
+    // create player data and place meeples
+    const playerData: IAvilaPlayer[] = [
+        createPlayer(AvilaPlayerColor.Green),
+        createPlayer(AvilaPlayerColor.Orange)
+    ];
+    const startingMeepleCount = playerData[0].availableMeeple;
+    board[3][1]!.meeple = {playerIndex: 0, edgeIndex: 0, playerColor: AvilaPlayerColor.Green};
+    playerData[0].availableMeeple--;
+    board[2][2]!.meeple = {playerIndex: 0, edgeIndex: 1, playerColor: AvilaPlayerColor.Green};
+    playerData[0].availableMeeple--;
+
+    // tile that was last placed
+    const lastPlacedPoint: Point = {X: 2, Y: 2};
+    const results = completedFeatureSearch(board, lastPlacedPoint, playerData);
+
+    // one meeple should have been returned
+    expect(results?.newPlayerData[0].availableMeeple).toBe(startingMeepleCount - 1); 
+    expect(results?.newPlayerData[0].score).toBe(14);
 });
