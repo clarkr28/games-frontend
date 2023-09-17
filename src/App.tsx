@@ -7,8 +7,8 @@ import { HomePage } from "./components/HomePage";
 import { ConnectFourGame } from "./components/connect-four/ConnectFourGame";
 import { BlackjackGame } from "./components/blackjack/BlackjackGame";
 import { LifeGame } from "./components/life/LifeGame";
-import { AvilaGame } from "./components/carcassonne/AvilaGame/AvilaGame";
-import { TileTester } from "./components/carcassonne/TileTester/TileTester";
+import { AvilaGame } from "./components/avila/AvilaGame/AvilaGame";
+import { TileTester } from "./components/avila/TileTester/TileTester";
 
 function App() {
     return (
