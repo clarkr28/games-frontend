@@ -35,7 +35,7 @@ function App() {
                     {process.env.REACT_APP_ENABLE_LIFE && (
                         <Route path="/life" element={<LifeGame />} />
                     )}
-                    {process.env.REACT_APP_ENABLE_CARCASSONNE && (
+                    {process.env.REACT_APP_ENABLE_AVILA && (
                         <Route path="/avila" element={<AvilaGame />} />
                     )}
                     {process.env.REACT_APP_AVILA_TILE_TEST && (
