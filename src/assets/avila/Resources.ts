@@ -574,7 +574,7 @@ export enum AvilaPlayerColor {
 export function createPlayer(color: AvilaPlayerColor): IAvilaPlayer {
     return {
         score: 0,
-        availableMeeple: 2,
+        availableMeeple: 6,
         color: color,
     };
 }
