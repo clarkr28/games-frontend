@@ -16,6 +16,12 @@ export const NavBar: React.FC<{}> = () => {
                 <Link to="/blackjack">Blackjack</Link>
             )}
             {process.env.REACT_APP_ENABLE_LIFE && <Link to="/life">Life</Link>}
+            {process.env.REACT_APP_ENABLE_AVILA && (
+                <Link to="/avila">Avila</Link>
+            )}
+            {process.env.REACT_APP_AVILA_TILE_TEST && (
+                <Link to="/avila-tile-test">Tile Tester</Link>
+            )}
         </nav>
     );
 };

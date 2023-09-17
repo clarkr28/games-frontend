@@ -1,0 +1,49 @@
+@import "../../common/Colors.module.scss";
+
+.playerCard {
+    border: 2px solid black;
+    border-radius: 1rem;
+    box-shadow: 0 0 6px 4px #ccc;
+    margin: 1rem;
+    padding: 1rem;
+    width: 120px;
+
+    p {
+        margin: 0.2rem;
+    }
+
+    .playerName {
+        display: inline-block;
+        padding: 2px 13px;
+        border-radius: 7px;
+        color: white;
+    }
+
+    .tileWrapper {
+        margin-bottom: 0.5rem;
+
+        & > div {
+            margin: 0 auto;
+        }
+    }
+}
+
+.green {
+    background-color: $greenPlayerAccent;
+}
+
+.red {
+    background-color: $redPlayerAccent;
+}
+
+.purple {
+    background-color: $purplePlayerAccent;
+}
+
+.orange {
+    background-color: $orangePlayerAccent;
+}
+
+.blue {
+    background-color: $bluePlayerAccent;
+}

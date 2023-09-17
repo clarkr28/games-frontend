@@ -1,0 +1,11 @@
+.settingsWrapper {
+    display: flex;
+
+    & > div {
+        border: 2px solid black;
+        border-radius: 1rem;
+        box-shadow: 0 0 6px 4px #ccc;
+        padding: 1rem;
+        margin: 0 auto;
+    }
+}

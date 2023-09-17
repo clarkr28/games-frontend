@@ -36,6 +36,13 @@ export const HomePage: React.FC<{}> = () => {
                     display={lifeDisplay}
                 />
             )}
+            {process.env.REACT_APP_ENABLE_AVILA && (
+                <GameCard
+                    buttonLabel="Play Avila"
+                    route="avila"
+                    display={<div>todo</div>}
+                />
+            )}
         </div>
     );
 };

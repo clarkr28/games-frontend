@@ -4,7 +4,16 @@ $disabledTextColor: #666;
 $greenBackground: rgb(135, 229, 130);
 $greenBackgroundHover: darken($greenBackground, 10);
 $greenBackgroundActive: darken($greenBackground, 25);
+$greenPlayerAccent: rgb(9, 147, 9);
 
 $greyBackground: #ccc;
 $greyBackgroundHover: darken($greyBackground, 10);
 $greyBackgroundActive: darken($greyBackground, 25);
+
+$redPlayerAccent: rgb(206, 16, 16);
+
+$orangePlayerAccent: orange;
+
+$bluePlayerAccent: rgb(12, 98, 218);
+
+$purplePlayerAccent: rgb(153, 10, 153);

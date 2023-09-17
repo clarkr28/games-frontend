@@ -1,0 +1,13 @@
+.game {
+    width: 100%;
+    height: calc(100% - 50px);
+    display: flex;
+    justify-content: center;
+
+    & > * {
+        &:first-child {
+            flex-grow: 1;
+            align-self: center;
+        }
+    }
+}

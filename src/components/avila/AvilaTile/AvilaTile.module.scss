@@ -1,0 +1,79 @@
+@import "../../common/Colors.module.scss";
+
+// constants 
+$tileWidth: 75px;
+$tileHeight: $tileWidth;
+
+.tileContainer {
+    border: 1px solid #555;
+    border-radius: 3px;
+    width: $tileWidth;
+    height: $tileHeight;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size: 12px;
+    background-color: white;
+
+    & > div {
+        height: calc($tileHeight / 5);
+    }
+
+    &.hasShield {
+        background-color: lightblue;
+    }
+}
+
+.middleRow {
+    display: flex;
+    justify-content: space-between;
+}
+
+.adjacencyRow {
+    display: flex;
+    justify-content: space-around;
+}
+
+.canPlace:hover {
+    cursor: pointer;
+
+    &.greenHover {
+        color: $greenPlayerAccent;
+    }
+
+    &.redHover {
+        color: $redPlayerAccent;
+    }
+
+    &.purpleHover {
+        color: $purplePlayerAccent;
+    }
+
+    &.orangeHover {
+        color: $orangePlayerAccent;
+    }
+
+    &.blueHover {
+        color: $bluePlayerAccent;
+    }
+}
+
+.green {
+    color: $greenPlayerAccent;
+}
+
+.red {
+    color: $redPlayerAccent;
+}
+
+.purple {
+    color: $purplePlayerAccent;
+}
+
+.orange {
+    color: $orangePlayerAccent;
+}
+
+.blue {
+    color: $bluePlayerAccent;
+}
