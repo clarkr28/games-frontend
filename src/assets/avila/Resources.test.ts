@@ -30,6 +30,33 @@ it("Score Feature - cyclical where last piece is split", () => {
     expect(results?.newPlayerData[0].score).toBe(4);
 });
 
+it("Score Feature - cyclical", () => {
+    const board: AvilaBoard = [];
+    board.push([undefined, undefined, undefined, undefined]);
+    board.push([undefined, tileGenerator("F_RR_F"), tileGenerator("F_F_RR"), undefined]);
+    board.push([undefined, tileGenerator("RR_F_F"), rotateTile(tileGenerator("F_F_RR")), undefined]);
+    board.push([undefined, undefined, undefined, undefined]);
+
+    const playerData: IAvilaPlayer[] = [
+        createPlayer(AvilaPlayerColor.Green),
+        createPlayer(AvilaPlayerColor.Orange)
+    ];
+    const startingMeepleCount = playerData[0].availableMeeple;
+
+    // place a meeple
+    board[1][1]!.meeple = {playerIndex: 0, playerColor: AvilaPlayerColor.Green, edgeIndex: 1};
+    playerData[0].availableMeeple--;
+
+    // tile that was placed last
+    const lastPlacedTile: Point = {Y: 2, X: 2};
+    const results = completedFeatureSearch(board, lastPlacedTile, playerData);
+
+    expect(board[1][1]!.meeple).toBe(undefined);
+    expect(results?.newPlayerData[1].score).toBe(0);
+    expect(results?.newPlayerData[0].availableMeeple).toBe(startingMeepleCount);
+    expect(results?.newPlayerData[0].score).toBe(4);
+});
+
 it("Find monestaries around last move", () => {
     // create a 3x3 board of all monestaries
     const board: AvilaBoard = [];
@@ -208,4 +235,45 @@ it("score complete, merged features in all directions", () => {
     expect(results?.newPlayerData[2].score).toBe(10);
     expect(results?.newPlayerData[3].score).toBe(10);
     expect(results?.newPlayerData[4].score).toBe(0);
-})
+});
+
+it("Road scoring bug", () => {
+    // create tiles for board
+    const topLeft = rotateTile(rotateTile(tileGenerator("CCC_R", true)));
+    const topRight = rotateTile(tileGenerator("F_RR_F"));
+    const bottomRight = rotateTile(tileGenerator("CC_RR", true));
+    const bottomLeft = tileGenerator("C_R_R_R");
+
+    // create board
+    const board: AvilaBoard = [];
+    board.push(new Array(4).fill(undefined));
+    board.push([undefined, topLeft, topRight, undefined]);
+    board.push([undefined, bottomLeft, bottomRight, undefined]);
+    board.push(new Array(4).fill(undefined));
+
+    // create player data
+    const playerData: IAvilaPlayer[] = [
+        createPlayer(AvilaPlayerColor.Green),
+        createPlayer(AvilaPlayerColor.Orange),
+        createPlayer(AvilaPlayerColor.Blue),
+    ];
+
+    // place meeples
+    const startingMeepleCount = playerData[0].availableMeeple;
+    board[1][1]!.meeple = {playerIndex: 2, edgeIndex: 0, playerColor: AvilaPlayerColor.Blue};
+    playerData[2].availableMeeple--;
+    board[1][2]!.meeple = {playerIndex: 0, edgeIndex: 3, playerColor: AvilaPlayerColor.Green};
+    playerData[0].availableMeeple--;
+    board[2][1]!.meeple = {playerIndex: 1, edgeIndex: 2, playerColor: AvilaPlayerColor.Orange};
+    playerData[1].availableMeeple--;
+
+    // process finished features
+    const lastTile: Point = {X: 1, Y: 2};
+    const results = completedFeatureSearch(board, lastTile, playerData);
+    
+    expect(results!.newPlayerData[0].availableMeeple).toBe(startingMeepleCount);
+    expect(board[1][2]!.meeple).toBe(undefined);
+    expect(results!.newPlayerData[0].score).toBe(4);
+    expect(results!.newPlayerData[1].score).toBe(0);
+    expect(results!.newPlayerData[2].score).toBe(0);
+});

@@ -2,10 +2,7 @@ import React from "react";
 import { IAvilaPlayer, IAvilaTile } from "../../../assets/avila/Resources";
 import { AvilaTile } from "../AvilaTile/AvilaTile";
 import styles from "./AvilaPlayerCard.module.scss";
-import {
-    IconButton,
-    IconButtonColor,
-} from "../../common/IconButton/IconButton";
+import { IconButton } from "../../common/IconButton/IconButton";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 
 export interface IAvilaPlayerCardProps {

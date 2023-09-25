@@ -222,6 +222,8 @@ export function isFeatureOccupied(board: AvilaBoard, tileLocation: Point, edgeIn
 
 const encodeLocation = (location: Point) => `${location.X},${location.Y}`
 
+const encodeEdge = (location: Point, edge: number) => `${location.X},${location.Y},${edge}`
+
 /**
  * validate that a point is on the board
  * @param location the location on the board to validate 
@@ -335,7 +337,8 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
 
     // evaluate all edges to determine if any features were completed
     const featureResults: ICompleteEdgeData[] = [];
-    const pastTiles = new Map<string, boolean>();
+    const edgeCache = new Map<string, number>();
+    edgeCache.set('CurrentFeature', 0);
     for (let i = 0; i < 4; i++) {
         if (tile.edges[i].type === AvilaFeature.Field) {
             continue; // fields are worthless
@@ -347,8 +350,8 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
         }
 
         const meeples = new Map<number, Point[]>();
-        const points = recurseCompletedFeature(board, tileLoc, i, meeples, pastTiles, true);
-        pastTiles.delete(encodeLocation(tileLoc));
+        const points = recurseCompletedFeature(board, tileLoc, i, meeples, edgeCache, new Map<string, boolean>(), true);
+        edgeCache.set('CurrentFeature', (edgeCache.get('CurrentFeature') ?? 0) + 1);
         if (points > -1 && meeples.size) {
             featureResults.push({
                 points: points,
@@ -411,7 +414,18 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
     };
 }
 
-function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: number, meeples: Map<number, Point[]>, pastTiles: Map<string, boolean>, firstCall?: boolean): number {
+/**
+ * score a feature (and check if it's complete)
+ * @param board the game board
+ * @param tileLoc the tile to score
+ * @param entryEdge the edge the tile is being entered from (think graph traversal)
+ * @param meeples a map to keep track of the meeples on this feature
+ * @param edgeCache a map of the edges that have been visited
+ * @param tileCache a map of the tiles that have been visited
+ * @param firstCall true if this is a root-level call to the recursive function
+ * @returns the point value for the feature (positive means feature is complete)
+ */
+function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: number, meeples: Map<number, Point[]>, edgeCache: Map<string, number>, tileCache: Map<string, boolean>, firstCall?: boolean): number {
     // make sure the tile location is valid
     if (!isLocationValid(tileLoc, board)) {
         return -1;
@@ -423,16 +437,24 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
         return -1;
     }
 
-    // make sure the tile hasn't been processed already
-    const encodedLocation = encodeLocation(tileLoc);
-    if (pastTiles.has(encodedLocation)) {
-        return 0; 
+    // make sure the edge hasn't been processed already
+    const encodedEdge = encodeEdge(tileLoc, entryEdge);
+    const currFeatureIndex = edgeCache.get('FeatureIndex') ?? 0;
+    const cachedEdge = edgeCache.get(encodedEdge);
+    if (cachedEdge !== undefined) {
+        if (cachedEdge === currFeatureIndex) {
+            return 0; // feature has a cycle and this edge has already been visited
+        }
+        // otherwise, this is a part of a different feature
+        return -1; 
     }
-    // the tile is valid and unprocessed, store it in the map
-    pastTiles.set(encodedLocation, true);
+
+    // the edge is valid and unprocessed, store it in the map
+    edgeCache.set(encodedEdge, currFeatureIndex);
 
     // see if the feature on this tile is occupied
     if (tile.meeple?.edgeIndex !== undefined) {
+        // make sure the meeple is placed on the feature currently being processed
         if (tile.meeple.edgeIndex === entryEdge || (tile.edges[entryEdge].connectedEdges?.indexOf(tile.meeple.edgeIndex) ?? -1) !== -1) {
             const meeplesForPlayer = meeples.get(tile.meeple.playerIndex);
             if (meeplesForPlayer === undefined) {
@@ -443,31 +465,48 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
         }
     }
 
-    // search edge we came from if it's the first time
     let connectivityTotal = 0;
-    if (firstCall) {
-        const firstEdgeValue = recurseCompletedFeatureHelper(board, entryEdge, tileLoc, meeples, pastTiles);
-        if (firstEdgeValue === -1) {
-            return -1;
-        }
-        connectivityTotal += firstEdgeValue;
-    }
 
     // search connected edges and count their points
     for (const conEdge of tile.edges[entryEdge].connectedEdges || []) {
-        const edgeValue = recurseCompletedFeatureHelper(board, conEdge, tileLoc, meeples, pastTiles);
+        // make sure this edge hasn't already been visited
+        const encodedEdge = encodeEdge(tileLoc, conEdge);
+        const cachedEdge = edgeCache.get(encodedEdge);
+        if (cachedEdge !== undefined) {
+            if (cachedEdge !== currFeatureIndex) {
+                // this is a part of a different feature
+                return -1; 
+            }
+        }
+        // the edge is valid and unprocessed, store it in the map
+        edgeCache.set(encodedEdge, currFeatureIndex);
+
+        const edgeValue = recurseCompletedFeatureHelper(board, conEdge, tileLoc, meeples, edgeCache, tileCache);
         if (edgeValue === -1) {
             return -1;
         }
         connectivityTotal += edgeValue;
     }
 
+    // search edge we came from if it's the first time
+    if (firstCall) {
+        const firstEdgeValue = recurseCompletedFeatureHelper(board, entryEdge, tileLoc, meeples, edgeCache, tileCache);
+        if (firstEdgeValue === -1) {
+            return -1;
+        }
+        connectivityTotal += firstEdgeValue;
+    }
+
     // compute the value of this tile
     let tileValue = 0;
-    if (tile.edges[entryEdge].type === AvilaFeature.City) {
-        tileValue = tile.shield ? 4 : 2;
-    } else if (tile.edges[entryEdge].type === AvilaFeature.Road) {
-        tileValue = 1;
+    if (!tileCache.has(encodeLocation(tileLoc))) {
+        // tile cache is used to make sure a tile is only scored once per feature
+        tileCache.set(encodeLocation(tileLoc), true);
+        if (tile.edges[entryEdge].type === AvilaFeature.City) {
+            tileValue = tile.shield ? 4 : 2;
+        } else if (tile.edges[entryEdge].type === AvilaFeature.Road) {
+            tileValue = 1;
+        }
     }
 
     return connectivityTotal + tileValue;
@@ -479,10 +518,11 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
  * @param conEdge the edge of a tile to recursively search in that direction
  * @param originalLocation the tile currently being processed
  * @param meeples the meeples found on this feature
- * @param pastTiles keeps track of tiles that have already been processed
+ * @param edgeCache keeps track of the edges that have already been processed
+ * @param tileCache keeps track of tiles that have already been processed
  * @returns -1 if feature is not complete, point value if featre is complete
  */
-function recurseCompletedFeatureHelper(board: AvilaBoard, conEdge: number, originalLocation: Point, meeples: Map<number, Point[]>, pastTiles: Map<string, boolean>): number {
+function recurseCompletedFeatureHelper(board: AvilaBoard, conEdge: number, originalLocation: Point, meeples: Map<number, Point[]>, edgeCache: Map<string, number>, tileCache: Map<string, boolean>): number {
     const newLocation: Point = {X: originalLocation.X, Y: originalLocation.Y};
     let newEntryEdge = 0;
     if (conEdge === 0) {
@@ -498,7 +538,7 @@ function recurseCompletedFeatureHelper(board: AvilaBoard, conEdge: number, origi
         newLocation.X--;
         newEntryEdge = 1; // entering from the right
     }
-    return recurseCompletedFeature(board, newLocation, newEntryEdge, meeples, pastTiles);
+    return recurseCompletedFeature(board, newLocation, newEntryEdge, meeples, edgeCache, tileCache);
 }
 
 const MonestaryOffsets: Point[] = [
