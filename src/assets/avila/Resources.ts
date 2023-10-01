@@ -2,6 +2,7 @@ import { Point } from "../ConnectFourResources";
 
 export enum AvilaGameStatus {
     Pregame,
+    WaitingForTurn,
     PlacingTile,
     PlacingMeeple,
     TriggerFinishMove,
@@ -157,7 +158,7 @@ export function expandBoard(board: AvilaBoard, placedTileLocation: Point): Avila
 
 export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IAvilaTile): boolean {
     // don't place a tile if there's already a tile there
-    if (board[tileLocation.Y][tileLocation.X] !== undefined) {
+    if (board[tileLocation.Y][tileLocation.X] !== undefined && board[tileLocation.Y][tileLocation.X] !== null) {
         return false;
     }
 
@@ -250,7 +251,7 @@ function searchFeatureForOccupation(board: AvilaBoard, tileLoc: Point, entryEdge
 
     // make sure the tile is defined
     const tile = board[tileLoc.Y][tileLoc.X];
-    if (tile === undefined) {
+    if (tile === undefined || tile === null) {
         return false;
     }
 
@@ -264,7 +265,7 @@ function searchFeatureForOccupation(board: AvilaBoard, tileLoc: Point, entryEdge
     pastTiles.set(encodedLocation, true);
 
     // see if the feature on this tile is occupied
-    if (tile.meeple?.edgeIndex !== undefined) {
+    if (tile.meeple?.edgeIndex !== undefined && tile.meeple?.edgeIndex !== null) {
         if (tile.meeple.edgeIndex === entryEdge || (tile.edges[entryEdge].connectedEdges?.indexOf(tile.meeple.edgeIndex) ?? -1) !== -1) {
             return true;
         }
@@ -331,7 +332,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
         return undefined;
     }
     const tile = board[tileLoc.Y][tileLoc.X];
-    if (tile === undefined) {
+    if (tile === undefined || tile === null) {
         return undefined;
     }
 
@@ -392,7 +393,7 @@ export function completedFeatureSearch(board: AvilaBoard, tileLoc: Point, player
         for (let [playerIndex, meeplePoints] of Array.from(result.meepleMap.entries())) {
             meeplePoints.forEach(meeplePoint => {
                 const tile = board[meeplePoint.Y][meeplePoint.X];
-                if (tile === undefined) {
+                if (tile === undefined || tile === null) {
                     // this shouldn't occur, so log a message for troubleshooting if it does
                     console.log(`error: removing meeple from undefined tile. X: ${meeplePoint.X}, Y: ${meeplePoint.Y}, playerIndex: ${playerIndex}`);
                     return;
@@ -433,7 +434,7 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
 
     // make sure the tile is defined
     const tile = board[tileLoc.Y][tileLoc.X];
-    if (tile === undefined) {
+    if (tile === undefined || tile === null) {
         return -1;
     }
 
@@ -441,7 +442,7 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
     const encodedEdge = encodeEdge(tileLoc, entryEdge);
     const currFeatureIndex = edgeCache.get('FeatureIndex') ?? 0;
     const cachedEdge = edgeCache.get(encodedEdge);
-    if (cachedEdge !== undefined) {
+    if (cachedEdge !== undefined && cachedEdge !== null) {
         if (cachedEdge === currFeatureIndex) {
             return 0; // feature has a cycle and this edge has already been visited
         }
@@ -453,7 +454,7 @@ function recurseCompletedFeature(board: AvilaBoard, tileLoc: Point, entryEdge: n
     edgeCache.set(encodedEdge, currFeatureIndex);
 
     // see if the feature on this tile is occupied
-    if (tile.meeple?.edgeIndex !== undefined) {
+    if (tile.meeple?.edgeIndex !== undefined && tile.meeple?.edgeIndex !== null) {
         // make sure the meeple is placed on the feature currently being processed
         if (tile.meeple.edgeIndex === entryEdge || (tile.edges[entryEdge].connectedEdges?.indexOf(tile.meeple.edgeIndex) ?? -1) !== -1) {
             const meeplesForPlayer = meeples.get(tile.meeple.playerIndex);
@@ -601,6 +602,7 @@ export interface IAvilaPlayer {
     score: number;
     availableMeeple: number;
     color: AvilaPlayerColor;
+    name: string;
 }
 
 export enum AvilaPlayerColor {
@@ -611,11 +613,45 @@ export enum AvilaPlayerColor {
     Purple = 'purple'
 }
 
-export function createPlayer(color: AvilaPlayerColor): IAvilaPlayer {
+export function createPlayer(name: string, color: AvilaPlayerColor): IAvilaPlayer {
     return {
         score: 0,
         availableMeeple: 6,
         color: color,
+        name: name,
     };
+}
+
+/**
+ * add a player to the existing list of players
+ * @param existingPlayers the existing players
+ * @param name the new player's name
+ * @param color the new player's color (optional)
+ * @returns a new array of players containing the new player. Returns the same
+ * array if all colors have been used (meaning the player wasn't added).
+ */
+export function addPlayer(existingPlayers: IAvilaPlayer[], name: string, color?: AvilaPlayerColor): IAvilaPlayer[] {
+    let colorToUse: AvilaPlayerColor | undefined;
+    if (color !== undefined && existingPlayers.every(player => player.color !== color)) {
+        colorToUse = color;
+    }
+
+    if (color === undefined) {
+        const usableColors: AvilaPlayerColor[] = [];
+        Object.values(AvilaPlayerColor).forEach(c => {
+            if (existingPlayers.every(player => player.color !== c)) {
+                usableColors.push(c);
+            }
+        });
+        if (usableColors.length > 0) {
+            colorToUse = usableColors[0];
+        }
+    }
+
+    if (colorToUse !== undefined) {
+        return [...existingPlayers, createPlayer(name, colorToUse)];
+    }
+
+    return existingPlayers;
 }
 

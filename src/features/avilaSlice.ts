@@ -1,8 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, AvilaPlayerColor, IAvilaPlayer, IAvilaTile, canPlaceTile, completedFeatureSearch, createEmptyBoard, createPlayer, expandBoard, isFeatureOccupied, rotateTile } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, IAvilaPlayer, IAvilaTile, addPlayer, canPlaceTile, completedFeatureSearch, createEmptyBoard, expandBoard, isFeatureOccupied, rotateTile } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
+import { CommWrapper, IEndTurnData, IPlacedTileData, IStartGameData } from "../assets/avila/CommWrapper";
 
 export interface AvilaState {
     board: AvilaBoard;              // board[y][x]
@@ -12,6 +13,8 @@ export interface AvilaState {
     remainingTiles: IAvilaTile[];   // remaining tiles in the deck
     status: AvilaGameStatus;        // game status
     playerData: IAvilaPlayer[];     // player data
+    roomCreated: boolean;           // true if this person created the room
+    myPlayerIndex: number;          // the index this player is in the array of players
 }
 
 const initialState: AvilaState = {
@@ -20,12 +23,22 @@ const initialState: AvilaState = {
     currentTile: undefined,
     remainingTiles: [],
     status: AvilaGameStatus.Pregame,
-    playerData: [createPlayer(AvilaPlayerColor.Green), createPlayer(AvilaPlayerColor.Blue), createPlayer(AvilaPlayerColor.Purple), createPlayer(AvilaPlayerColor.Red), createPlayer(AvilaPlayerColor.Orange)],
+    playerData: [],
+    roomCreated: false,
+    myPlayerIndex: 0,
 };
 
 export interface PlaceMeepleData {
     edgeIndex?: number;
     onMonestary?: boolean;
+}
+
+export interface RoomCreatorData {
+    name: string;
+}
+
+export interface AddPlayerData {
+    name: string;
 }
 
 export const avilaSlice = createSlice({
@@ -80,7 +93,6 @@ export const avilaSlice = createSlice({
                     };
                 }
 
-
                 if (meeplePlaced) {
                     // decrease meeple count for the player that placed it
                     state.playerData[state.currentTurn].availableMeeple--; 
@@ -90,7 +102,6 @@ export const avilaSlice = createSlice({
             }
         },
         finishMove: (state) => {
-            // TODO: completed features should be scored
             if (state.lastTilePlaced) {
                 const results = completedFeatureSearch(state.board, state.lastTilePlaced, state.playerData);
                 if (results) {
@@ -102,24 +113,77 @@ export const avilaSlice = createSlice({
             state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
             state.currentTile = state.remainingTiles.pop();
             state.remainingTiles = [...state.remainingTiles];
-            state.status = AvilaGameStatus.PlacingTile;
+            state.status = AvilaGameStatus.WaitingForTurn;
+
+            CommWrapper.EndTurn({
+                board: state.board,
+                playerData: state.playerData,
+            });
         },
         startGame: (state) => {
             state.status = AvilaGameStatus.PlacingTile;
             // create the shuffled tiles and set the current tiles
-            const tiles = createTiles(true, true);
+            const tiles = createTiles(true);
             state.currentTile = tiles.pop(); 
             state.remainingTiles = tiles;
+
+            CommWrapper.StartGame({
+                currentTile: state.currentTile!,
+                playerData: state.playerData,
+                remainingTiles: state.remainingTiles,
+            });
+
+        },
+        hostStartedGame: (state, action: PayloadAction<IStartGameData>) => {
+            state.status = AvilaGameStatus.WaitingForTurn;
+            state.currentTile = action.payload.currentTile;
+            state.remainingTiles = action.payload.remainingTiles;
+            state.playerData = action.payload.playerData;
         },
         rotateCurrentTile: (state) => {
             if (state.currentTile) {
                 state.currentTile = rotateTile(state.currentTile);
             }
+        },
+        setRoomCreated: (state, action: PayloadAction<RoomCreatorData>) => {
+            state.roomCreated = true;
+            state.playerData = addPlayer(state.playerData, action.payload.name);
+        },
+        playerJoinedRoom: (state, action: PayloadAction<AddPlayerData>) => {
+            state.playerData = addPlayer(state.playerData, action.payload.name);
+        },
+        applyOpponentPlacedTile: (state, action: PayloadAction<IPlacedTileData>) => {
+            console.log('received message that tile was placed');
+            state.board = action.payload.board;
+        },
+        applyOpponentEndTurn: (state, action: PayloadAction<IEndTurnData>) => {
+            console.log('received message that its the end of an opponents turn');
+            // process data from server
+            state.board = action.payload.board;
+            state.playerData = action.payload.playerData;
+
+            // update data for the next turn
+            state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
+            state.currentTile = state.remainingTiles.pop();
+            state.remainingTiles = [...state.remainingTiles];
+            if (state.currentTurn === state.myPlayerIndex) {
+                state.status = AvilaGameStatus.PlacingTile;
+                console.log("It's my turn!")
+            }
+
+        },
+        setMyPlayerIndex: (state, action: PayloadAction<number>) => {
+            console.log(`setting my player index to: ${action.payload.valueOf()}`);
+            state.myPlayerIndex = action.payload.valueOf();
         }
     }
 });
 
-export const { recordMove, startGame, rotateCurrentTile, finishMove, placeMeeple } = avilaSlice.actions;
+export const { 
+    recordMove, startGame, rotateCurrentTile, finishMove, placeMeeple, setRoomCreated, 
+    playerJoinedRoom, hostStartedGame, applyOpponentPlacedTile, applyOpponentEndTurn, 
+    setMyPlayerIndex 
+} = avilaSlice.actions;
 
 export const selectAvilaBoard = (state: RootState) => state.avila.board;
 export const selectAvilaCurrentTurn = (state: RootState) => state.avila.currentTurn;
@@ -127,5 +191,6 @@ export const selectAvilaCurrentTile = (state: RootState) => state.avila.currentT
 export const selectAvilaPlayerData = (state: RootState) => state.avila.playerData;
 export const selectAvilaStatus = (state: RootState) => state.avila.status;
 export const selectAvilaLastTilePlaced = (state: RootState) => state.avila.lastTilePlaced;
+export const selectAvilaRoomCreated = (state: RootState) => state.avila.roomCreated;
 
 export default avilaSlice.reducer;

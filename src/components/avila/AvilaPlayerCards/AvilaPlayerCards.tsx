@@ -28,10 +28,11 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
                 <AvilaPlayerCard
                     key={index}
                     playerData={player}
-                    playerName={`Player ${index + 1}`}
+                    playerName={player.name}
                     tile={
                         turnIndex === index &&
-                        gameStatus === AvilaGameStatus.PlacingTile
+                        (gameStatus === AvilaGameStatus.PlacingTile ||
+                            gameStatus === AvilaGameStatus.WaitingForTurn)
                             ? currentTile
                             : undefined
                     }
