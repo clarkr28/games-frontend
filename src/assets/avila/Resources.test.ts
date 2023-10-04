@@ -11,8 +11,8 @@ it("Score Feature - cyclical where last piece is split", () => {
     board.push([undefined, undefined, undefined, undefined]);
 
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange)
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange)
     ];
     const startingMeepleCount = playerData[0].availableMeeple;
 
@@ -38,8 +38,8 @@ it("Score Feature - cyclical", () => {
     board.push([undefined, undefined, undefined, undefined]);
 
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange)
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange)
     ];
     const startingMeepleCount = playerData[0].availableMeeple;
 
@@ -99,8 +99,8 @@ it("Score Feature - complete monestary", () => {
     board.push(new Array(5).fill(undefined));
 
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange)
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange)
     ];
     const startingMeepleCount = playerData[0].availableMeeple;
 
@@ -135,8 +135,8 @@ it("City Scoring Bug", () => {
 
     // create player data and place meeples
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange)
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange)
     ];
     const startingMeepleCount = playerData[0].availableMeeple;
     board[3][1]!.meeple = {playerIndex: 0, edgeIndex: 0, playerColor: AvilaPlayerColor.Green};
@@ -163,11 +163,11 @@ it("score complete, independent features in all directions", () => {
 
     // create player data and place meeples
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange),
-        createPlayer(AvilaPlayerColor.Blue),
-        createPlayer(AvilaPlayerColor.Purple),
-        createPlayer(AvilaPlayerColor.Red),
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange),
+        createPlayer('', AvilaPlayerColor.Blue),
+        createPlayer('', AvilaPlayerColor.Purple),
+        createPlayer('', AvilaPlayerColor.Red),
     ];
     const startingMeepleCount = playerData[0].availableMeeple;
     board[1][2]!.meeple = {playerIndex: 0, edgeIndex: 2, playerColor: AvilaPlayerColor.Green};
@@ -205,11 +205,11 @@ it("score complete, merged features in all directions", () => {
 
     // create player data and place meeples
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange),
-        createPlayer(AvilaPlayerColor.Blue),
-        createPlayer(AvilaPlayerColor.Purple),
-        createPlayer(AvilaPlayerColor.Red),
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange),
+        createPlayer('', AvilaPlayerColor.Blue),
+        createPlayer('', AvilaPlayerColor.Purple),
+        createPlayer('', AvilaPlayerColor.Red),
     ];
     const startingMeepleCount = playerData[0].availableMeeple;
     board[1][2]!.meeple = {playerIndex: 0, edgeIndex: 2, playerColor: AvilaPlayerColor.Green};
@@ -253,9 +253,9 @@ it("Road scoring bug", () => {
 
     // create player data
     const playerData: IAvilaPlayer[] = [
-        createPlayer(AvilaPlayerColor.Green),
-        createPlayer(AvilaPlayerColor.Orange),
-        createPlayer(AvilaPlayerColor.Blue),
+        createPlayer('', AvilaPlayerColor.Green),
+        createPlayer('', AvilaPlayerColor.Orange),
+        createPlayer('', AvilaPlayerColor.Blue),
     ];
 
     // place meeples

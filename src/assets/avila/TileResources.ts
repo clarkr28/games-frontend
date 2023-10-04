@@ -161,18 +161,16 @@ export function shuffleTiles(tiles: IAvilaTile[]): void {
 
 /**
  * create a deck of tiles
- * @param standardTiles true to include standard tiles
  * @param shuffle true if tiles should be shuffled
  * @returns the generated tiles
  */
-export function createTiles(standardTiles: boolean, shuffle: boolean): IAvilaTile[] {
-    const tiles: IAvilaTile[] = [];
+export function createTiles(shuffle: boolean): IAvilaTile[] {
+    let tiles: IAvilaTile[] = [];
+    tiles.push(...STANDARD_TILES);
 
-    if (standardTiles) {
-        tiles.push(...STANDARD_TILES);
-    }
     if (shuffle) {
         shuffleTiles(tiles);
+        tiles.push({...C_R_F_R}); // insert the standard starting tile
     }
 
     return tiles;

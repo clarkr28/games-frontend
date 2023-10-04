@@ -16,7 +16,9 @@ export const AvilaEmptyTile: React.FC<IAvilaEmptyTileProps> = (props) => {
     return (
         <div
             className={`${styles.tile} ${canPlaceTile ? styles.hoverable : ""}`}
-            onClick={() => dispatch(recordMove({ X: col, Y: row }))}
+            onClick={() =>
+                canPlaceTile && dispatch(recordMove({ X: col, Y: row }))
+            }
         ></div>
     );
 };

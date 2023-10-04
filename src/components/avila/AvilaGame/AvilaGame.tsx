@@ -4,15 +4,25 @@ import styles from "./AvilaGame.module.scss";
 import { AvilaPlayerCards } from "../AvilaPlayerCards/AvilaPlayerCards";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+    applyOpponentEndTurn,
+    applyOpponentPlacedTile,
     finishMove,
+    hostStartedGame,
     selectAvilaBoard,
     selectAvilaCurrentTurn,
     selectAvilaLastTilePlaced,
     selectAvilaPlayerData,
     selectAvilaStatus,
+    setMyPlayerIndex,
 } from "../../../features/avilaSlice";
 import { AvilaSettings } from "../AvilaSettings/AvilaSettings";
 import { AvilaGameStatus } from "../../../assets/avila/Resources";
+import {
+    CommWrapper,
+    IEndTurnData,
+    IPlacedTileData,
+    IStartGameData,
+} from "../../../assets/avila/CommWrapper";
 
 export const AvilaGame: React.FC<{}> = () => {
     const dispatch = useAppDispatch();
@@ -22,12 +32,31 @@ export const AvilaGame: React.FC<{}> = () => {
     const playerData = useAppSelector(selectAvilaPlayerData);
     const playerTurn = useAppSelector(selectAvilaCurrentTurn);
 
+    // trigger the end of a move
     useEffect(() => {
-        // trigger the end of a move
         if (gameStatus === AvilaGameStatus.TriggerFinishMove) {
             dispatch(finishMove());
         }
-    }, [gameStatus]);
+    }, [gameStatus, dispatch]);
+
+    useEffect(() => {
+        // connect to the server
+        CommWrapper.Connect();
+        // this return only works because strict mode was removed
+        return () => CommWrapper.Close();
+    }, []);
+
+    // link callbacks from the server communication handler to action dispatches
+    useEffect(() => {
+        CommWrapper.startGameCallback = (data: IStartGameData) =>
+            dispatch(hostStartedGame(data));
+        CommWrapper.joinedRoomPlayerCallback = (index: number) =>
+            dispatch(setMyPlayerIndex(index));
+        CommWrapper.opponentPlacedTileCallback = (data: IPlacedTileData) =>
+            dispatch(applyOpponentPlacedTile(data));
+        CommWrapper.opponentEndTurnCallback = (data: IEndTurnData) =>
+            dispatch(applyOpponentEndTurn(data));
+    }, [dispatch]);
 
     return (
         <div className={styles.game}>

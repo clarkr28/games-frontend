@@ -8,7 +8,7 @@ export const TileTester: React.FC<{}> = () => {
 
     // get the tiles and turn them into a grid
     useEffect(() => {
-        const tiles = createTiles(true, false);
+        const tiles = createTiles(false);
         let row: IAvilaTile[] = [];
         const tempGrid: IAvilaTile[][] = [];
         tiles.forEach((tile, index) => {
