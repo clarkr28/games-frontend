@@ -63,7 +63,7 @@ export class CommWrapper {
 
     public static Connect() {
         if (CommWrapper.socket === null) {
-            CommWrapper.socket = new WebSocket('ws://localhost:8080');
+            CommWrapper.socket = new WebSocket(`ws://${process.env.REACT_APP_AVILA_BACKEND}`);
 
             CommWrapper.socket.addEventListener("open", () => {
                 console.log("Connected to server");
