@@ -63,7 +63,11 @@ export class CommWrapper {
 
     public static Connect() {
         if (CommWrapper.socket === null) {
-            CommWrapper.socket = new WebSocket(`ws://${process.env.REACT_APP_AVILA_BACKEND}`);
+            if (!process.env.REACT_APP_AVILA_BACKEND) {
+                throw Error("Can't connect to empty socket hostname");
+            }
+
+            CommWrapper.socket = new WebSocket(process.env.REACT_APP_AVILA_BACKEND);
 
             CommWrapper.socket.addEventListener("open", () => {
                 console.log("Connected to server");
