@@ -55,7 +55,7 @@ export class CommWrapper {
     private static playerId = '';
     private static roomId = '';
     private static shouldReconnect = true; // if true, create a new connection when communication disconnects
-    private static reconnecting = false; // true if currently trying to reconnect
+    private static reconnecting = false; // true if currently trying to reconnect to the server
     private static forceReconnectTimeoutId = 0;
     public static roomCreationCallback?: (room: string) => void = undefined;
     public static joinedRoomHostCallback?: (name: string) => void = undefined;
@@ -115,6 +115,7 @@ export class CommWrapper {
                             * the new ID that the server sends. Instead, send a message to the 
                             * server telling it to use our old ID
                             */
+                            CommWrapper.reconnecting = false; 
                             CommWrapper.Reconnect(); 
                             return;
                         }
