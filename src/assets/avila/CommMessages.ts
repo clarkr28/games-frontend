@@ -79,5 +79,10 @@ export interface IEndTurnRequest {
     data: string;
 }
 
+export interface IReconnectRequest {
+    type: "ReconnectRequest";
+    playerId: string;
+}
+
 export type MessagesFromClient = ICreateRoomRequest | IJoinRoomRequest | IStartGameRequest |
-    IPlacedTileRequest | IEndTurnRequest;
+    IPlacedTileRequest | IEndTurnRequest | IReconnectRequest;
