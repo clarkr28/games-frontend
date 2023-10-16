@@ -10,8 +10,10 @@ export interface IAvilaPlayerCardProps {
     tile?: IAvilaTile;
     playerName: string;
     rotateCallback: () => void;
+    showRotateButton?: boolean;
     placingMeeple: boolean;
     skipMeepleCallback: () => void;
+    numRemainingTiles: number;
 }
 
 export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
@@ -20,8 +22,10 @@ export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
         tile,
         playerName,
         rotateCallback,
+        showRotateButton,
         placingMeeple,
         skipMeepleCallback,
+        numRemainingTiles,
     } = props;
 
     return (
@@ -33,10 +37,11 @@ export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
             >
                 <strong>{playerName}</strong>
             </p>
+            {tile && <p>{`${numRemainingTiles} tiles left`}</p>}
             <div className={tile ? styles.tileWrapper : ""}>
                 {tile && <AvilaTile tile={tile} />}
             </div>
-            {tile && (
+            {showRotateButton && (
                 <IconButton
                     displayText="Rotate"
                     icon={solid("rotate")}
