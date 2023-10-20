@@ -1,9 +1,13 @@
+$gridPadding: 40px;
+
 .grid {
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow-y: scroll;
-    height: 100%;
+    padding: $gridPadding;
+    min-height: calc(100% - $gridPadding * 2);
+    margin: auto;
 
     & > div {
         display: flex;

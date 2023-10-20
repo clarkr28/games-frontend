@@ -60,17 +60,21 @@ export const AvilaGame: React.FC<{}> = () => {
 
     return (
         <div className={styles.game}>
-            {gameStatus === AvilaGameStatus.Pregame ? (
-                <AvilaSettings />
-            ) : (
-                <AvilaGrid
-                    gridData={gridData}
-                    placingTile={gameStatus === AvilaGameStatus.PlacingTile}
-                    lastTilePlaced={lastTilePlaced}
-                    placingMeeple={gameStatus === AvilaGameStatus.PlacingMeeple}
-                    playerTurnColor={playerData[playerTurn].color}
-                />
-            )}
+            <div className={styles.boardContainer}>
+                {gameStatus === AvilaGameStatus.Pregame ? (
+                    <AvilaSettings />
+                ) : (
+                    <AvilaGrid
+                        gridData={gridData}
+                        placingTile={gameStatus === AvilaGameStatus.PlacingTile}
+                        lastTilePlaced={lastTilePlaced}
+                        placingMeeple={
+                            gameStatus === AvilaGameStatus.PlacingMeeple
+                        }
+                        playerTurnColor={playerData[playerTurn].color}
+                    />
+                )}
+            </div>
             <AvilaPlayerCards gameStatus={gameStatus} />
         </div>
     );
