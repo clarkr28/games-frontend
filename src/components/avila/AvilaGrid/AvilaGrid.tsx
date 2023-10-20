@@ -22,8 +22,10 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
         playerTurnColor,
     } = props;
 
+    const width_px = (gridData[0]?.length || 0) * 77;
+
     return (
-        <div className={styles.grid}>
+        <div className={styles.grid} style={{ width: `${width_px}px` }}>
             {gridData.map((gridRow, row) => (
                 <div key={row}>
                     {gridRow.map((cell, col) =>

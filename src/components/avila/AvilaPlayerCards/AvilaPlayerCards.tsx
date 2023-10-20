@@ -6,6 +6,7 @@ import {
     selectAvilaCurrentTile,
     selectAvilaCurrentTurn,
     selectAvilaPlayerData,
+    selectAvilaRemainingTilesCount,
 } from "../../../features/avilaSlice";
 import { AvilaPlayerCard } from "../AvilaPlayerCard/AvilaPlayerCard";
 import { AvilaGameStatus } from "../../../assets/avila/Resources";
@@ -20,6 +21,7 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
     const players = useAppSelector(selectAvilaPlayerData);
     const turnIndex = useAppSelector(selectAvilaCurrentTurn);
     const currentTile = useAppSelector(selectAvilaCurrentTile);
+    const numRemainingTiles = useAppSelector(selectAvilaRemainingTilesCount);
     const dispatch = useAppDispatch();
 
     return (
@@ -42,6 +44,11 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
                         gameStatus === AvilaGameStatus.PlacingMeeple
                     }
                     skipMeepleCallback={() => dispatch(finishMove())}
+                    numRemainingTiles={numRemainingTiles}
+                    showRotateButton={
+                        turnIndex === index &&
+                        gameStatus === AvilaGameStatus.PlacingTile
+                    }
                 />
             ))}
         </div>

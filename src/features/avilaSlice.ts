@@ -192,5 +192,6 @@ export const selectAvilaPlayerData = (state: RootState) => state.avila.playerDat
 export const selectAvilaStatus = (state: RootState) => state.avila.status;
 export const selectAvilaLastTilePlaced = (state: RootState) => state.avila.lastTilePlaced;
 export const selectAvilaRoomCreated = (state: RootState) => state.avila.roomCreated;
+export const selectAvilaRemainingTilesCount = (state: RootState) => state.avila.remainingTiles.length;
 
 export default avilaSlice.reducer;
