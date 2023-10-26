@@ -63,6 +63,7 @@ export class CommWrapper {
     public static startGameCallback?: (data: IStartGameData) => void = undefined;
     public static opponentPlacedTileCallback?: (data: IPlacedTileData) => void = undefined;
     public static opponentEndTurnCallback?: (data: IEndTurnData) => void = undefined;
+    public static serverConnectedCallback?: (isConnected: boolean) => void = undefined;
 
     private static CreateSocket() {
         if (!process.env.REACT_APP_AVILA_BACKEND) {
@@ -97,6 +98,7 @@ export class CommWrapper {
 
         CommWrapper.socket.onclose = (ev: CloseEvent) => {
             console.log("Disconnected from server");
+            CommWrapper.serverConnectedCallback?.(false);
             if (CommWrapper.shouldReconnect) {
                 CommWrapper.reconnecting = true;
                 CommWrapper.CreateSocket();
@@ -109,6 +111,7 @@ export class CommWrapper {
             if (message) {
                 switch (message.type) {
                     case "AssignIdMessage": 
+                        CommWrapper.serverConnectedCallback?.(true);
                         if (CommWrapper.reconnecting) {
                             /* If trying to reconnect, the server will initially send a new ID for the 
                             * client to use. But we want to continue using the old ID, so don't save

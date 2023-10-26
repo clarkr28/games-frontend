@@ -13,6 +13,7 @@ import {
     selectAvilaLastTilePlaced,
     selectAvilaPlayerData,
     selectAvilaStatus,
+    setIsServerConnected,
     setMyPlayerIndex,
 } from "../../../features/avilaSlice";
 import { AvilaSettings } from "../AvilaSettings/AvilaSettings";
@@ -56,6 +57,8 @@ export const AvilaGame: React.FC<{}> = () => {
             dispatch(applyOpponentPlacedTile(data));
         CommWrapper.opponentEndTurnCallback = (data: IEndTurnData) =>
             dispatch(applyOpponentEndTurn(data));
+        CommWrapper.serverConnectedCallback = (isConnected: boolean) =>
+            dispatch(setIsServerConnected(isConnected));
     }, [dispatch]);
 
     return (
