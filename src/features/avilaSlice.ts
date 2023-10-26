@@ -15,6 +15,7 @@ export interface AvilaState {
     playerData: IAvilaPlayer[];     // player data
     roomCreated: boolean;           // true if this person created the room
     myPlayerIndex: number;          // the index this player is in the array of players
+    isServerConnected: boolean;     // true if the client is successfully connected to the server
 }
 
 const initialState: AvilaState = {
@@ -26,6 +27,7 @@ const initialState: AvilaState = {
     playerData: [],
     roomCreated: false,
     myPlayerIndex: 0,
+    isServerConnected: false,
 };
 
 export interface PlaceMeepleData {
@@ -132,7 +134,6 @@ export const avilaSlice = createSlice({
                 playerData: state.playerData,
                 remainingTiles: state.remainingTiles,
             });
-
         },
         hostStartedGame: (state, action: PayloadAction<IStartGameData>) => {
             state.status = AvilaGameStatus.WaitingForTurn;
@@ -170,11 +171,12 @@ export const avilaSlice = createSlice({
                 state.status = AvilaGameStatus.PlacingTile;
                 console.log("It's my turn!")
             }
-
         },
         setMyPlayerIndex: (state, action: PayloadAction<number>) => {
-            console.log(`setting my player index to: ${action.payload.valueOf()}`);
             state.myPlayerIndex = action.payload.valueOf();
+        },
+        setIsServerConnected: (state, action: PayloadAction<boolean>) => {
+            state.isServerConnected = action.payload.valueOf();
         }
     }
 });
@@ -182,7 +184,7 @@ export const avilaSlice = createSlice({
 export const { 
     recordMove, startGame, rotateCurrentTile, finishMove, placeMeeple, setRoomCreated, 
     playerJoinedRoom, hostStartedGame, applyOpponentPlacedTile, applyOpponentEndTurn, 
-    setMyPlayerIndex 
+    setMyPlayerIndex, setIsServerConnected 
 } = avilaSlice.actions;
 
 export const selectAvilaBoard = (state: RootState) => state.avila.board;
@@ -193,5 +195,6 @@ export const selectAvilaStatus = (state: RootState) => state.avila.status;
 export const selectAvilaLastTilePlaced = (state: RootState) => state.avila.lastTilePlaced;
 export const selectAvilaRoomCreated = (state: RootState) => state.avila.roomCreated;
 export const selectAvilaRemainingTilesCount = (state: RootState) => state.avila.remainingTiles.length;
+export const selectAvilaIsServerConnnected = (state: RootState) => state.avila.isServerConnected;
 
 export default avilaSlice.reducer;

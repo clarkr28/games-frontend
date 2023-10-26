@@ -7,6 +7,7 @@ import {
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import {
     playerJoinedRoom,
+    selectAvilaIsServerConnnected,
     selectAvilaRoomCreated,
     setRoomCreated,
     startGame,
@@ -17,6 +18,7 @@ import { CommWrapper } from "../../../assets/avila/CommWrapper";
 export const AvilaSettings: React.FC<{}> = () => {
     const dispatch = useAppDispatch();
     const roomCreated = useAppSelector(selectAvilaRoomCreated);
+    const isServerConnected = useAppSelector(selectAvilaIsServerConnnected);
     const [name, setName] = useState("");
     const [room, setRoom] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
@@ -43,6 +45,8 @@ export const AvilaSettings: React.FC<{}> = () => {
         return () => (CommWrapper.joinedRoomHostCallback = undefined);
     }, [roomCreated, dispatch]);
 
+    const joinedOrCreatedRoom = roomCreated || joinedRoom !== "";
+
     return (
         <div className={styles.settingsWrapper}>
             <div>
@@ -52,13 +56,17 @@ export const AvilaSettings: React.FC<{}> = () => {
                         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setName(e.target.value)
                         }
-                        disabled={roomCreated || joinedRoom !== ""}
+                        disabled={joinedOrCreatedRoom}
                     />
                     <IconButton
                         displayText="Create Room"
                         color={IconButtonColor.Green}
                         icon={solid("plus")}
-                        disabled={roomCreated || joinedRoom !== ""}
+                        disabled={
+                            !isServerConnected ||
+                            joinedOrCreatedRoom ||
+                            name === ""
+                        }
                         clickCallback={() => CommWrapper.CreateRoom(name)}
                     />
                 </div>
@@ -69,7 +77,7 @@ export const AvilaSettings: React.FC<{}> = () => {
                         onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                             setRoom(e.target.value)
                         }
-                        disabled={roomCreated || joinedRoom !== ""}
+                        disabled={joinedOrCreatedRoom}
                     />
                     <IconButton
                         displayText="Join Room"
@@ -79,7 +87,12 @@ export const AvilaSettings: React.FC<{}> = () => {
                             CommWrapper.JoinRoom(room, name);
                             setJoinedRoom(room);
                         }}
-                        disabled={roomCreated || joinedRoom !== ""}
+                        disabled={
+                            !isServerConnected ||
+                            joinedOrCreatedRoom ||
+                            name === "" ||
+                            room === ""
+                        }
                     />
                 </div>
                 {roomCreated && (
@@ -92,6 +105,7 @@ export const AvilaSettings: React.FC<{}> = () => {
                     />
                 )}
                 {joinedRoom !== "" && <div>Waiting for host to start game</div>}
+                {!isServerConnected && <div>Connecting to server...</div>}
             </div>
         </div>
     );
