@@ -40,7 +40,7 @@ export const HomePage: React.FC<{}> = () => {
                 <GameCard
                     buttonLabel="Play Avila"
                     route="avila"
-                    display={<div>todo</div>}
+                    display={AvilaDisplay}
                 />
             )}
         </div>
@@ -148,5 +148,22 @@ const lifeDisplay = (
             <div></div>
             <div></div>
         </div>
+    </div>
+);
+
+const AvilaDisplay = (
+    <div className="fourIconGrid avila">
+        <img src="/images/avila/RR_C_F-0-0.svg" alt="avila game tile example" />
+        <img
+            src="/images/avila/RR_F_C-0-0.svg"
+            alt="avila game tile example"
+            className="rotate180"
+        />
+        <img src="/images/avila/CCCC-1-0.svg" alt="avila game tile example" />
+        <img
+            src="/images/avila/C_R*_F_R*-0-0.svg"
+            alt="avila game tile example"
+            className="rotate270"
+        />
     </div>
 );

@@ -17,6 +17,19 @@
     margin: 10px auto 0 auto;
 }
 
+.fourIconGrid.avila > img {
+    width: 85px;
+    height: 85px;
+}
+
+.rotate180 {
+    transform: rotate(180deg);
+}
+
+.rotate270 {
+    transform: rotate(270deg);
+}
+
 .red {
     color: crimson;
 }
