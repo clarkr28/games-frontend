@@ -50,6 +50,8 @@ export interface IAvilaTile {
     shield?: boolean;
     monestary?: boolean;
     meeple?: IMeeplePlacement;
+    rotation: number;
+    imageFile?: string;
 }
 
 /**

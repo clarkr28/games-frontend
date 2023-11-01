@@ -1,5 +1,7 @@
 import { AvilaFeature, IAvilaEdge, IAvilaTile } from "./Resources";
 
+const IMAGE_PATH_BASE = "/images/avila/";
+
 /**
  * STANDARD TILES
  */
@@ -14,18 +16,18 @@ STANDARD_TILES.push(tileGenerator("CCC_F", true));
 STANDARD_TILES.push(tileGenerator("CCC_R"));
 STANDARD_TILES.push(tileGenerator("CCC_R", true));
 STANDARD_TILES.push(tileGenerator("CCC_R", true));
-STANDARD_TILES.push(tileGenerator("CC_F_F"));
-STANDARD_TILES.push(tileGenerator("CC_F_F"));
-STANDARD_TILES.push(tileGenerator("CC_F_F"));
-STANDARD_TILES.push(tileGenerator("CC_F_F", true));
-STANDARD_TILES.push(tileGenerator("CC_F_F", true));
-STANDARD_TILES.push(tileGenerator("C_C_F_F"));
-STANDARD_TILES.push(tileGenerator("C_C_F_F"));
-STANDARD_TILES.push(tileGenerator("CC_RR"));
-STANDARD_TILES.push(tileGenerator("CC_RR"));
-STANDARD_TILES.push(tileGenerator("CC_RR"));
-STANDARD_TILES.push(tileGenerator("CC_RR", true));
-STANDARD_TILES.push(tileGenerator("CC_RR", true));
+STANDARD_TILES.push(tileGenerator("F_F_CC"));
+STANDARD_TILES.push(tileGenerator("F_F_CC"));
+STANDARD_TILES.push(tileGenerator("F_F_CC"));
+STANDARD_TILES.push(tileGenerator("F_F_CC", true));
+STANDARD_TILES.push(tileGenerator("F_F_CC", true));
+STANDARD_TILES.push(tileGenerator("F_F_C_C"));
+STANDARD_TILES.push(tileGenerator("F_F_C_C"));
+STANDARD_TILES.push(tileGenerator("RR_CC"));
+STANDARD_TILES.push(tileGenerator("RR_CC"));
+STANDARD_TILES.push(tileGenerator("RR_CC"));
+STANDARD_TILES.push(tileGenerator("RR_CC", true));
+STANDARD_TILES.push(tileGenerator("RR_CC", true));
 STANDARD_TILES.push(tileGenerator("C_F_C_F"));
 STANDARD_TILES.push(tileGenerator("C_F_C_F"));
 STANDARD_TILES.push(tileGenerator("C_F_C_F"));
@@ -45,16 +47,20 @@ export const C_F_C_F: IAvilaTile = {
         {
             type: AvilaFeature.Field,
         },
-    ]
+    ],
+    rotation: 0,
+    imageFile: `${IMAGE_PATH_BASE}C*_F_C*_F-0-0.svg`
 };
-STANDARD_TILES.push(C_F_C_F);
+STANDARD_TILES.push({...C_F_C_F});
 STANDARD_TILES.push({
     ...C_F_C_F,
     shield: true,
+    imageFile: `${IMAGE_PATH_BASE}C*_F_C*_F-1-0.svg`
 });
 STANDARD_TILES.push({
     ...C_F_C_F,
     shield: true,
+    imageFile: `${IMAGE_PATH_BASE}C*_F_C*_F-1-0.svg`
 });
 
 
@@ -84,14 +90,16 @@ export const C_R_F_R: IAvilaTile = {
             type: AvilaFeature.Road,
             connectedEdges: [1],
         },
-    ]
+    ],
+    rotation: 0,
+    imageFile: `${IMAGE_PATH_BASE}C_R*_F_R*-0-0.svg`
 };
 STANDARD_TILES.push(...[C_R_F_R, C_R_F_R, C_R_F_R]);
 
 
-STANDARD_TILES.push(tileGenerator("C_RR_F"));
-STANDARD_TILES.push(tileGenerator("C_RR_F"));
-STANDARD_TILES.push(tileGenerator("C_RR_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_C"));
+STANDARD_TILES.push(tileGenerator("RR_F_C"));
+STANDARD_TILES.push(tileGenerator("RR_F_C"));
 STANDARD_TILES.push(tileGenerator("C_R_R_R"));
 STANDARD_TILES.push(tileGenerator("C_R_R_R"));
 STANDARD_TILES.push(tileGenerator("C_R_R_R"));
@@ -101,15 +109,15 @@ STANDARD_TILES.push(tileGenerator("F_F_F_F", false, true));
 STANDARD_TILES.push(tileGenerator("F_F_F_F", false, true));
 STANDARD_TILES.push(tileGenerator("F_F_F_R", false, true));
 STANDARD_TILES.push(tileGenerator("F_F_F_R", false, true));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
-STANDARD_TILES.push(tileGenerator("F_F_RR"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
+STANDARD_TILES.push(tileGenerator("RR_F_F"));
 
 
 export const F_R_F_R: IAvilaTile = {
@@ -128,7 +136,9 @@ export const F_R_F_R: IAvilaTile = {
             type: AvilaFeature.Road,
             connectedEdges: [1],
         },
-    ]
+    ],
+    rotation: 0,
+    imageFile: `${IMAGE_PATH_BASE}F_R*_F_R*-0-0.svg`
 };
 STANDARD_TILES.push(...[F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R])
 
@@ -186,9 +196,10 @@ export function createTiles(shuffle: boolean): IAvilaTile[] {
  * @param descriptor descriptor of the tile to create
  * @param shield true if the tile has a shield
  * @param monestary true if the tile is a monestary
+ * @param fileOverride override filename to use (do not include path)
  * @returns the generated tile
  */
-export function tileGenerator(descriptor: string, shield?: boolean, monestary?: boolean): IAvilaTile {
+export function tileGenerator(descriptor: string, shield?: boolean, monestary?: boolean, fileOverride?: string): IAvilaTile {
     const edges: IAvilaEdge[] = [];
     const nodes = descriptor.split("_");
     nodes.forEach(node => {
@@ -215,12 +226,18 @@ export function tileGenerator(descriptor: string, shield?: boolean, monestary?: 
         throw new Error(`tile with descriptor ${descriptor} doesn't have 4 edges. Edges: ${JSON.stringify(edges)}`);
     }
 
+    const fileName = fileOverride ?? generateImageName(descriptor, shield, monestary);
+    const fullFileName = fileName ? `${IMAGE_PATH_BASE}${fileName}` : undefined;
+
     return {
         edges: edges,
         shield: shield,
         monestary: monestary,
+        rotation: 0,
+        imageFile: fullFileName,
     };
 }
+
 
 /**
  * convert a character to its corresponding AvilaFeature
@@ -237,4 +254,16 @@ function charToEdgeType(char: string): AvilaFeature {
             return AvilaFeature.Field;
     }
     throw new Error(`invlaid edge character: ${char}`);
+}
+
+
+/**
+ * compute the image filename for a tile
+ * @param descriptor the tile descriptor
+ * @param shield true if the tile has a shield
+ * @param monestary true if the tile is a monestary
+ * @returns the filename for this tile (no path)
+ */
+function generateImageName(descriptor: string, shield?: boolean, monestary?: boolean): string | undefined {
+    return `${descriptor}-${shield ? '1' : '0'}-${monestary ? '1' : '0'}.svg`;
 }
