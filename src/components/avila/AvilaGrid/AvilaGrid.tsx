@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./AvilaGrid.module.scss";
-import { AvilaTile } from "../AvilaTile/AvilaTile";
-import { AvilaEmptyTile } from "../AvilaEmptyTile/AvilaEmptyTile";
+import { IconTile } from "../IconTile/IconTile";
+import { EmptyTile } from "../EmptyTile/EmptyTile";
 import { AvilaBoard, AvilaPlayerColor } from "../../../assets/avila/Resources";
 import { Point } from "../../../assets/ConnectFourResources";
 
@@ -30,7 +30,7 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                 <div key={row}>
                     {gridRow.map((cell, col) =>
                         cell ? (
-                            <AvilaTile
+                            <IconTile
                                 key={col}
                                 tile={cell}
                                 placeMeepleColor={
@@ -42,7 +42,7 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                                 }
                             />
                         ) : (
-                            <AvilaEmptyTile
+                            <EmptyTile
                                 key={col}
                                 row={row}
                                 col={col}
