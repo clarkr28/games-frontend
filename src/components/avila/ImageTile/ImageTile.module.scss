@@ -1,7 +1,46 @@
 @import "../IconTile/IconTile.module.scss";
 
-.imageTile {
+$meepleContainer: 22px;
+
+.wrapper {
     border: 1px solid #ccc;
     width: $tileWidth;
     height: $tileHeight;
+}
+
+.placedMeeple {
+    width: $meepleContainer;
+    height: $meepleContainer;
+    border-radius: calc($meepleContainer / 2);
+    background-color: #fff;
+}
+
+.topMeeple {
+    position: relative;
+    top: -76px;
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.bottomMeeple {
+    position: relative;
+    top: -27px;
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.rightMeeple {
+    position: relative;
+    top: calc((($tileWidth + $meepleContainer) / -2) - 3px);
+    left: calc($tileWidth - $meepleContainer);
+}
+
+.leftMeeple {
+    position: relative;
+    top: calc((($tileWidth + $meepleContainer) / -2) - 3px);
+    left: 2px;
+}
+
+.monestaryMeeple {
+    position: relative;
+    top: calc((($tileWidth + $meepleContainer) / -2) + 5px);
+    left: calc(($tileWidth - $meepleContainer) / 2);
 }
