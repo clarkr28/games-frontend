@@ -1,9 +1,9 @@
 import React from "react";
 import { IAvilaPlayer, IAvilaTile } from "../../../assets/avila/Resources";
-import { IconTile } from "../IconTile/IconTile";
 import styles from "./AvilaPlayerCard.module.scss";
 import { IconButton } from "../../common/IconButton/IconButton";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
+import { ImageTile } from "../ImageTile/ImageTile";
 
 export interface IAvilaPlayerCardProps {
     playerData: IAvilaPlayer;
@@ -39,7 +39,7 @@ export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
             </p>
             {tile && <p>{`${numRemainingTiles} tiles left`}</p>}
             <div className={tile ? styles.tileWrapper : ""}>
-                {tile && <IconTile tile={tile} />}
+                {tile && <ImageTile tile={tile} />}
             </div>
             {showRotateButton && (
                 <IconButton

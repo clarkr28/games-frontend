@@ -69,9 +69,9 @@ STANDARD_TILES.push(tileGenerator("C_F_F_F"));
 STANDARD_TILES.push(tileGenerator("C_F_F_F"));
 STANDARD_TILES.push(tileGenerator("C_F_F_F"));
 STANDARD_TILES.push(tileGenerator("C_F_F_F"));
-STANDARD_TILES.push(tileGenerator("C_F_RR"));
-STANDARD_TILES.push(tileGenerator("C_F_RR"));
-STANDARD_TILES.push(tileGenerator("C_F_RR"));
+STANDARD_TILES.push(tileGenerator("RR_C_F"));
+STANDARD_TILES.push(tileGenerator("RR_C_F"));
+STANDARD_TILES.push(tileGenerator("RR_C_F"));
 
 
 export const C_R_F_R: IAvilaTile = {
@@ -107,8 +107,8 @@ STANDARD_TILES.push(tileGenerator("F_F_F_F", false, true));
 STANDARD_TILES.push(tileGenerator("F_F_F_F", false, true));
 STANDARD_TILES.push(tileGenerator("F_F_F_F", false, true));
 STANDARD_TILES.push(tileGenerator("F_F_F_F", false, true));
-STANDARD_TILES.push(tileGenerator("F_F_F_R", false, true));
-STANDARD_TILES.push(tileGenerator("F_F_F_R", false, true));
+STANDARD_TILES.push(tileGenerator("F_F_R_F", false, true));
+STANDARD_TILES.push(tileGenerator("F_F_R_F", false, true));
 STANDARD_TILES.push(tileGenerator("RR_F_F"));
 STANDARD_TILES.push(tileGenerator("RR_F_F"));
 STANDARD_TILES.push(tileGenerator("RR_F_F"));

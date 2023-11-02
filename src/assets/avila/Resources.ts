@@ -75,6 +75,9 @@ export function rotateTile(tile: IAvilaTile): IAvilaTile {
         newTile.edges[edgeIndex].connectedEdges = newTile.edges[edgeIndex].connectedEdges?.map(connection => (connection + 1) % 4);
     }
 
+    // update the rotation degree
+    newTile.rotation = (tile.rotation + 90) % 360;
+
     return newTile;
 }
 

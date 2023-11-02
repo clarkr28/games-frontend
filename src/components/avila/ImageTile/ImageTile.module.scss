@@ -1,0 +1,7 @@
+@import "../IconTile/IconTile.module.scss";
+
+.imageTile {
+    border: 1px solid #ccc;
+    width: $tileWidth;
+    height: $tileHeight;
+}
