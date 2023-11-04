@@ -4,10 +4,12 @@ import styles from "./AvilaGame.module.scss";
 import { AvilaPlayerCards } from "../AvilaPlayerCards/AvilaPlayerCards";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+    PlaceMeepleData,
     applyOpponentEndTurn,
     applyOpponentPlacedTile,
     finishMove,
     hostStartedGame,
+    placeMeeple,
     selectAvilaBoard,
     selectAvilaCurrentTurn,
     selectAvilaLastTilePlaced,
@@ -75,6 +77,9 @@ export const AvilaGame: React.FC<{}> = () => {
                             gameStatus === AvilaGameStatus.PlacingMeeple
                         }
                         playerTurnColor={playerData[playerTurn].color}
+                        placeMeepleCallback={(data: PlaceMeepleData) =>
+                            dispatch(placeMeeple(data))
+                        }
                     />
                 )}
             </div>

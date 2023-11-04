@@ -4,6 +4,7 @@ import { EmptyTile } from "../EmptyTile/EmptyTile";
 import { AvilaBoard, AvilaPlayerColor } from "../../../assets/avila/Resources";
 import { Point } from "../../../assets/ConnectFourResources";
 import { ImageTile } from "../ImageTile/ImageTile";
+import { PlaceMeepleData } from "../../../features/avilaSlice";
 
 export interface IAvilaGridProps {
     gridData: AvilaBoard;
@@ -11,6 +12,7 @@ export interface IAvilaGridProps {
     placingMeeple?: boolean;
     lastTilePlaced?: Point;
     playerTurnColor?: AvilaPlayerColor;
+    placeMeepleCallback?: (data: PlaceMeepleData) => void;
 }
 
 export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
@@ -20,6 +22,7 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
         placingMeeple,
         lastTilePlaced,
         playerTurnColor,
+        placeMeepleCallback,
     } = props;
 
     const width_px = (gridData[0]?.length || 0) * 77;
@@ -40,6 +43,7 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                                         ? playerTurnColor
                                         : undefined
                                 }
+                                placeMeepleCallback={placeMeepleCallback}
                             />
                         ) : (
                             <EmptyTile

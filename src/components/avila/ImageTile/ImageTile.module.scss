@@ -3,6 +3,7 @@
 $meepleContainer: 22px;
 
 .wrapper {
+    position: relative;
     border: 1px solid #ccc;
     width: $tileWidth;
     height: $tileHeight;
@@ -13,34 +14,72 @@ $meepleContainer: 22px;
     height: $meepleContainer;
     border-radius: calc($meepleContainer / 2);
     background-color: #fff;
+    font-size: 18px;
+}
+
+.placeMeeple {
+    width: $meepleContainer;
+    height: $meepleContainer;
+    border-radius: calc($meepleContainer / 2);
+    background-color: #fff;
 }
 
 .topMeeple {
-    position: relative;
-    top: -76px;
+    position: absolute;
+    top: 1px;
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.placeTop {
+    position: absolute;
+    top: 1px;
     left: calc(($tileWidth - $meepleContainer) / 2);
 }
 
 .bottomMeeple {
-    position: relative;
-    top: -27px;
+    position: absolute;
+    top: calc($tileHeight - $meepleContainer - 1px);
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.placeBottom {
+    position: absolute;
+    top: calc($tileHeight - $meepleContainer - 1px);
     left: calc(($tileWidth - $meepleContainer) / 2);
 }
 
 .rightMeeple {
-    position: relative;
-    top: calc((($tileWidth + $meepleContainer) / -2) - 3px);
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
     left: calc($tileWidth - $meepleContainer);
 }
 
+.placeRight {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    right: 2px;
+}
+
 .leftMeeple {
-    position: relative;
-    top: calc((($tileWidth + $meepleContainer) / -2) - 3px);
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: 2px;
+}
+
+.placeLeft {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
     left: 2px;
 }
 
 .monestaryMeeple {
-    position: relative;
-    top: calc((($tileWidth + $meepleContainer) / -2) + 5px);
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.placeMonestary {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
     left: calc(($tileWidth - $meepleContainer) / 2);
 }
