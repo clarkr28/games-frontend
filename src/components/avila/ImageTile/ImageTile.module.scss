@@ -1,6 +1,7 @@
 @import "../IconTile/IconTile.module.scss";
 
 $meepleContainer: 22px;
+$placeMeepleBorder: 2px;
 
 .wrapper {
     position: relative;
@@ -18,10 +19,20 @@ $meepleContainer: 22px;
 }
 
 .placeMeeple {
-    width: $meepleContainer;
-    height: $meepleContainer;
-    border-radius: calc($meepleContainer / 2);
+    width: calc($meepleContainer - $placeMeepleBorder * 2);
+    height: calc($meepleContainer - $placeMeepleBorder * 2);
+    border-radius: 50%;
+    border: 2px solid black;
     background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s ease-in-out;
+
+    &:hover {
+        transform: rotate(180deg) scale(1.4);
+        cursor: pointer;
+    }
 }
 
 .topMeeple {

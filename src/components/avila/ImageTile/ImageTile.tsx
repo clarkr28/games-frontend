@@ -60,31 +60,41 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
                 <div
                     className={`${styles.placeMeeple} ${styles.placeTop}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 0 })}
-                ></div>
+                >
+                    <FontAwesomeIcon icon={solid("plus")} />
+                </div>
             )}
             {showPlaceMeepleRight && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeRight}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 1 })}
-                ></div>
+                >
+                    <FontAwesomeIcon icon={solid("plus")} />
+                </div>
             )}
             {showPlaceMeepleBottom && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeBottom}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 2 })}
-                ></div>
+                >
+                    <FontAwesomeIcon icon={solid("plus")} />
+                </div>
             )}
             {showPlaceMeepleLeft && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeLeft}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 3 })}
-                ></div>
+                >
+                    <FontAwesomeIcon icon={solid("plus")} />
+                </div>
             )}
             {showPlaceMeepleMonestary && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeMonestary}`}
                     onClick={() => placeMeepleCallback?.({ onMonestary: true })}
-                ></div>
+                >
+                    <FontAwesomeIcon icon={solid("plus")} />
+                </div>
             )}
         </div>
     );
