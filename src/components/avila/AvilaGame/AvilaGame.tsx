@@ -13,6 +13,7 @@ import {
     selectAvilaBoard,
     selectAvilaCurrentTurn,
     selectAvilaLastTilePlaced,
+    selectAvilaPlaceableMeepleLocations,
     selectAvilaPlayerData,
     selectAvilaStatus,
     setIsServerConnected,
@@ -34,6 +35,9 @@ export const AvilaGame: React.FC<{}> = () => {
     const lastTilePlaced = useAppSelector(selectAvilaLastTilePlaced);
     const playerData = useAppSelector(selectAvilaPlayerData);
     const playerTurn = useAppSelector(selectAvilaCurrentTurn);
+    const placeableMeepleLocations = useAppSelector(
+        selectAvilaPlaceableMeepleLocations
+    );
 
     // trigger the end of a move
     useEffect(() => {
@@ -80,6 +84,7 @@ export const AvilaGame: React.FC<{}> = () => {
                         placeMeepleCallback={(data: PlaceMeepleData) =>
                             dispatch(placeMeeple(data))
                         }
+                        placeableMeepleLocations={placeableMeepleLocations}
                     />
                 )}
             </div>

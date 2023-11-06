@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, IAvilaPlayer, IAvilaTile, addPlayer, canPlaceTile, completedFeatureSearch, createEmptyBoard, expandBoard, isFeatureOccupied, rotateTile } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaGameStatus, IAvilaPlayer, IAvilaTile, IPlaceableMeepleLocations, addPlayer, canPlaceTile, completedFeatureSearch, createEmptyBoard, expandBoard, getPlaceableMeepleLocations, isFeatureOccupied, isMeeplePlaceable, rotateTile } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -16,6 +16,7 @@ export interface AvilaState {
     roomCreated: boolean;           // true if this person created the room
     myPlayerIndex: number;          // the index this player is in the array of players
     isServerConnected: boolean;     // true if the client is successfully connected to the server
+    placeableMeepleLocations?: IPlaceableMeepleLocations; // where meeples can be placed on the most recent tile
 }
 
 const initialState: AvilaState = {
@@ -67,9 +68,19 @@ export const avilaSlice = createSlice({
                     state.lastTilePlaced.Y++;
                 }
 
-                // set to placing meeple if they have one to place
-                state.status = state.playerData[state.currentTurn].availableMeeple 
+                // set to placing meeple if they have a meeple to place
+                let nextGameStatus = state.playerData[state.currentTurn].availableMeeple 
                     ? AvilaGameStatus.PlacingMeeple : AvilaGameStatus.TriggerFinishMove;
+                
+                // see if it's even possible to place a meeple on the tile that was just placed
+                if (nextGameStatus === AvilaGameStatus.PlacingMeeple) {
+                    state.placeableMeepleLocations = getPlaceableMeepleLocations(state.board, state.lastTilePlaced);
+                    if (!isMeeplePlaceable(state.placeableMeepleLocations)) {
+                        // a meeple can't be placed on this tile, so finish the move
+                        nextGameStatus = AvilaGameStatus.TriggerFinishMove;
+                    }
+                }
+                state.status = nextGameStatus;
             }    
         },
         placeMeeple: (state, action: PayloadAction<PlaceMeepleData>) => {
@@ -115,6 +126,7 @@ export const avilaSlice = createSlice({
             state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
             state.currentTile = state.remainingTiles.pop();
             state.remainingTiles = [...state.remainingTiles];
+            state.placeableMeepleLocations = undefined;
             state.status = AvilaGameStatus.WaitingForTurn;
 
             CommWrapper.EndTurn({
@@ -196,5 +208,6 @@ export const selectAvilaLastTilePlaced = (state: RootState) => state.avila.lastT
 export const selectAvilaRoomCreated = (state: RootState) => state.avila.roomCreated;
 export const selectAvilaRemainingTilesCount = (state: RootState) => state.avila.remainingTiles.length;
 export const selectAvilaIsServerConnnected = (state: RootState) => state.avila.isServerConnected;
+export const selectAvilaPlaceableMeepleLocations = (state: RootState) => state.avila.placeableMeepleLocations;
 
 export default avilaSlice.reducer;

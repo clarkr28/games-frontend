@@ -3,6 +3,7 @@ import {
     AvilaFeature,
     AvilaPlayerColor,
     IAvilaTile,
+    IPlaceableMeepleLocations,
     getEdgeType,
 } from "../../../assets/avila/Resources";
 import { IconTile } from "../IconTile/IconTile";
@@ -14,28 +15,20 @@ export interface IImageTileProps {
     tile: IAvilaTile;
     placeMeepleColor?: AvilaPlayerColor;
     placeMeepleCallback?: (data: PlaceMeepleData) => void;
+    placeableMeepleLocations?: IPlaceableMeepleLocations;
 }
 
 export const ImageTile: React.FC<IImageTileProps> = (props) => {
-    const { tile, placeMeepleColor, placeMeepleCallback } = props;
+    const {
+        tile,
+        placeMeepleColor,
+        placeMeepleCallback,
+        placeableMeepleLocations,
+    } = props;
+
     if (!tile.imageFile) {
         return <IconTile tile={tile} placeMeepleColor={placeMeepleColor} />;
     }
-
-    const showPlaceMeepleTop =
-        placeMeepleColor !== undefined &&
-        getEdgeType(tile, 0) !== AvilaFeature.Field;
-    const showPlaceMeepleRight =
-        placeMeepleColor !== undefined &&
-        getEdgeType(tile, 1) !== AvilaFeature.Field;
-    const showPlaceMeepleBottom =
-        placeMeepleColor !== undefined &&
-        getEdgeType(tile, 2) !== AvilaFeature.Field;
-    const showPlaceMeepleLeft =
-        placeMeepleColor !== undefined &&
-        getEdgeType(tile, 3) !== AvilaFeature.Field;
-    const showPlaceMeepleMonestary =
-        placeMeepleColor !== undefined && tile.monestary;
 
     const Meeple = (
         <div
@@ -56,7 +49,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
                 alt="avila game tile"
             />
             {tile.meeple && Meeple}
-            {showPlaceMeepleTop && (
+            {placeableMeepleLocations?.topEdge && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeTop}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 0 })}
@@ -64,7 +57,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
                     <FontAwesomeIcon icon={solid("plus")} />
                 </div>
             )}
-            {showPlaceMeepleRight && (
+            {placeableMeepleLocations?.rightEdge && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeRight}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 1 })}
@@ -72,7 +65,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
                     <FontAwesomeIcon icon={solid("plus")} />
                 </div>
             )}
-            {showPlaceMeepleBottom && (
+            {placeableMeepleLocations?.bottomEdge && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeBottom}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 2 })}
@@ -80,7 +73,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
                     <FontAwesomeIcon icon={solid("plus")} />
                 </div>
             )}
-            {showPlaceMeepleLeft && (
+            {placeableMeepleLocations?.leftEdge && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeLeft}`}
                     onClick={() => placeMeepleCallback?.({ edgeIndex: 3 })}
@@ -88,7 +81,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
                     <FontAwesomeIcon icon={solid("plus")} />
                 </div>
             )}
-            {showPlaceMeepleMonestary && (
+            {placeableMeepleLocations?.monestary && (
                 <div
                     className={`${styles.placeMeeple} ${styles.placeMonestary}`}
                     onClick={() => placeMeepleCallback?.({ onMonestary: true })}
