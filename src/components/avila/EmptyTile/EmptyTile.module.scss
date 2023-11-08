@@ -4,6 +4,7 @@
     border: 1px solid #ccc;
     width: $tileWidth;
     height: $tileHeight;
+    flex-shrink: 0;
 
     &.hoverable {
         &:hover {

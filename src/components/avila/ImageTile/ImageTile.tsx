@@ -1,10 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    AvilaFeature,
     AvilaPlayerColor,
     IAvilaTile,
     IPlaceableMeepleLocations,
-    getEdgeType,
 } from "../../../assets/avila/Resources";
 import { IconTile } from "../IconTile/IconTile";
 import styles from "./ImageTile.module.scss";
