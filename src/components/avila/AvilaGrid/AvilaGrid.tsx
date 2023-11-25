@@ -18,6 +18,7 @@ export interface IAvilaGridProps {
     playerTurnColor?: AvilaPlayerColor;
     placeMeepleCallback?: (data: PlaceMeepleData) => void;
     placeableMeepleLocations?: IPlaceableMeepleLocations;
+    danceLastPlaced?: boolean;
 }
 
 export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
@@ -29,6 +30,7 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
         playerTurnColor,
         placeMeepleCallback,
         placeableMeepleLocations,
+        danceLastPlaced,
     } = props;
 
     const width_px = (gridData[0]?.length || 0) * 77;
@@ -56,6 +58,11 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                                     placingMeeple
                                         ? placeableMeepleLocations
                                         : undefined
+                                }
+                                dance={
+                                    lastTilePlaced?.X === col &&
+                                    lastTilePlaced?.Y === row &&
+                                    danceLastPlaced
                                 }
                             />
                         ) : (

@@ -14,6 +14,7 @@ export interface IImageTileProps {
     placeMeepleColor?: AvilaPlayerColor;
     placeMeepleCallback?: (data: PlaceMeepleData) => void;
     placeableMeepleLocations?: IPlaceableMeepleLocations;
+    dance?: boolean;
 }
 
 export const ImageTile: React.FC<IImageTileProps> = (props) => {
@@ -22,6 +23,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
         placeMeepleColor,
         placeMeepleCallback,
         placeableMeepleLocations,
+        dance,
     } = props;
 
     if (!tile.imageFile) {
@@ -39,7 +41,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
     );
 
     return (
-        <div className={styles.wrapper}>
+        <div className={`${styles.wrapper} ${dance ? styles.dance : ""}`}>
             <img
                 className={styles.imageTile}
                 style={{ transform: `rotate(${tile.rotation}deg)` }}

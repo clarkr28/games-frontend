@@ -85,6 +85,10 @@ export const AvilaGame: React.FC<{}> = () => {
                             dispatch(placeMeeple(data))
                         }
                         placeableMeepleLocations={placeableMeepleLocations}
+                        danceLastPlaced={
+                            gameStatus === AvilaGameStatus.PlacingTile ||
+                            gameStatus === AvilaGameStatus.WaitingForTurn
+                        }
                     />
                 )}
             </div>

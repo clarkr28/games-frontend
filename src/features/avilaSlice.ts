@@ -80,6 +80,15 @@ export const avilaSlice = createSlice({
                         nextGameStatus = AvilaGameStatus.TriggerFinishMove;
                     }
                 }
+
+                // send tile placed message if game is waiting for user to place a meeple
+                if (nextGameStatus === AvilaGameStatus.PlacingMeeple) {
+                    CommWrapper.PlaceTile({
+                        board: state.board,
+                        lastTilePlaced: state.lastTilePlaced,
+                    });
+                }
+
                 state.status = nextGameStatus;
             }    
         },
@@ -132,6 +141,7 @@ export const avilaSlice = createSlice({
             CommWrapper.EndTurn({
                 board: state.board,
                 playerData: state.playerData,
+                lastTilePlaced: state.lastTilePlaced!,
             });
         },
         startGame: (state) => {
@@ -168,12 +178,14 @@ export const avilaSlice = createSlice({
         applyOpponentPlacedTile: (state, action: PayloadAction<IPlacedTileData>) => {
             console.log('received message that tile was placed');
             state.board = action.payload.board;
+            state.lastTilePlaced = action.payload.lastTilePlaced;
         },
         applyOpponentEndTurn: (state, action: PayloadAction<IEndTurnData>) => {
             console.log('received message that its the end of an opponents turn');
             // process data from server
             state.board = action.payload.board;
             state.playerData = action.payload.playerData;
+            state.lastTilePlaced = action.payload.lastTilePlaced;
 
             // update data for the next turn
             state.currentTurn = (state.currentTurn + 1) % state.playerData.length;

@@ -1,3 +1,4 @@
+import { Point } from "../ConnectFourResources";
 import { IAssignIdResponse, ICreateRoomRequest, ICreateRoomResponse, IEndTurnRequest, IEndTurnResponse, IJoinRoomHostResponse, IJoinRoomPlayerResponse, IJoinRoomRequest, IPlacedTileRequest, IPlacedTileResponse, IReconnectRequest, IStartGameRequest, IStartGameResponse, MessagesFromServer } from "./CommMessages";
 import { AvilaBoard, IAvilaPlayer, IAvilaTile } from "./Resources";
 
@@ -42,11 +43,13 @@ export interface IStartGameData {
 
 export interface IPlacedTileData {
     board: AvilaBoard; 
+    lastTilePlaced: Point;
 }
 
 export interface IEndTurnData {
     board: AvilaBoard;
     playerData: IAvilaPlayer[]; // scores and meeple counts change
+    lastTilePlaced: Point;
 }
 
 

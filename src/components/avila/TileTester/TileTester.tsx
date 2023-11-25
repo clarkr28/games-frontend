@@ -45,6 +45,7 @@ export const TileTester: React.FC<{}> = () => {
                 gridData={grid}
                 lastTilePlaced={{ X: 10, Y: 5 }}
                 playerTurnColor={AvilaPlayerColor.Blue}
+                danceLastPlaced
             />
             <div className={styles.putMeepleWrapper}>
                 <ImageTile
