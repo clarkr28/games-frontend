@@ -9,18 +9,19 @@ import { AvilaGrid } from "../AvilaGrid/AvilaGrid";
 import { ImageTile } from "../ImageTile/ImageTile";
 import styles from "./TileTester.module.scss";
 
+const TILES = createTiles(false);
+
 export const TileTester: React.FC<{}> = () => {
     const [grid, setGrid] = useState<AvilaBoard>([]);
-    const [tiles, setTiles] = useState<IAvilaTile[]>(createTiles(false));
     const gridWidth = 12;
 
     // get the tiles and turn them into a grid
     useEffect(() => {
-        if (tiles.length) {
-            customizeTiles(tiles);
+        if (TILES.length) {
+            customizeTiles(TILES);
             let row: (IAvilaTile | undefined)[] = [];
             const tempGrid: AvilaBoard = [];
-            tiles.forEach((tile) => {
+            TILES.forEach((tile) => {
                 row.push(tile);
                 if (row.length === gridWidth) {
                     tempGrid.push(row);
@@ -37,7 +38,7 @@ export const TileTester: React.FC<{}> = () => {
 
             setGrid(tempGrid);
         }
-    }, [tiles.length]);
+    }, []);
 
     return (
         <div>
@@ -49,24 +50,43 @@ export const TileTester: React.FC<{}> = () => {
             />
             <div className={styles.putMeepleWrapper}>
                 <ImageTile
-                    tile={tiles[46]}
+                    tile={TILES[46]}
                     placeMeepleColor={AvilaPlayerColor.Blue}
+                    placeableMeepleLocations={{ monestary: true }}
                 />
                 <ImageTile
-                    tile={tiles[47]}
+                    tile={TILES[47]}
                     placeMeepleColor={AvilaPlayerColor.Green}
+                    placeableMeepleLocations={{
+                        monestary: true,
+                        bottomEdge: true,
+                    }}
                 />
                 <ImageTile
-                    tile={tiles[tiles.length - 1]}
+                    tile={TILES[TILES.length - 1]}
                     placeMeepleColor={AvilaPlayerColor.Orange}
+                    placeableMeepleLocations={{
+                        topEdge: true,
+                        rightEdge: true,
+                        bottomEdge: true,
+                        leftEdge: true,
+                    }}
                 />
                 <ImageTile
-                    tile={tiles[19]}
+                    tile={TILES[19]}
                     placeMeepleColor={AvilaPlayerColor.Purple}
+                    placeableMeepleLocations={{
+                        topEdge: true,
+                        bottomEdge: true,
+                    }}
                 />
                 <ImageTile
-                    tile={tiles[33]}
+                    tile={TILES[33]}
                     placeMeepleColor={AvilaPlayerColor.Red}
+                    placeableMeepleLocations={{
+                        topEdge: true,
+                        bottomEdge: true,
+                    }}
                 />
             </div>
         </div>
