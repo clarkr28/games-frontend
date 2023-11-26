@@ -1,0 +1,23 @@
+.wrapper {
+    position: relative;
+}
+
+.scoreChangeDisplay {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    color: green;
+    font-size: 18px;
+    opacity: 0;
+    animation: fadeOut 3s linear;
+}
+
+.doubleDigit {
+    right: -15px;
+}
+
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+}
