@@ -1,9 +1,14 @@
 import React from "react";
 import styles from "./AvilaGrid.module.scss";
-import { AvilaTile } from "../AvilaTile/AvilaTile";
-import { AvilaEmptyTile } from "../AvilaEmptyTile/AvilaEmptyTile";
-import { AvilaBoard, AvilaPlayerColor } from "../../../assets/avila/Resources";
+import { EmptyTile } from "../EmptyTile/EmptyTile";
+import {
+    AvilaBoard,
+    AvilaPlayerColor,
+    IPlaceableMeepleLocations,
+} from "../../../assets/avila/Resources";
 import { Point } from "../../../assets/ConnectFourResources";
+import { ImageTile } from "../ImageTile/ImageTile";
+import { PlaceMeepleData } from "../../../features/avilaSlice";
 
 export interface IAvilaGridProps {
     gridData: AvilaBoard;
@@ -11,6 +16,9 @@ export interface IAvilaGridProps {
     placingMeeple?: boolean;
     lastTilePlaced?: Point;
     playerTurnColor?: AvilaPlayerColor;
+    placeMeepleCallback?: (data: PlaceMeepleData) => void;
+    placeableMeepleLocations?: IPlaceableMeepleLocations;
+    danceLastPlaced?: boolean;
 }
 
 export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
@@ -20,6 +28,9 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
         placingMeeple,
         lastTilePlaced,
         playerTurnColor,
+        placeMeepleCallback,
+        placeableMeepleLocations,
+        danceLastPlaced,
     } = props;
 
     const width_px = (gridData[0]?.length || 0) * 77;
@@ -30,7 +41,7 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                 <div key={row}>
                     {gridRow.map((cell, col) =>
                         cell ? (
-                            <AvilaTile
+                            <ImageTile
                                 key={col}
                                 tile={cell}
                                 placeMeepleColor={
@@ -40,9 +51,22 @@ export const AvilaGrid: React.FC<IAvilaGridProps> = (props) => {
                                         ? playerTurnColor
                                         : undefined
                                 }
+                                placeMeepleCallback={placeMeepleCallback}
+                                placeableMeepleLocations={
+                                    lastTilePlaced?.X === col &&
+                                    lastTilePlaced?.Y === row &&
+                                    placingMeeple
+                                        ? placeableMeepleLocations
+                                        : undefined
+                                }
+                                dance={
+                                    lastTilePlaced?.X === col &&
+                                    lastTilePlaced?.Y === row &&
+                                    danceLastPlaced
+                                }
                             />
                         ) : (
-                            <AvilaEmptyTile
+                            <EmptyTile
                                 key={col}
                                 row={row}
                                 col={col}

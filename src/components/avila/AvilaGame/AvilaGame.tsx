@@ -4,13 +4,16 @@ import styles from "./AvilaGame.module.scss";
 import { AvilaPlayerCards } from "../AvilaPlayerCards/AvilaPlayerCards";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
+    PlaceMeepleData,
     applyOpponentEndTurn,
     applyOpponentPlacedTile,
     finishMove,
     hostStartedGame,
+    placeMeeple,
     selectAvilaBoard,
     selectAvilaCurrentTurn,
     selectAvilaLastTilePlaced,
+    selectAvilaPlaceableMeepleLocations,
     selectAvilaPlayerData,
     selectAvilaStatus,
     setIsServerConnected,
@@ -32,6 +35,9 @@ export const AvilaGame: React.FC<{}> = () => {
     const lastTilePlaced = useAppSelector(selectAvilaLastTilePlaced);
     const playerData = useAppSelector(selectAvilaPlayerData);
     const playerTurn = useAppSelector(selectAvilaCurrentTurn);
+    const placeableMeepleLocations = useAppSelector(
+        selectAvilaPlaceableMeepleLocations
+    );
 
     // trigger the end of a move
     useEffect(() => {
@@ -75,6 +81,14 @@ export const AvilaGame: React.FC<{}> = () => {
                             gameStatus === AvilaGameStatus.PlacingMeeple
                         }
                         playerTurnColor={playerData[playerTurn].color}
+                        placeMeepleCallback={(data: PlaceMeepleData) =>
+                            dispatch(placeMeeple(data))
+                        }
+                        placeableMeepleLocations={placeableMeepleLocations}
+                        danceLastPlaced={
+                            gameStatus === AvilaGameStatus.PlacingTile ||
+                            gameStatus === AvilaGameStatus.WaitingForTurn
+                        }
                     />
                 )}
             </div>

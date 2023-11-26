@@ -1,9 +1,10 @@
-@import "../AvilaTile/AvilaTile.module.scss";
+@import "../IconTile/IconTile.module.scss";
 
 .tile {
     border: 1px solid #ccc;
     width: $tileWidth;
     height: $tileHeight;
+    flex-shrink: 0;
 
     &.hoverable {
         &:hover {

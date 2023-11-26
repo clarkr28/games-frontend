@@ -8,18 +8,18 @@ import {
 } from "../../../assets/avila/Resources";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
-import styles from "./AvilaTile.module.scss";
+import styles from "./IconTile.module.scss";
 import { useAppDispatch } from "../../../app/hooks";
 import { placeMeeple } from "../../../features/avilaSlice";
 
 const Monestary = <FontAwesomeIcon icon={solid("place-of-worship")} />;
 
-export interface IAvilaTileProps {
+export interface IIconTileProps {
     tile: IAvilaTile;
     placeMeepleColor?: AvilaPlayerColor; // the color of the player placing meeples
 }
 
-export const AvilaTile: React.FC<IAvilaTileProps> = (props) => {
+export const IconTile: React.FC<IIconTileProps> = (props) => {
     const { tile, placeMeepleColor } = props;
     const dispatch = useAppDispatch();
 

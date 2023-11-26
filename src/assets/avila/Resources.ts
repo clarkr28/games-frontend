@@ -50,6 +50,8 @@ export interface IAvilaTile {
     shield?: boolean;
     monestary?: boolean;
     meeple?: IMeeplePlacement;
+    rotation: number;
+    imageFile?: string;
 }
 
 /**
@@ -72,6 +74,9 @@ export function rotateTile(tile: IAvilaTile): IAvilaTile {
     for (let edgeIndex = 0; edgeIndex < 4; edgeIndex++) {
         newTile.edges[edgeIndex].connectedEdges = newTile.edges[edgeIndex].connectedEdges?.map(connection => (connection + 1) % 4);
     }
+
+    // update the rotation degree
+    newTile.rotation = (tile.rotation + 90) % 360;
 
     return newTile;
 }
@@ -207,6 +212,93 @@ export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IA
     }
 
     return hasAdjacentTile;
+}
+
+export interface IPlaceableMeepleLocations {
+    topEdge?: boolean;
+    rightEdge?: boolean;
+    bottomEdge?: boolean;
+    leftEdge?: boolean;
+    monestary?: boolean;
+}
+
+/**
+ * determine if a meeple can be placed from the passed options
+ * @param options meeple placement options
+ * @returns true if a meeple can be placed somewhere 
+ */
+export function isMeeplePlaceable(options: IPlaceableMeepleLocations): boolean {
+    return options.topEdge || options.rightEdge || options.bottomEdge ||
+        options.leftEdge || options.monestary || false;
+}
+
+/**
+ * determine where a meeple can be placed for a tile (based on what features are unoccupied)
+ * @param board the game board
+ * @param tileLoc the location of the tile to compute placeable meeple locations
+ * @returns the places where a meeple can be placed on this tile
+ */
+export function getPlaceableMeepleLocations(board: AvilaBoard, tileLoc: Point): IPlaceableMeepleLocations {
+    const placeableMeepleLocations: IPlaceableMeepleLocations = {};
+
+    // make sure the tile location is valid
+    if (!isLocationValid(tileLoc, board)) {
+        return placeableMeepleLocations;
+    }
+
+    // make sure the tile is defined
+    const tile = board[tileLoc.Y][tileLoc.X];
+    if (tile === undefined || tile === null) {
+        return placeableMeepleLocations;
+    }
+
+    // make sure the tile doesn't have a meeple on it
+    if (tile.meeple) {
+        return placeableMeepleLocations;
+    }
+
+    if (tile.monestary) {
+        placeableMeepleLocations.monestary = true;
+    }
+
+    tile.edges.forEach((edge: IAvilaEdge, edgeIndex: number) => {
+        // no need to process field edges
+        if (edge.type === AvilaFeature.Field) {
+            return;
+        }
+
+        // see if we've already processed an edge connected to this edge
+        let earlierConnectedEdgeExists = false;
+        edge.connectedEdges?.forEach(connectedEdgeValue => {
+            if (connectedEdgeValue < edgeIndex) {
+                earlierConnectedEdgeExists = true;
+            }
+        });
+        if (earlierConnectedEdgeExists) {
+            return;
+        }
+
+        // search the feature to see if a meeple can be placed on it
+        const featureOccupied = isFeatureOccupied(board, tileLoc, edgeIndex);
+        if (!featureOccupied) {
+            switch (edgeIndex) {
+                case 0:
+                    placeableMeepleLocations.topEdge = true;
+                    break;
+                case 1:
+                    placeableMeepleLocations.rightEdge = true;
+                    break;
+                case 2:
+                    placeableMeepleLocations.bottomEdge = true;
+                    break;
+                case 3:
+                    placeableMeepleLocations.leftEdge = true;
+                    break;
+            }
+        }
+    });
+
+    return placeableMeepleLocations;
 }
 
 /**

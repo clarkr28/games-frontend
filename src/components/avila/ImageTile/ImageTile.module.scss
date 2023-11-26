@@ -1,0 +1,114 @@
+@import "../IconTile/IconTile.module.scss";
+
+$meepleContainer: 22px;
+$placeMeepleBorder: 2px;
+
+.wrapper {
+    position: relative;
+    border: 1px solid #ccc;
+    width: $tileWidth;
+    height: $tileHeight;
+    flex-shrink: 0;
+    img {
+        width: $tileWidth;
+        height: $tileHeight;
+    }
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    2% { transform: rotate(10deg); }
+    6% { transform: rotate(-10deg); }
+    10% { transform: rotate(10deg); }
+    14% { transform: rotate(-10deg); }
+    16% { transform: rotate(0deg); } 
+}
+
+.dance {
+    animation: wiggle 4s infinite;
+}
+
+.placedMeeple {
+    width: $meepleContainer;
+    height: $meepleContainer;
+    border-radius: calc($meepleContainer / 2);
+    background-color: #fff;
+    font-size: 18px;
+}
+
+.placeMeeple {
+    width: calc($meepleContainer - $placeMeepleBorder * 2);
+    height: calc($meepleContainer - $placeMeepleBorder * 2);
+    border-radius: 50%;
+    border: 2px solid black;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.5s ease-in-out;
+
+    &:hover {
+        transform: rotate(180deg) scale(1.4);
+        cursor: pointer;
+    }
+}
+
+.topMeeple {
+    position: absolute;
+    top: 1px;
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.placeTop {
+    position: absolute;
+    top: 1px;
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.bottomMeeple {
+    position: absolute;
+    top: calc($tileHeight - $meepleContainer - 1px);
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.placeBottom {
+    position: absolute;
+    top: calc($tileHeight - $meepleContainer - 1px);
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.rightMeeple {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: calc($tileWidth - $meepleContainer);
+}
+
+.placeRight {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    right: 2px;
+}
+
+.leftMeeple {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: 2px;
+}
+
+.placeLeft {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: 2px;
+}
+
+.monestaryMeeple {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.placeMonestary {
+    position: absolute;
+    top: calc((($tileWidth - $meepleContainer) / 2));
+    left: calc(($tileWidth - $meepleContainer) / 2);
+}
