@@ -19,7 +19,8 @@ export enum AvilaGameStatus {
 export enum AvilaFeature {
     Field = "1",
     City = "2",
-    Road = "3"
+    Road = "3",
+    River = "4",
 }
 
 export interface IAvilaEdge {
