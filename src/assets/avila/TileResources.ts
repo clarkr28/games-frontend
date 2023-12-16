@@ -190,6 +190,23 @@ RIVER_TILES.push({
 });
 RIVER_TILES.push(tileGenerator("V_F_F_F")); // river lake (end tile)
 
+
+/**
+ * Gets an array of all river tiles
+ * @param shuffle if true, shuffle the tiles, but keep the source as the first tile and
+ * the lake as the last tile
+ * @returns an array of river tiles
+ */
+export function getRiverTiles(shuffle: boolean): IAvilaTile[] {
+    let tiles = structuredClone(RIVER_TILES);
+    if (shuffle){
+        const middle = tiles.slice(1, tiles.length - 1);
+        shuffleTiles(middle);
+        tiles = [tiles[0], ...middle, tiles[tiles.length - 1]];
+    }
+    return tiles;
+}
+
 /**
  * END OF RIVER TILES
  */
@@ -218,12 +235,22 @@ export function shuffleTiles(tiles: IAvilaTile[]): void {
  */
 export function createTiles(shuffle: boolean, addRiver?: boolean): IAvilaTile[] {
     let tiles: IAvilaTile[] = [];
-    tiles.push(...STANDARD_TILES);
 
-    if (shuffle) {
-        shuffleTiles(tiles);
-        tiles.push({...C_R_F_R}); // insert the standard starting tile
+    // add river tiles
+    if (addRiver) {
+        tiles.push(...getRiverTiles(shuffle));
     }
+
+    const regularTiles = structuredClone(STANDARD_TILES);
+
+    // add regular tiles
+    if (shuffle) {
+        shuffleTiles(regularTiles);
+        if (!addRiver) {
+            tiles.push({...C_R_F_R}); // insert the standard starting tile
+        }
+    }
+    tiles.push(...regularTiles);
 
     return tiles;
 }
