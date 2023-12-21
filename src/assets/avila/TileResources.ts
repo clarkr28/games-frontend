@@ -251,6 +251,7 @@ export function createTiles(shuffle: boolean, addRiver?: boolean): IAvilaTile[] 
         }
     }
     tiles.push(...regularTiles);
+    tiles.reverse();
 
     return tiles;
 }

@@ -1,3 +1,4 @@
+import { IGameOptions } from "../../features/avilaSlice";
 import { Point } from "../ConnectFourResources";
 import { IAssignIdResponse, ICreateRoomRequest, ICreateRoomResponse, IEndTurnRequest, IEndTurnResponse, IJoinRoomHostResponse, IJoinRoomPlayerResponse, IJoinRoomRequest, IPlacedTileRequest, IPlacedTileResponse, IReconnectRequest, IStartGameRequest, IStartGameResponse, MessagesFromServer } from "./CommMessages";
 import { AvilaBoard, IAvilaPlayer, IAvilaTile } from "./Resources";
@@ -39,6 +40,7 @@ export interface IStartGameData {
     currentTile: IAvilaTile;
     remainingTiles: IAvilaTile[];
     playerData: IAvilaPlayer[];
+    gameOptions: IGameOptions;
 }
 
 export interface IPlacedTileData {
@@ -50,6 +52,7 @@ export interface IEndTurnData {
     board: AvilaBoard;
     playerData: IAvilaPlayer[]; // scores and meeple counts change
     lastTilePlaced: Point;
+    riverDirection?: number;
 }
 
 

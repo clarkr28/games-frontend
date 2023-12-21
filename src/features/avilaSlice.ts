@@ -1,5 +1,5 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { AvilaBoard, AvilaGameStatus, IAvilaPlayer, IAvilaTile, IPlaceableMeepleLocations, addPlayer, canPlaceTile, completedFeatureSearch, createEmptyBoard, expandBoard, getPlaceableMeepleLocations, isFeatureOccupied, isMeeplePlaceable, rotateTile } from "../assets/avila/Resources";
+import { AvilaBoard, AvilaFeature, AvilaGameStatus, IAvilaEdge, IAvilaPlayer, IAvilaTile, IPlaceableMeepleLocations, addPlayer, canPlaceTile, completedFeatureSearch, createEmptyBoard, expandBoard, getPlaceableMeepleLocations, isFeatureOccupied, isMeeplePlaceable, isRiverDirectionValid, isRiverTile, rotateTile } from "../assets/avila/Resources";
 import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
@@ -17,6 +17,7 @@ export interface AvilaState {
     myPlayerIndex: number;          // the index this player is in the array of players
     isServerConnected: boolean;     // true if the client is successfully connected to the server
     placeableMeepleLocations?: IPlaceableMeepleLocations; // where meeples can be placed on the most recent tile
+    riverDirection?: number;        // defined if the river expansion is being used
 }
 
 const initialState: AvilaState = {
@@ -44,6 +45,10 @@ export interface AddPlayerData {
     name: string;
 }
 
+export interface IGameOptions {
+    river: boolean;
+}
+
 export const avilaSlice = createSlice({
     name: 'avila',
     initialState,
@@ -52,6 +57,14 @@ export const avilaSlice = createSlice({
             const x = action.payload.X;
             const y = action.payload.Y;
             if (state.currentTile && canPlaceTile(state.board, action.payload, state.currentTile)) {
+                // handle river tiles
+                const isFirstTile = state.board.length === 1 && state.board[0].length === 1;
+                if (isRiverTile(state.currentTile) 
+                    && !isFirstTile 
+                    && !isRiverDirectionValid(state.board, state.currentTile, action.payload, state.riverDirection!)) {
+                    return; // the river tile is not being validly placed here
+                }
+
                 // save the board width and height before placing the tile
                 const startWidth = state.board[0].length;
                 const startHeight = state.board.length;
@@ -131,6 +144,18 @@ export const avilaSlice = createSlice({
                     state.playerData = results.newPlayerData;
                 }
             }
+            // handle river first tile placement
+            const isFirstTile = state.board.length === 3 && state.board[0].length === 3;
+            let riverDirection: number | undefined = undefined;
+            if (isFirstTile) {
+                state.board[1][1]?.edges.forEach((edge: IAvilaEdge, index: number) => {
+                    if (edge.type === AvilaFeature.River) {
+                        riverDirection = index;
+                        state.riverDirection = riverDirection;
+                    }
+                })
+            }
+
             // advance turn to the next player, set the next tile
             state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
             state.currentTile = state.remainingTiles.pop();
@@ -142,12 +167,14 @@ export const avilaSlice = createSlice({
                 board: state.board,
                 playerData: state.playerData,
                 lastTilePlaced: state.lastTilePlaced!,
+                riverDirection: riverDirection,
             });
         },
-        startGame: (state) => {
+        startGame: (state, action: PayloadAction<IGameOptions>) => {
             state.status = AvilaGameStatus.PlacingTile;
             // create the shuffled tiles and set the current tiles
-            const tiles = createTiles(true);
+            console.log(`startGame river: ${action.payload.river}`);
+            const tiles = createTiles(true, action.payload.river);
             state.currentTile = tiles.pop(); 
             state.remainingTiles = tiles;
 
@@ -155,6 +182,7 @@ export const avilaSlice = createSlice({
                 currentTile: state.currentTile!,
                 playerData: state.playerData,
                 remainingTiles: state.remainingTiles,
+                gameOptions: action.payload,
             });
         },
         hostStartedGame: (state, action: PayloadAction<IStartGameData>) => {
@@ -176,16 +204,18 @@ export const avilaSlice = createSlice({
             state.playerData = addPlayer(state.playerData, action.payload.name);
         },
         applyOpponentPlacedTile: (state, action: PayloadAction<IPlacedTileData>) => {
-            console.log('received message that tile was placed');
             state.board = action.payload.board;
             state.lastTilePlaced = action.payload.lastTilePlaced;
         },
         applyOpponentEndTurn: (state, action: PayloadAction<IEndTurnData>) => {
-            console.log('received message that its the end of an opponents turn');
             // process data from server
             state.board = action.payload.board;
             state.playerData = action.payload.playerData;
             state.lastTilePlaced = action.payload.lastTilePlaced;
+            if (action.payload.riverDirection !== undefined) {
+                console.log(`river direction: ${action.payload.riverDirection}`);
+                state.riverDirection = action.payload.riverDirection; 
+            }
 
             // update data for the next turn
             state.currentTurn = (state.currentTurn + 1) % state.playerData.length;
@@ -193,7 +223,6 @@ export const avilaSlice = createSlice({
             state.remainingTiles = [...state.remainingTiles];
             if (state.currentTurn === state.myPlayerIndex) {
                 state.status = AvilaGameStatus.PlacingTile;
-                console.log("It's my turn!")
             }
         },
         setMyPlayerIndex: (state, action: PayloadAction<number>) => {

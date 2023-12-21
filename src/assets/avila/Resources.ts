@@ -263,8 +263,8 @@ export function getPlaceableMeepleLocations(board: AvilaBoard, tileLoc: Point): 
     }
 
     tile.edges.forEach((edge: IAvilaEdge, edgeIndex: number) => {
-        // no need to process field edges
-        if (edge.type === AvilaFeature.Field) {
+        // no need to process field or river edges
+        if (edge.type === AvilaFeature.Field || edge.type === AvilaFeature.River) {
             return;
         }
 
@@ -300,6 +300,29 @@ export function getPlaceableMeepleLocations(board: AvilaBoard, tileLoc: Point): 
     });
 
     return placeableMeepleLocations;
+}
+
+/**
+ * check if the tile is a river tile
+ * @param tile the tile to check for river edges
+ * @returns true if the tile is a river tile
+ */
+export function isRiverTile(tile: IAvilaTile): boolean {
+    return tile.edges.some(edge => edge.type === AvilaFeature.River);
+}
+
+/**
+ * Determine if a river tile can be placed on the board at the given location
+ * @param board the board without the new tile placed
+ * @param newTile the new tile to place. It is assumed that this is a river tile
+ * @param newTileLocation the location on the board where the new tile is trying to be placed
+ * @param riverDirection the direction of the river source
+ * @returns true if the river tile can be placed
+ */
+export function isRiverDirectionValid(board: AvilaBoard, newTile: IAvilaTile, newTileLocation: Point, riverDirection: number): boolean {
+    let riverInEdge = -1;
+    let riverOutEdge = -1;
+    return false;
 }
 
 /**
