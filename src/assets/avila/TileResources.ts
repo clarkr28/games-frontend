@@ -241,13 +241,13 @@ export function createTiles(shuffle: boolean, addRiver?: boolean): IAvilaTile[] 
         tiles.push(...getRiverTiles(shuffle));
     }
 
-    const regularTiles = structuredClone(STANDARD_TILES);
+    let regularTiles = structuredClone(STANDARD_TILES);
 
     // add regular tiles
     if (shuffle) {
         shuffleTiles(regularTiles);
         if (!addRiver) {
-            tiles.push({...C_R_F_R}); // insert the standard starting tile
+            regularTiles = [{...C_R_F_R}, ...regularTiles]; // insert the standard starting tile
         }
     }
     tiles.push(...regularTiles);
