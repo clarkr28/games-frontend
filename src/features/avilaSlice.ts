@@ -173,7 +173,6 @@ export const avilaSlice = createSlice({
         startGame: (state, action: PayloadAction<IGameOptions>) => {
             state.status = AvilaGameStatus.PlacingTile;
             // create the shuffled tiles and set the current tiles
-            console.log(`startGame river: ${action.payload.river}`);
             const tiles = createTiles(true, action.payload.river);
             state.currentTile = tiles.pop(); 
             state.remainingTiles = tiles;
@@ -213,7 +212,6 @@ export const avilaSlice = createSlice({
             state.playerData = action.payload.playerData;
             state.lastTilePlaced = action.payload.lastTilePlaced;
             if (action.payload.riverDirection !== undefined) {
-                console.log(`river direction: ${action.payload.riverDirection}`);
                 state.riverDirection = action.payload.riverDirection; 
             }
 

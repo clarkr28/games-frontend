@@ -202,7 +202,6 @@ interface IRoomSettings {
 const RoomSettings: React.FC<IRoomSettings> = (props) => {
     const { onStartGame, roomId } = props;
     const [river, setRiver] = useState(false);
-    console.log(`river: ${river}`);
 
     return (
         <div>

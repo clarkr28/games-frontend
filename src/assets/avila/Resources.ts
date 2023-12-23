@@ -311,18 +311,79 @@ export function isRiverTile(tile: IAvilaTile): boolean {
     return tile.edges.some(edge => edge.type === AvilaFeature.River);
 }
 
+function getAdjacentLocation(startPoint: Point, edgeDirection: number): Point {
+    switch (edgeDirection) {
+        case 0:
+            return { X: startPoint.X, Y: startPoint.Y - 1 };
+        case 1:
+            return { X: startPoint.X + 1, Y: startPoint.Y };
+        case 2:
+            return { X: startPoint.X, Y: startPoint.Y + 1 };
+        case 3:
+            return { X: startPoint.X - 1, Y: startPoint.Y };
+    }
+    throw Error(`edge value of ${edgeDirection} is not valid`);
+}
+
 /**
  * Determine if a river tile can be placed on the board at the given location
- * @param board the board without the new tile placed
+ * @param board the board without the new tile placed. It is assumed that the incoming board is valid.
  * @param newTile the new tile to place. It is assumed that this is a river tile
- * @param newTileLocation the location on the board where the new tile is trying to be placed
+ * @param newTileLocation the location on the board where the new tile is trying to be placed. It
+ * is assumed that the edges are compatible with neighboring edges on the board.
  * @param riverDirection the direction of the river source
  * @returns true if the river tile can be placed
  */
 export function isRiverDirectionValid(board: AvilaBoard, newTile: IAvilaTile, newTileLocation: Point, riverDirection: number): boolean {
     let riverInEdge = -1;
     let riverOutEdge = -1;
-    return false;
+    let invalid = false;
+    newTile.edges.forEach((edge: IAvilaEdge, index: number) => {
+        if (edge.type === AvilaFeature.River) {
+            // inbound river edges will have a neighboring river edge
+            const neighborPoint = getAdjacentLocation(newTileLocation, index);
+            if (board[neighborPoint.Y]?.[neighborPoint.X]) {
+                // assuming the edges are compatible
+                if (riverInEdge !== -1) {
+                    //throw Error(`riverInEdge should not be set more than once. newTile: ${JSON.stringify(newTile)}, newtileLocation: ${JSON.stringify(newTileLocation)}, board: ${JSON.stringify(board)}`);
+                    invalid = true;
+                }
+                riverInEdge = index;
+            }
+            else {
+                // neighbor tile is not defined, meaning this is an outgoing river edge
+                if (riverOutEdge !== -1) {
+                    //throw Error(`riverOutEdge should not be set more than once. newTile: ${JSON.stringify(newTile)}, newtileLocation: ${JSON.stringify(newTileLocation)}, board: ${JSON.stringify(board)}`);
+                    invalid = true;
+                }
+                riverOutEdge = index;
+            }
+        }
+    });
+
+    if (invalid) {
+        return false;
+    }
+
+    if (riverInEdge === -1 && riverOutEdge === -1) {
+        // this case should never occur, but handling it anyways
+        return true; // this isn't a river tile, so it's not an invalid river placement
+    }
+
+    if (riverInEdge === -1 && riverOutEdge !== -1) {
+        // this is a source tile, which should only ever be the first tile placed.
+        // therefore, make sure this is the first tile to be placed
+        return board.length === 1 && board[0].length === 1;
+    }
+
+    if (riverInEdge !== -1 && riverOutEdge === -1) {
+        // this is a lake tile, so any placement is valid (assumes the previous board is valid)
+        return true;
+    }
+
+    // it can now be assumed that river in and river out are both defined
+    // make sure the outgoing river edge is not going upstream
+    return riverOutEdge !== ((riverDirection + 2) % 4);
 }
 
 /**

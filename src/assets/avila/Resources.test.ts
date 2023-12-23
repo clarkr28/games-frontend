@@ -1,5 +1,5 @@
 import { Point } from "../ConnectFourResources";
-import { AvilaBoard, AvilaPlayerColor, IAvilaPlayer, completedFeatureSearch, createPlayer, findAffectedMonestaries, rotateTile} from "./Resources";
+import { AvilaBoard, AvilaPlayerColor, IAvilaPlayer, completedFeatureSearch, createPlayer, findAffectedMonestaries, isRiverDirectionValid, rotateTile} from "./Resources";
 import { C_F_C_F, tileGenerator } from "./TileResources";
 
 
@@ -276,4 +276,52 @@ it("Road scoring bug", () => {
     expect(results!.newPlayerData[0].score).toBe(4);
     expect(results!.newPlayerData[1].score).toBe(0);
     expect(results!.newPlayerData[2].score).toBe(0);
+});
+
+it("Valid river tile placement", () => {
+    // create tiles for board
+    const riverSource = tileGenerator("F_F_V_F");
+
+    // create board
+    const board: AvilaBoard = [];
+    board.push(new Array(3).fill(undefined));
+    board.push([undefined, riverSource, undefined]);
+    board.push(new Array(3).fill(undefined));
+
+    // test a straight river tile
+    const straightRiver = tileGenerator("V_F_V_F");
+    let canPlace = isRiverDirectionValid(board, straightRiver, {X: 1, Y: 2}, 2);
+    expect(canPlace).toBe(true);
+
+    // test a river tile with a turn
+    const riverTurn = rotateTile(tileGenerator("F_F_V_V"));
+    canPlace = isRiverDirectionValid(board, riverTurn, {X: 1, Y: 2}, 2);
+    expect(canPlace).toBe(true);
+
+    // rotate turn tile again and re-test
+    canPlace = isRiverDirectionValid(board, rotateTile(riverTurn), {X: 1, Y: 2}, 2);
+    expect(canPlace).toBe(true);
+});
+
+it("Invalid river tile placement", () => {
+    // create tiles for board
+    const riverSource = tileGenerator("F_F_V_F");
+    const riverTurn = rotateTile(tileGenerator("F_F_V_V"));
+
+    // create board
+    const board: AvilaBoard = [];
+    board.push(new Array(3).fill(undefined));
+    board.push([undefined, riverSource, undefined]);
+    board.push([undefined, riverTurn, undefined]);
+    board.push(new Array(3).fill(undefined));
+
+    // test a straight river tile
+    const straightRiver = rotateTile(tileGenerator("V_F_V_F"));
+    let canPlace = isRiverDirectionValid(board, straightRiver, {X: 0, Y: 2}, 2);
+    expect(canPlace).toBe(true);
+
+    // test a river tile with a turn (invalid)
+    const riverTurnUp = rotateTile(rotateTile(tileGenerator("F_F_V_V")));
+    canPlace = isRiverDirectionValid(board, riverTurnUp, {X: 0, Y: 2}, 2);
+    expect(canPlace).toBe(false);
 });
