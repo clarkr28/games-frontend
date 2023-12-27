@@ -57,25 +57,41 @@ export const AvilaSettings: React.FC<{}> = () => {
     return (
         <div className={styles.settingsWrapper}>
             <div>
-                <div>
-                    <input
-                        type="radio"
-                        name="connect_type"
-                        value={CREATE_VALUE}
-                        checked={connectType === CREATE_VALUE}
-                        onChange={(e) => setConnectType(e.target.value)}
-                        disabled={joinedOrCreatedRoom}
-                    />
-                    <label>Create Room</label>
-                    <input
-                        type="radio"
-                        name="connect_type"
-                        value={JOIN_VALUE}
-                        checked={connectType === JOIN_VALUE}
-                        onChange={(e) => setConnectType(e.target.value)}
-                        disabled={joinedOrCreatedRoom}
-                    />
-                    <label>Join Room</label>
+                <div
+                    className={`${styles.radioRow} ${
+                        joinedOrCreatedRoom ? "" : styles.radioRowEnabled
+                    }`}
+                >
+                    <div
+                        onClick={() =>
+                            !joinedOrCreatedRoom && setConnectType(CREATE_VALUE)
+                        }
+                    >
+                        <input
+                            type="radio"
+                            name="connect_type"
+                            value={CREATE_VALUE}
+                            checked={connectType === CREATE_VALUE}
+                            onChange={(e) => setConnectType(e.target.value)}
+                            disabled={joinedOrCreatedRoom}
+                        />
+                        <label>Create Room</label>
+                    </div>
+                    <div
+                        onClick={() =>
+                            !joinedOrCreatedRoom && setConnectType(JOIN_VALUE)
+                        }
+                    >
+                        <input
+                            type="radio"
+                            name="connect_type"
+                            value={JOIN_VALUE}
+                            checked={connectType === JOIN_VALUE}
+                            onChange={(e) => setConnectType(e.target.value)}
+                            disabled={joinedOrCreatedRoom}
+                        />
+                        <label>Join Room</label>
+                    </div>
                 </div>
                 {showCreateRoom && (
                     <CreateRoom
@@ -133,7 +149,7 @@ const CreateRoom: React.FC<ICreateRoom> = (props) => {
     return (
         <>
             <div>
-                <label>Name</label>
+                <label className={styles.labelGap}>Name</label>
                 <input
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setName(e.target.value)
@@ -166,7 +182,7 @@ const JoinRoom: React.FC<IJoinRoom> = (props) => {
     return (
         <>
             <div>
-                <label>Name</label>
+                <label className={styles.labelGap}>Name</label>
                 <input
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setName(e.target.value)
@@ -174,7 +190,7 @@ const JoinRoom: React.FC<IJoinRoom> = (props) => {
                 />
             </div>
             <div>
-                <label>Room</label>
+                <label className={styles.labelGap}>Room</label>
                 <input
                     onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
                         setRoom(e.target.value)
@@ -204,9 +220,11 @@ const RoomSettings: React.FC<IRoomSettings> = (props) => {
     const [river, setRiver] = useState(false);
 
     return (
-        <div>
+        <>
             <div>
-                <label>{`Room ID: ${roomId}`}</label>
+                <label>
+                    Room ID: <strong>{roomId}</strong>
+                </label>
             </div>
             <div>
                 <input
@@ -223,6 +241,6 @@ const RoomSettings: React.FC<IRoomSettings> = (props) => {
                 clickCallback={() => onStartGame({ river: river })}
                 disabled={false}
             />
-        </div>
+        </>
     );
 };

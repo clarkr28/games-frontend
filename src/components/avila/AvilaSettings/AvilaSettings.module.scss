@@ -1,3 +1,5 @@
+$rowGap: 10px;
+
 .settingsWrapper {
     display: inline-block;
     margin-top: 100px;
@@ -8,5 +10,31 @@
         box-shadow: 0 0 6px 4px #ccc;
         padding: 1rem;
         margin: 0 auto;
+    }
+
+    & > div > * {
+        margin-bottom: $rowGap;
+    }
+}
+.labelGap {
+    padding-right: 5px;
+}
+
+.radioRow {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.radioRowEnabled {
+    & > div:hover {
+        cursor: pointer;
+
+        & * {
+            cursor: pointer; // cursor needs to be applied to child elements
+        }
+
+        & > label {
+            text-decoration: underline;
+        }
     }
 }
