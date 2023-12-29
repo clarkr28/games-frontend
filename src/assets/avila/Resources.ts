@@ -345,7 +345,6 @@ export function isRiverDirectionValid(board: AvilaBoard, newTile: IAvilaTile, ne
             if (board[neighborPoint.Y]?.[neighborPoint.X]) {
                 // assuming the edges are compatible
                 if (riverInEdge !== -1) {
-                    //throw Error(`riverInEdge should not be set more than once. newTile: ${JSON.stringify(newTile)}, newtileLocation: ${JSON.stringify(newTileLocation)}, board: ${JSON.stringify(board)}`);
                     invalid = true;
                 }
                 riverInEdge = index;
@@ -353,7 +352,6 @@ export function isRiverDirectionValid(board: AvilaBoard, newTile: IAvilaTile, ne
             else {
                 // neighbor tile is not defined, meaning this is an outgoing river edge
                 if (riverOutEdge !== -1) {
-                    //throw Error(`riverOutEdge should not be set more than once. newTile: ${JSON.stringify(newTile)}, newtileLocation: ${JSON.stringify(newTileLocation)}, board: ${JSON.stringify(board)}`);
                     invalid = true;
                 }
                 riverOutEdge = index;
