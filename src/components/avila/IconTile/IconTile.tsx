@@ -136,8 +136,6 @@ function getEdgeDisplayIcon(edge: AvilaFeature): JSX.Element | null {
             return <FontAwesomeIcon icon={solid("city")} />;
         case AvilaFeature.Road:
             return <FontAwesomeIcon icon={solid("road")} />;
-        case AvilaFeature.Field:
-            //return <FontAwesomeIcon icon={solid("wheat-awn")} />;
-            return null;
     }
+    return null;
 }

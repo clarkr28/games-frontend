@@ -9,7 +9,8 @@ import { AvilaGrid } from "../AvilaGrid/AvilaGrid";
 import { ImageTile } from "../ImageTile/ImageTile";
 import styles from "./TileTester.module.scss";
 
-const TILES = createTiles(false);
+const USE_RIVER = true;
+const TILES = createTiles(false, USE_RIVER);
 
 export const TileTester: React.FC<{}> = () => {
     const [grid, setGrid] = useState<AvilaBoard>([]);
@@ -93,28 +94,33 @@ export const TileTester: React.FC<{}> = () => {
     );
 };
 
+function indexPicker(baseIndex: number, useRiver: boolean): number {
+    const riverOffset = useRiver ? 12 : 0;
+    return baseIndex + riverOffset;
+}
+
 function customizeTiles(tiles: IAvilaTile[]): void {
-    tiles[40].meeple = {
+    tiles[indexPicker(40, USE_RIVER)].meeple = {
         playerColor: AvilaPlayerColor.Blue,
         playerIndex: 0, // doesn't matter for this test
         edgeIndex: 3,
     };
-    tiles[16].meeple = {
+    tiles[indexPicker(16, USE_RIVER)].meeple = {
         playerColor: AvilaPlayerColor.Green,
         playerIndex: 0, // doesn't matter for this test
         edgeIndex: 0,
     };
-    tiles[17].meeple = {
+    tiles[indexPicker(17, USE_RIVER)].meeple = {
         playerColor: AvilaPlayerColor.Orange,
         playerIndex: 0, // doesn't matter for this test
         edgeIndex: 1,
     };
-    tiles[41].meeple = {
+    tiles[indexPicker(41, USE_RIVER)].meeple = {
         playerColor: AvilaPlayerColor.Purple,
         playerIndex: 0, // doesn't matter for this test
         edgeIndex: 2,
     };
-    tiles[45].meeple = {
+    tiles[indexPicker(45, USE_RIVER)].meeple = {
         playerColor: AvilaPlayerColor.Red,
         playerIndex: 0, // doesn't matter for this test
         onMonestary: true,

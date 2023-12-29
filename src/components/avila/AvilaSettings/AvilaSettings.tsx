@@ -6,6 +6,7 @@ import {
 } from "../../common/IconButton/IconButton";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import {
+    IGameOptions,
     playerJoinedRoom,
     selectAvilaIsServerConnnected,
     selectAvilaRoomCreated,
@@ -15,6 +16,9 @@ import {
 import styles from "./AvilaSettings.module.scss";
 import { CommWrapper } from "../../../assets/avila/CommWrapper";
 
+const CREATE_VALUE = "create";
+const JOIN_VALUE = "join";
+
 export const AvilaSettings: React.FC<{}> = () => {
     const dispatch = useAppDispatch();
     const roomCreated = useAppSelector(selectAvilaRoomCreated);
@@ -22,6 +26,7 @@ export const AvilaSettings: React.FC<{}> = () => {
     const [name, setName] = useState("");
     const [room, setRoom] = useState("");
     const [joinedRoom, setJoinedRoom] = useState("");
+    const [connectType, setConnectType] = useState(CREATE_VALUE);
 
     // setup callback to handle this user creating a room
     useEffect(() => {
@@ -46,67 +51,196 @@ export const AvilaSettings: React.FC<{}> = () => {
     }, [roomCreated, dispatch]);
 
     const joinedOrCreatedRoom = roomCreated || joinedRoom !== "";
+    const showCreateRoom = !joinedOrCreatedRoom && connectType === CREATE_VALUE;
+    const showJoinRoom = !joinedOrCreatedRoom && connectType === JOIN_VALUE;
 
     return (
         <div className={styles.settingsWrapper}>
             <div>
-                <div>
-                    <label>Name</label>
-                    <input
-                        onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setName(e.target.value)
+                <div
+                    className={`${styles.radioRow} ${
+                        joinedOrCreatedRoom ? "" : styles.radioRowEnabled
+                    }`}
+                >
+                    <div
+                        onClick={() =>
+                            !joinedOrCreatedRoom && setConnectType(CREATE_VALUE)
                         }
-                        disabled={joinedOrCreatedRoom}
-                    />
-                    <IconButton
-                        displayText="Create Room"
-                        color={IconButtonColor.Green}
-                        icon={solid("plus")}
-                        disabled={
-                            !isServerConnected ||
-                            joinedOrCreatedRoom ||
-                            name === ""
+                    >
+                        <input
+                            type="radio"
+                            name="connect_type"
+                            value={CREATE_VALUE}
+                            checked={connectType === CREATE_VALUE}
+                            onChange={(e) => setConnectType(e.target.value)}
+                            disabled={joinedOrCreatedRoom}
+                        />
+                        <label>Create Room</label>
+                    </div>
+                    <div
+                        onClick={() =>
+                            !joinedOrCreatedRoom && setConnectType(JOIN_VALUE)
                         }
-                        clickCallback={() => CommWrapper.CreateRoom(name)}
-                    />
+                    >
+                        <input
+                            type="radio"
+                            name="connect_type"
+                            value={JOIN_VALUE}
+                            checked={connectType === JOIN_VALUE}
+                            onChange={(e) => setConnectType(e.target.value)}
+                            disabled={joinedOrCreatedRoom}
+                        />
+                        <label>Join Room</label>
+                    </div>
                 </div>
-                <div>
-                    <label>Room</label>
-                    <input
-                        value={room}
-                        onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setRoom(e.target.value)
+                {showCreateRoom && (
+                    <CreateRoom
+                        setName={setName}
+                        enableCreateRoom={
+                            isServerConnected &&
+                            !joinedOrCreatedRoom &&
+                            name !== ""
                         }
-                        disabled={joinedOrCreatedRoom}
+                        onCreateRoom={() => CommWrapper.CreateRoom(name)}
                     />
-                    <IconButton
-                        displayText="Join Room"
-                        color={IconButtonColor.Green}
-                        icon={solid("door-open")}
-                        clickCallback={() => {
+                )}
+                {showJoinRoom && (
+                    <JoinRoom
+                        setName={setName}
+                        setRoom={setRoom}
+                        onJoinRoom={() => {
                             CommWrapper.JoinRoom(room, name);
                             setJoinedRoom(room);
                         }}
-                        disabled={
-                            !isServerConnected ||
-                            joinedOrCreatedRoom ||
-                            name === "" ||
-                            room === ""
+                        enableJoinRoom={
+                            isServerConnected &&
+                            !joinedOrCreatedRoom &&
+                            name !== "" &&
+                            room !== ""
                         }
                     />
-                </div>
+                )}
                 {roomCreated && (
-                    <IconButton
-                        displayText="Start Game"
-                        color={IconButtonColor.Green}
-                        icon={solid("play")}
-                        clickCallback={() => dispatch(startGame())}
-                        disabled={false}
+                    <RoomSettings
+                        onStartGame={(options: IGameOptions) =>
+                            dispatch(startGame(options))
+                        }
+                        roomId={room}
                     />
                 )}
-                {joinedRoom !== "" && <div>Waiting for host to start game</div>}
+                {joinedRoom !== "" && (
+                    <div>{`Waiting for host to start game ${room}`}</div>
+                )}
                 {!isServerConnected && <div>Connecting to server...</div>}
             </div>
         </div>
+    );
+};
+
+interface ICreateRoom {
+    setName: (newName: string) => void;
+    enableCreateRoom: boolean;
+    onCreateRoom: () => void;
+}
+
+const CreateRoom: React.FC<ICreateRoom> = (props) => {
+    const { setName, onCreateRoom, enableCreateRoom } = props;
+
+    return (
+        <>
+            <div>
+                <label className={styles.labelGap}>Name</label>
+                <input
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setName(e.target.value)
+                    }
+                />
+            </div>
+            <div>
+                <IconButton
+                    displayText="Create Room"
+                    color={IconButtonColor.Green}
+                    icon={solid("plus")}
+                    disabled={!enableCreateRoom}
+                    clickCallback={onCreateRoom}
+                />
+            </div>
+        </>
+    );
+};
+
+interface IJoinRoom {
+    setName: (newName: string) => void;
+    setRoom: (newRoom: string) => void;
+    enableJoinRoom: boolean;
+    onJoinRoom: () => void;
+}
+
+const JoinRoom: React.FC<IJoinRoom> = (props) => {
+    const { setName, setRoom, enableJoinRoom, onJoinRoom } = props;
+
+    return (
+        <>
+            <div>
+                <label className={styles.labelGap}>Name</label>
+                <input
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setName(e.target.value)
+                    }
+                />
+            </div>
+            <div>
+                <label className={styles.labelGap}>Room</label>
+                <input
+                    onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setRoom(e.target.value)
+                    }
+                />
+            </div>
+            <div>
+                <IconButton
+                    displayText="Join Room"
+                    color={IconButtonColor.Green}
+                    icon={solid("plus")}
+                    disabled={!enableJoinRoom}
+                    clickCallback={onJoinRoom}
+                />
+            </div>
+        </>
+    );
+};
+
+interface IRoomSettings {
+    onStartGame: (options: IGameOptions) => void;
+    roomId: string;
+}
+
+const RoomSettings: React.FC<IRoomSettings> = (props) => {
+    const { onStartGame, roomId } = props;
+    const [river, setRiver] = useState(false);
+
+    return (
+        <>
+            <div>
+                <label>
+                    Room ID: <strong>{roomId}</strong>
+                </label>
+            </div>
+            <div>
+                <input
+                    type="checkbox"
+                    checked={river}
+                    onChange={() => setRiver(!river)}
+                />
+                <label>River Expansion</label>
+            </div>
+            <IconButton
+                displayText="Start Game"
+                color={IconButtonColor.Green}
+                icon={solid("play")}
+                clickCallback={() => onStartGame({ river: river })}
+                disabled={false}
+            />
+        </>
     );
 };

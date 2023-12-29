@@ -153,6 +153,64 @@ STANDARD_TILES.push(tileGenerator("R_R_R_R"));
  * END OF STANDARD TILES
  */
 
+/**
+ * RIVER TILES
+ */
+
+const RIVER_TILES: IAvilaTile[] = [];
+RIVER_TILES.push(tileGenerator("F_F_V_F")); // river source (start tile)
+RIVER_TILES.push(tileGenerator("V_F_V_F"));
+RIVER_TILES.push(tileGenerator("V_F_V_F"));
+RIVER_TILES.push(tileGenerator("F_F_V_V"));
+RIVER_TILES.push(tileGenerator("F_F_V_V"));
+RIVER_TILES.push(tileGenerator("RR_V_V"));
+RIVER_TILES.push(tileGenerator("V_V_CC"));
+RIVER_TILES.push(tileGenerator("F_V_R_V", false, true));
+RIVER_TILES.push(tileGenerator("C_V_R_V"));
+RIVER_TILES.push(tileGenerator("C_V_C_V"));
+RIVER_TILES.push({
+    edges: [
+        {
+            type: AvilaFeature.Road,
+            connectedEdges: [2],
+        },
+        {
+            type: AvilaFeature.River,
+        },
+        {
+            type: AvilaFeature.Road,
+            connectedEdges: [0],
+        },
+        {
+            type: AvilaFeature.River,
+        },
+    ],
+    rotation: 0,
+    imageFile: `${IMAGE_PATH_BASE}R*_V_R*_V-0-0.svg`
+});
+RIVER_TILES.push(tileGenerator("V_F_F_F")); // river lake (end tile)
+
+
+/**
+ * Gets an array of all river tiles
+ * @param shuffle if true, shuffle the tiles, but keep the source as the first tile and
+ * the lake as the last tile
+ * @returns an array of river tiles
+ */
+export function getRiverTiles(shuffle: boolean): IAvilaTile[] {
+    let tiles = structuredClone(RIVER_TILES);
+    if (shuffle){
+        const middle = tiles.slice(1, tiles.length - 1);
+        shuffleTiles(middle);
+        tiles = [tiles[0], ...middle, tiles[tiles.length - 1]];
+    }
+    return tiles;
+}
+
+/**
+ * END OF RIVER TILES
+ */
+
 
 
 /**
@@ -172,16 +230,28 @@ export function shuffleTiles(tiles: IAvilaTile[]): void {
 /**
  * create a deck of tiles
  * @param shuffle true if tiles should be shuffled
+ * @param addRiver true if river expansion cards should be added
  * @returns the generated tiles
  */
-export function createTiles(shuffle: boolean): IAvilaTile[] {
+export function createTiles(shuffle: boolean, addRiver?: boolean): IAvilaTile[] {
     let tiles: IAvilaTile[] = [];
-    tiles.push(...STANDARD_TILES);
 
-    if (shuffle) {
-        shuffleTiles(tiles);
-        tiles.push({...C_R_F_R}); // insert the standard starting tile
+    // add river tiles
+    if (addRiver) {
+        tiles.push(...getRiverTiles(shuffle));
     }
+
+    let regularTiles = structuredClone(STANDARD_TILES);
+
+    // add regular tiles
+    if (shuffle) {
+        shuffleTiles(regularTiles);
+        if (!addRiver) {
+            regularTiles = [{...C_R_F_R}, ...regularTiles]; // insert the standard starting tile
+        }
+    }
+    tiles.push(...regularTiles);
+    tiles.reverse();
 
     return tiles;
 }
@@ -252,6 +322,8 @@ function charToEdgeType(char: string): AvilaFeature {
             return AvilaFeature.Road;
         case 'F': 
             return AvilaFeature.Field;
+        case 'V':
+            return AvilaFeature.River;
     }
     throw new Error(`invlaid edge character: ${char}`);
 }
