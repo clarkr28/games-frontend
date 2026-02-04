@@ -1,39 +1,38 @@
-
 .boardRow {
-    display: flex;
+  display: flex;
 }
 
 .boardCell {
-    width: 90px;
-    height: 90px;
-    line-height: 90px;
-    font-size: 60px;
-    user-select: none;
+  width: 90px;
+  height: 90px;
+  line-height: 90px;
+  font-size: 60px;
+  user-select: none;
 }
 
 .cellEmptyHover:hover {
-    background-color: #eee;
-    cursor: pointer;
+  background-color: #eee;
+  cursor: pointer;
 }
 
 .cellWinner {
-    background-color: #acffa0;
+  background-color: #acffa0;
 }
 
 .boardContainer {
-    width: 290px;
-    height: 290px;
-    margin: 50px auto 25px auto;
+  width: 290px;
+  height: 290px;
+  margin: 50px auto 25px auto;
 }
 
 .rowDivider {
-    width: 290px;
-    height: 10px;
-    background-color: #666;
+  width: 290px;
+  height: 10px;
+  background-color: #666;
 }
 
 .colDivider {
-    width: 10px;
-    height: 90px;
-    background-color: #666;
+  width: 10px;
+  height: 90px;
+  background-color: #666;
 }

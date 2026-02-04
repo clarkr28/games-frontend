@@ -1,12 +1,12 @@
 .game {
-    width: 100%;
-    height: calc(100% - 50px);
-    display: flex;
-    justify-content: center;
+  width: 100%;
+  height: calc(100% - 50px);
+  display: flex;
+  justify-content: center;
 }
 
 .boardContainer {
-    width: calc(100% - 160px);
-    height: 100%;
-    overflow: auto;
+  width: calc(100% - 160px);
+  height: 100%;
+  overflow: auto;
 }

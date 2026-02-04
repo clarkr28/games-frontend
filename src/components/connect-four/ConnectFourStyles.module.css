@@ -1,80 +1,80 @@
 .red {
-    color: crimson;
+  color: crimson;
 }
 
 .gridCell {
-    aspect-ratio: 1;
-    background-color: #fff;
-    display: flex;
-    align-items: center;
+  aspect-ratio: 1;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
 }
 
 .gridCellHovering {
-    background-color: #eee;
-    cursor: pointer;
+  background-color: #eee;
+  cursor: pointer;
 }
 
 .cellWinner {
-    background-color: #acffa0;
+  background-color: #acffa0;
 }
 
 .cellIcon {
-    display: block;
-    margin: auto;
-    height: 75%;
+  display: block;
+  margin: auto;
+  height: 75%;
 }
 
 .gameContainer {
-    max-width: 650px;
-    margin: 50px auto 25px auto;
-    padding-left: 50px;
-    padding-right: 50px;
+  max-width: 650px;
+  margin: 50px auto 25px auto;
+  padding-left: 50px;
+  padding-right: 50px;
 }
 
 .boardGrid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    background-color: black;
-    border: 2px solid black;
-    gap: 2px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background-color: black;
+  border: 2px solid black;
+  gap: 2px;
 }
 
 .columnGrid {
-    display: grid;
-    grid-template-columns: 1fr;
-    background-color: black;
-    gap: 2px;
+  display: grid;
+  grid-template-columns: 1fr;
+  background-color: black;
+  gap: 2px;
 }
 
 .gameInfo {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    margin-top: 25px;
-    font-size: 20px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 25px;
+  font-size: 20px;
 }
 
 .gameStatus {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }
 
 .statusIconShape {
-    --icon-height: 25px;
-    height: var(--icon-height);
-    width: var(--icon-height);
-    border-radius: 50%;
+  --icon-height: 25px;
+  height: var(--icon-height);
+  width: var(--icon-height);
+  border-radius: 50%;
 }
 
 .statusIconRed {
-    background-color: crimson;
+  background-color: crimson;
 }
 
 .statusIconBlack {
-    background-color: black;
+  background-color: black;
 }
 
 .statusIconNoWinner {
-    border: 1px dashed black;
+  border: 1px dashed black;
 }

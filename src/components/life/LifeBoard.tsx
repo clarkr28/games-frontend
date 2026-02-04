@@ -1,70 +1,70 @@
 import React from "react";
 import { useAppSelector } from "../../app/hooks";
 import {
-    presetHoverCell,
-    selectLifeBoard,
-    selectPreset,
-    toggleCell,
+  presetHoverCell,
+  selectLifeBoard,
+  selectPreset,
+  toggleCell,
 } from "../../features/lifeSlice";
 import { useDispatch } from "react-redux";
 import styles from "./LifeStyles.module.css";
 import { LifeCellState } from "../../assets/LifePatternResources";
 
 export const LifeBoard: React.FC<{}> = () => {
-    const board = useAppSelector(selectLifeBoard);
-    return (
-        <div className={styles.gameGrid}>
-            {board.map((row, rowInd) => (
-                <div className={styles.gridRow} key={rowInd}>
-                    {row.map((cell, colInd) => (
-                        <LifeCell
-                            key={colInd}
-                            cellState={cell}
-                            rowInd={rowInd}
-                            colInd={colInd}
-                        />
-                    ))}
-                </div>
-            ))}
+  const board = useAppSelector(selectLifeBoard);
+  return (
+    <div className={styles.gameGrid}>
+      {board.map((row, rowInd) => (
+        <div className={styles.gridRow} key={rowInd}>
+          {row.map((cell, colInd) => (
+            <LifeCell
+              key={colInd}
+              cellState={cell}
+              rowInd={rowInd}
+              colInd={colInd}
+            />
+          ))}
         </div>
-    );
+      ))}
+    </div>
+  );
 };
 
 interface ILifeCell {
-    cellState: LifeCellState;
-    rowInd: number;
-    colInd: number;
+  cellState: LifeCellState;
+  rowInd: number;
+  colInd: number;
 }
 
 export const LifeCell: React.FC<ILifeCell> = (props) => {
-    const { cellState, rowInd, colInd } = props;
+  const { cellState, rowInd, colInd } = props;
 
-    const dispatch = useDispatch();
-    const selectedPreset = useAppSelector(selectPreset);
+  const dispatch = useDispatch();
+  const selectedPreset = useAppSelector(selectPreset);
 
-    const mouseEnterCallback = () => {
-        if (selectedPreset !== null) {
-            dispatch(presetHoverCell({ X: colInd, Y: rowInd }));
-        }
-    };
+  const mouseEnterCallback = () => {
+    if (selectedPreset !== null) {
+      dispatch(presetHoverCell({ X: colInd, Y: rowInd }));
+    }
+  };
 
-    return (
-        <div
-            className={cellStateToStyleClass(cellState)}
-            onClick={() => dispatch(toggleCell({ X: colInd, Y: rowInd }))}
-            onMouseEnter={mouseEnterCallback}
-        />
-    );
+  return (
+    <div
+      className={cellStateToStyleClass(cellState)}
+      onClick={() => dispatch(toggleCell({ X: colInd, Y: rowInd }))}
+      onMouseEnter={mouseEnterCallback}
+    />
+  );
 };
 
 function cellStateToStyleClass(cellState: LifeCellState): string {
-    switch (cellState) {
-        case LifeCellState.Alive:
-            return styles.alive;
-        case LifeCellState.Dead:
-            return styles.dead;
-        case LifeCellState.HoverPreset:
-            return styles.presetHovering;
-    }
-    return "";
+  switch (cellState) {
+    case LifeCellState.Alive:
+      return styles.alive;
+    case LifeCellState.Dead:
+      return styles.dead;
+    case LifeCellState.HoverPreset:
+      return styles.presetHovering;
+  }
+  return "";
 }

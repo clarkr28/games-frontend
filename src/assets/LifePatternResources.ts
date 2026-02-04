@@ -1,26 +1,25 @@
-
 export enum LifeCellState {
-    Alive,
-    Dead,
-    HoverPreset,
+  Alive,
+  Dead,
+  HoverPreset,
 }
 
 export enum LifePresets {
-    Glider,
-    LWSH, // leight-weight space ship
-    CircleOfFire,
-    Griddle,
-    Turtle,
-    Puffer,
-    Blom, // methuselah
-    BeaconFuse,
-    AntWick,
+  Glider,
+  LWSH, // leight-weight space ship
+  CircleOfFire,
+  Griddle,
+  Turtle,
+  Puffer,
+  Blom, // methuselah
+  BeaconFuse,
+  AntWick,
 }
 
 export interface LifePresetData {
-    width: number,
-    height: number,
-    data: LifeCellState[][],
+  width: number;
+  height: number;
+  data: LifeCellState[][];
 }
 
 /**
@@ -29,135 +28,137 @@ export interface LifePresetData {
  * @returns array of life cell states based on the input string
  */
 function stringToCellStates(row: string): LifeCellState[] {
-    return Array.from(row).map(ch => ch === " " ? LifeCellState.Dead : LifeCellState.Alive);
+  return Array.from(row).map((ch) =>
+    ch === " " ? LifeCellState.Dead : LifeCellState.Alive,
+  );
 }
 
 const GliderPreset: LifePresetData = {
-    width: 3,
-    height: 3,
-    data: [
-        stringToCellStates(" 1 "),
-        stringToCellStates("  1"),
-        stringToCellStates("111")
-    ]
+  width: 3,
+  height: 3,
+  data: [
+    stringToCellStates(" 1 "),
+    stringToCellStates("  1"),
+    stringToCellStates("111"),
+  ],
 };
 
 const LWSHPreset: LifePresetData = {
-    width: 5,
-    height: 4,
-    data: [
-        stringToCellStates("1  1 "),
-        stringToCellStates("    1"),
-        stringToCellStates("1   1"),
-        stringToCellStates(" 1111"),
-    ]
+  width: 5,
+  height: 4,
+  data: [
+    stringToCellStates("1  1 "),
+    stringToCellStates("    1"),
+    stringToCellStates("1   1"),
+    stringToCellStates(" 1111"),
+  ],
 };
 
 const CircleOfFirePreset: LifePresetData = {
-    width: 11,
-    height: 11,
-    data: [
-        stringToCellStates("    1 1    "),
-        stringToCellStates("  1  1  1  "),
-        stringToCellStates("   1 1 1   "),
-        stringToCellStates(" 111 1 111 "),
-        stringToCellStates("     1     "),
-        stringToCellStates("11111 11111"),
-        stringToCellStates("     1     "),
-        stringToCellStates(" 111 1 111 "),
-        stringToCellStates("   1 1 1   "),
-        stringToCellStates("  1  1  1  "),
-        stringToCellStates("    1 1    "),
-    ]
+  width: 11,
+  height: 11,
+  data: [
+    stringToCellStates("    1 1    "),
+    stringToCellStates("  1  1  1  "),
+    stringToCellStates("   1 1 1   "),
+    stringToCellStates(" 111 1 111 "),
+    stringToCellStates("     1     "),
+    stringToCellStates("11111 11111"),
+    stringToCellStates("     1     "),
+    stringToCellStates(" 111 1 111 "),
+    stringToCellStates("   1 1 1   "),
+    stringToCellStates("  1  1  1  "),
+    stringToCellStates("    1 1    "),
+  ],
 };
 
 const GriddlePreset: LifePresetData = {
-    width: 6,
-    height: 7,
-    data: [
-        stringToCellStates("   1  "),
-        stringToCellStates(" 1 1  "),
-        stringToCellStates("1    1"),
-        stringToCellStates("111111"),
-        stringToCellStates("      "),
-        stringToCellStates("  11  "),
-        stringToCellStates("  11  "),
-    ]
+  width: 6,
+  height: 7,
+  data: [
+    stringToCellStates("   1  "),
+    stringToCellStates(" 1 1  "),
+    stringToCellStates("1    1"),
+    stringToCellStates("111111"),
+    stringToCellStates("      "),
+    stringToCellStates("  11  "),
+    stringToCellStates("  11  "),
+  ],
 };
 
 const TurtlePreset: LifePresetData = {
-    width: 12,
-    height: 10,
-    data: [
-        stringToCellStates(" 111       1"),
-        stringToCellStates(" 11  1 11 11"),
-        stringToCellStates("   111    1 "),
-        stringToCellStates(" 1  1 1   1 "),
-        stringToCellStates("1    1    1 "),
-        stringToCellStates("1    1    1 "),
-        stringToCellStates(" 1  1 1   1 "),
-        stringToCellStates("   111    1 "),
-        stringToCellStates(" 11  1 11 11"),
-        stringToCellStates(" 111       1"),
-    ]
+  width: 12,
+  height: 10,
+  data: [
+    stringToCellStates(" 111       1"),
+    stringToCellStates(" 11  1 11 11"),
+    stringToCellStates("   111    1 "),
+    stringToCellStates(" 1  1 1   1 "),
+    stringToCellStates("1    1    1 "),
+    stringToCellStates("1    1    1 "),
+    stringToCellStates(" 1  1 1   1 "),
+    stringToCellStates("   111    1 "),
+    stringToCellStates(" 11  1 11 11"),
+    stringToCellStates(" 111       1"),
+  ],
 };
 
 const PufferPreset: LifePresetData = {
-    width: 18,
-    height: 5,
-    data: [
-        stringToCellStates(" 111           111"),
-        stringToCellStates("1  1          1  1"),
-        stringToCellStates("   1    111      1"),
-        stringToCellStates("   1    1  1     1"),
-        stringToCellStates("  1    1        1 "),
-    ]
+  width: 18,
+  height: 5,
+  data: [
+    stringToCellStates(" 111           111"),
+    stringToCellStates("1  1          1  1"),
+    stringToCellStates("   1    111      1"),
+    stringToCellStates("   1    1  1     1"),
+    stringToCellStates("  1    1        1 "),
+  ],
 };
 
 const BlomPreset: LifePresetData = {
-    width: 12,
-    height: 5,
-    data: [
-        stringToCellStates("1          1"),
-        stringToCellStates(" 1111      1"),
-        stringToCellStates("  11       1"),
-        stringToCellStates("          1 "),
-        stringToCellStates("        1 1 "),
-    ]
+  width: 12,
+  height: 5,
+  data: [
+    stringToCellStates("1          1"),
+    stringToCellStates(" 1111      1"),
+    stringToCellStates("  11       1"),
+    stringToCellStates("          1 "),
+    stringToCellStates("        1 1 "),
+  ],
 };
 
 const BeaconFusePreset: LifePresetData = {
-    width: 16,
-    height: 15,
-    data: [
-        stringToCellStates("              11"),
-        stringToCellStates("             1 1"),
-        stringToCellStates("            1   "),
-        stringToCellStates("           1    "),
-        stringToCellStates("          1     "),
-        stringToCellStates("         1      "),
-        stringToCellStates("        1       "),
-        stringToCellStates("       1        "),
-        stringToCellStates("      1         "),
-        stringToCellStates("     1          "),
-        stringToCellStates("    1           "),
-        stringToCellStates("   1            "),
-        stringToCellStates("111             "),
-        stringToCellStates("  1             "),
-        stringToCellStates("  1             "),
-    ]
+  width: 16,
+  height: 15,
+  data: [
+    stringToCellStates("              11"),
+    stringToCellStates("             1 1"),
+    stringToCellStates("            1   "),
+    stringToCellStates("           1    "),
+    stringToCellStates("          1     "),
+    stringToCellStates("         1      "),
+    stringToCellStates("        1       "),
+    stringToCellStates("       1        "),
+    stringToCellStates("      1         "),
+    stringToCellStates("     1          "),
+    stringToCellStates("    1           "),
+    stringToCellStates("   1            "),
+    stringToCellStates("111             "),
+    stringToCellStates("  1             "),
+    stringToCellStates("  1             "),
+  ],
 };
 
 const AntWickPreset: LifePresetData = {
-    width: 19,
-    height: 4,
-    data: [
-        stringToCellStates("11   11   11   11  "),
-        stringToCellStates("  11   11   11   11"),
-        stringToCellStates("  11   11   11   11"),
-        stringToCellStates("11   11   11   11  "),
-    ]
-}
+  width: 19,
+  height: 4,
+  data: [
+    stringToCellStates("11   11   11   11  "),
+    stringToCellStates("  11   11   11   11"),
+    stringToCellStates("  11   11   11   11"),
+    stringToCellStates("11   11   11   11  "),
+  ],
+};
 
 /* Store the presets in a map for easy access */
 const presetMap: Map<LifePresets, LifePresetData> = new Map();
@@ -172,10 +173,12 @@ presetMap.set(LifePresets.BeaconFuse, BeaconFusePreset);
 presetMap.set(LifePresets.AntWick, AntWickPreset);
 
 /**
- * get preset data for a specific preset type 
+ * get preset data for a specific preset type
  * @param presetType the preset to return
  * @returns preset data for the passed type
  */
-export function getPresetData(presetType: LifePresets): LifePresetData | undefined {
-    return presetMap.get(presetType);
+export function getPresetData(
+  presetType: LifePresets,
+): LifePresetData | undefined {
+  return presetMap.get(presetType);
 }

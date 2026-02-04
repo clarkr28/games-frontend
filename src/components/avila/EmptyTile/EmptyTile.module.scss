@@ -1,15 +1,15 @@
 @import "../IconTile/IconTile.module.scss";
 
 .tile {
-    border: 1px solid #ccc;
-    width: $tileWidth;
-    height: $tileHeight;
-    flex-shrink: 0;
+  border: 1px solid #ccc;
+  width: $tileWidth;
+  height: $tileHeight;
+  flex-shrink: 0;
 
-    &.hoverable {
-        &:hover {
-            cursor: pointer;
-            background-color: #eee;
-        }
+  &.hoverable {
+    &:hover {
+      cursor: pointer;
+      background-color: #eee;
     }
+  }
 }

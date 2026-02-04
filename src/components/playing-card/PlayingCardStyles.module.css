@@ -1,40 +1,40 @@
 .cardContainer {
-    display: inline-block;
-    border: 1px solid black;
-    border-radius: 5px;
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 .red {
-    color: crimson;
+  color: crimson;
 }
 
 .cardHeader {
-    font-size: 22px;
-    display: flex;
-    justify-content: space-between;
+  font-size: 22px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .cardBottomRow {
-    rotate: 180deg;
+  rotate: 180deg;
 }
 
 .cardCenter {
-    font-size: 65px;
-    margin: -15px 0;
+  font-size: 65px;
+  margin: -15px 0;
 }
 
 .stacked {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .stacked > div {
-    position: absolute;
-    background-color: #fff; /* makes it non-transparent */
+  position: absolute;
+  background-color: #fff; /* makes it non-transparent */
 }
 
 .cardContainer > img {
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
 }

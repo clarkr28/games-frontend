@@ -32,7 +32,9 @@
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && env-cmd -f environments/prod.env react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "serve:build": "serve -s build"
+    "serve:build": "serve -s build",
+    "format-check": "prettier --check ./src",
+    "format-write": "prettier --write ./src"
   },
   "eslintConfig": {
     "extends": [
@@ -55,6 +57,7 @@
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@types/ws": "^8.5.5",
-    "serve": "^14.2.1"
+    "serve": "^14.2.1",
+    "prettier": "~3.8.1"
   }
 }
