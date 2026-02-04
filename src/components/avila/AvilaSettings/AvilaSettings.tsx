@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import {
-  IconButton,
-  IconButtonColor,
-} from "../../common/IconButton/IconButton";
+import { IconButton, IconButtonColor } from "../../common/IconButton/IconButton";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import {
   IGameOptions,
@@ -57,14 +54,8 @@ export const AvilaSettings: React.FC<{}> = () => {
   return (
     <div className={styles.settingsWrapper}>
       <div>
-        <div
-          className={`${styles.radioRow} ${
-            joinedOrCreatedRoom ? "" : styles.radioRowEnabled
-          }`}
-        >
-          <div
-            onClick={() => !joinedOrCreatedRoom && setConnectType(CREATE_VALUE)}
-          >
+        <div className={`${styles.radioRow} ${joinedOrCreatedRoom ? "" : styles.radioRowEnabled}`}>
+          <div onClick={() => !joinedOrCreatedRoom && setConnectType(CREATE_VALUE)}>
             <input
               type="radio"
               name="connect_type"
@@ -75,9 +66,7 @@ export const AvilaSettings: React.FC<{}> = () => {
             />
             <label>Create Room</label>
           </div>
-          <div
-            onClick={() => !joinedOrCreatedRoom && setConnectType(JOIN_VALUE)}
-          >
+          <div onClick={() => !joinedOrCreatedRoom && setConnectType(JOIN_VALUE)}>
             <input
               type="radio"
               name="connect_type"
@@ -92,9 +81,7 @@ export const AvilaSettings: React.FC<{}> = () => {
         {showCreateRoom && (
           <CreateRoom
             setName={setName}
-            enableCreateRoom={
-              isServerConnected && !joinedOrCreatedRoom && name !== ""
-            }
+            enableCreateRoom={isServerConnected && !joinedOrCreatedRoom && name !== ""}
             onCreateRoom={() => CommWrapper.CreateRoom(name)}
           />
         )}
@@ -106,25 +93,13 @@ export const AvilaSettings: React.FC<{}> = () => {
               CommWrapper.JoinRoom(room, name);
               setJoinedRoom(room);
             }}
-            enableJoinRoom={
-              isServerConnected &&
-              !joinedOrCreatedRoom &&
-              name !== "" &&
-              room !== ""
-            }
+            enableJoinRoom={isServerConnected && !joinedOrCreatedRoom && name !== "" && room !== ""}
           />
         )}
         {roomCreated && (
-          <RoomSettings
-            onStartGame={(options: IGameOptions) =>
-              dispatch(startGame(options))
-            }
-            roomId={room}
-          />
+          <RoomSettings onStartGame={(options: IGameOptions) => dispatch(startGame(options))} roomId={room} />
         )}
-        {joinedRoom !== "" && (
-          <div>{`Waiting for host to start game ${room}`}</div>
-        )}
+        {joinedRoom !== "" && <div>{`Waiting for host to start game ${room}`}</div>}
         {!isServerConnected && <div>Connecting to server...</div>}
       </div>
     </div>
@@ -144,11 +119,7 @@ const CreateRoom: React.FC<ICreateRoom> = (props) => {
     <>
       <div>
         <label className={styles.labelGap}>Name</label>
-        <input
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setName(e.target.value)
-          }
-        />
+        <input onInput={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
       </div>
       <div>
         <IconButton
@@ -177,19 +148,11 @@ const JoinRoom: React.FC<IJoinRoom> = (props) => {
     <>
       <div>
         <label className={styles.labelGap}>Name</label>
-        <input
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setName(e.target.value)
-          }
-        />
+        <input onInput={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
       </div>
       <div>
         <label className={styles.labelGap}>Room</label>
-        <input
-          onInput={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setRoom(e.target.value)
-          }
-        />
+        <input onInput={(e: React.ChangeEvent<HTMLInputElement>) => setRoom(e.target.value)} />
       </div>
       <div>
         <IconButton
@@ -212,6 +175,7 @@ interface IRoomSettings {
 const RoomSettings: React.FC<IRoomSettings> = (props) => {
   const { onStartGame, roomId } = props;
   const [river, setRiver] = useState(false);
+  const [flier, setFlier] = useState(false);
 
   return (
     <>
@@ -221,18 +185,18 @@ const RoomSettings: React.FC<IRoomSettings> = (props) => {
         </label>
       </div>
       <div>
-        <input
-          type="checkbox"
-          checked={river}
-          onChange={() => setRiver(!river)}
-        />
+        <input type="checkbox" checked={river} onChange={() => setRiver(!river)} />
         <label>River Expansion</label>
+      </div>
+      <div>
+        <input type="checkbox" checked={flier} onChange={() => setFlier(!flier)} />
+        <label>Flier Expansion</label>
       </div>
       <IconButton
         displayText="Start Game"
         color={IconButtonColor.Green}
         icon={solid("play")}
-        clickCallback={() => onStartGame({ river: river })}
+        clickCallback={() => onStartGame({ river: river, flier: flier })}
         disabled={false}
       />
     </>
