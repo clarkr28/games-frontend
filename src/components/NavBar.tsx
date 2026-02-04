@@ -7,12 +7,20 @@ export const NavBar: React.FC<{}> = () => {
     <nav>
       <Link to="/">Home</Link>
       <div>
-        {process.env.REACT_APP_ENABLE_TICTACTOE && <RegularNavItem label="Tic Tac Toe" />}
-        {process.env.REACT_APP_ENABLE_CONNECTFOUR && <RegularNavItem label="Connect Four" />}
-        {process.env.REACT_APP_ENABLE_BLACKJACK && <RegularNavItem label="Blackjack" />}
+        {process.env.REACT_APP_ENABLE_TICTACTOE && (
+          <RegularNavItem label="Tic Tac Toe" />
+        )}
+        {process.env.REACT_APP_ENABLE_CONNECTFOUR && (
+          <RegularNavItem label="Connect Four" />
+        )}
+        {process.env.REACT_APP_ENABLE_BLACKJACK && (
+          <RegularNavItem label="Blackjack" />
+        )}
         {process.env.REACT_APP_ENABLE_LIFE && <RegularNavItem label="Life" />}
         {process.env.REACT_APP_ENABLE_AVILA && <RegularNavItem label="Avila" />}
-        {process.env.REACT_APP_AVILA_TILE_TEST && <RegularNavItem label="Tile Tester" route="/avila-tile-test" />}
+        {process.env.REACT_APP_AVILA_TILE_TEST && (
+          <RegularNavItem label="Tile Tester" route="/avila-tile-test" />
+        )}
       </div>
     </nav>
   );

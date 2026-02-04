@@ -1,53 +1,65 @@
-import {PayloadAction, createSlice} from '@reduxjs/toolkit';
-import { C4CellState, C4GameStatus, Point, calculateStatus, createEmptyBoard, findWinningCells } from '../assets/ConnectFourResources';
-import { RootState } from '../app/store';
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import {
+  C4CellState,
+  C4GameStatus,
+  Point,
+  calculateStatus,
+  createEmptyBoard,
+  findWinningCells,
+} from "../assets/ConnectFourResources";
+import { RootState } from "../app/store";
 
 export interface ConnectFourState {
-    board: C4CellState[][]; // board[x][y]
-    nextTurn: C4CellState;
-    status: C4GameStatus;
-    winningCells: Point[] | null; 
+  board: C4CellState[][]; // board[x][y]
+  nextTurn: C4CellState;
+  status: C4GameStatus;
+  winningCells: Point[] | null;
 }
 
 const initialState: ConnectFourState = {
-    board: createEmptyBoard(),
-    nextTurn: C4CellState.Black,
-    status: C4GameStatus.New,
-    winningCells: null,
+  board: createEmptyBoard(),
+  nextTurn: C4CellState.Black,
+  status: C4GameStatus.New,
+  winningCells: null,
 };
 
 export const connectFourSlice = createSlice({
-    name: 'connectFour',
-    initialState,
-    reducers: {
-        recordMove: (state, action: PayloadAction<number>) => {
-            if (action.payload < state.board.length) {
-                // add the move to the bottommost empty cell
-                for (let i = 0; i < state.board[action.payload].length; i++) {
-                    if (state.board[action.payload][i] === C4CellState.Empty) {
-                        state.board[action.payload][i] = state.nextTurn;
-                        state.nextTurn = state.nextTurn === C4CellState.Black ? C4CellState.Red : C4CellState.Black;
-                        state.winningCells = findWinningCells(state.board, action.payload);
-                        state.status = calculateStatus(state.board, state.winningCells);
-                        break;
-                    }
-                }
-            }
-        },
-        reset: (state) => {
-            state.board = initialState.board;
-            state.nextTurn = initialState.nextTurn;
-            state.status = initialState.status;
-            state.winningCells = initialState.winningCells;
+  name: "connectFour",
+  initialState,
+  reducers: {
+    recordMove: (state, action: PayloadAction<number>) => {
+      if (action.payload < state.board.length) {
+        // add the move to the bottommost empty cell
+        for (let i = 0; i < state.board[action.payload].length; i++) {
+          if (state.board[action.payload][i] === C4CellState.Empty) {
+            state.board[action.payload][i] = state.nextTurn;
+            state.nextTurn =
+              state.nextTurn === C4CellState.Black
+                ? C4CellState.Red
+                : C4CellState.Black;
+            state.winningCells = findWinningCells(state.board, action.payload);
+            state.status = calculateStatus(state.board, state.winningCells);
+            break;
+          }
         }
-    }
+      }
+    },
+    reset: (state) => {
+      state.board = initialState.board;
+      state.nextTurn = initialState.nextTurn;
+      state.status = initialState.status;
+      state.winningCells = initialState.winningCells;
+    },
+  },
 });
 
-export const {recordMove, reset} = connectFourSlice.actions;
+export const { recordMove, reset } = connectFourSlice.actions;
 
 export const selectC4Board = (state: RootState) => state.connectFour.board;
 export const selectC4Status = (state: RootState) => state.connectFour.status;
-export const selectC4WinningCells = (state: RootState) => state.connectFour.winningCells;
-export const selectC4NextTurnPlayer = (state: RootState) => state.connectFour.nextTurn;
+export const selectC4WinningCells = (state: RootState) =>
+  state.connectFour.winningCells;
+export const selectC4NextTurnPlayer = (state: RootState) =>
+  state.connectFour.nextTurn;
 
 export default connectFourSlice.reducer;

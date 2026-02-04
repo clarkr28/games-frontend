@@ -18,7 +18,11 @@ export const GameCard: React.FC<GameCardProps> = (props) => {
   return (
     <div className={styles.gameCardContainer}>
       <div className={styles.gameCardIconSection}>{display}</div>
-      <FancyLink route={routeFormatted} buttonLabel={buttonLabel} icon={solid("play")} />
+      <FancyLink
+        route={routeFormatted}
+        buttonLabel={buttonLabel}
+        icon={solid("play")}
+      />
     </div>
   );
 };

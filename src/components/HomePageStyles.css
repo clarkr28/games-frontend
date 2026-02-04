@@ -1,49 +1,49 @@
 .homePageCardContainer {
-    margin-top: 50px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 50px;
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 50px;
 }
 
 .fourIconGrid {
-    font-size: 70px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    justify-items: center;
-    align-items: center;
-    width: 200px;
-    height: 200px;
-    margin: 10px auto 0 auto;
+  font-size: 70px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  margin: 10px auto 0 auto;
 }
 
 .fourIconGrid.avila > img {
-    width: 85px;
-    height: 85px;
+  width: 85px;
+  height: 85px;
 }
 
 .rotate180 {
-    transform: rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .rotate270 {
-    transform: rotate(270deg);
+  transform: rotate(270deg);
 }
 
 .red {
-    color: crimson;
+  color: crimson;
 }
 
 .lifeDisplayGrid {
-    display: grid;
-    grid-template-columns: repeat(4, 15px);
-    gap: 1px;
+  display: grid;
+  grid-template-columns: repeat(4, 15px);
+  gap: 1px;
 }
 
 .lifeDisplayGrid div {
-    height: 15px;
+  height: 15px;
 }
 
 .blackBackground {
-    background-color: black;
+  background-color: black;
 }

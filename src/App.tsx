@@ -11,43 +11,34 @@ import { AvilaGame } from "./components/avila/AvilaGame/AvilaGame";
 import { TileTester } from "./components/avila/TileTester/TileTester";
 
 function App() {
-    return (
-        <BrowserRouter>
-            <div className="App">
-                <NavBar />
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    {process.env.REACT_APP_ENABLE_TICTACTOE && (
-                        <Route
-                            path="/tic-tac-toe"
-                            element={<TicTacToeGame />}
-                        />
-                    )}
-                    {process.env.REACT_APP_ENABLE_CONNECTFOUR && (
-                        <Route
-                            path="/connect-four"
-                            element={<ConnectFourGame />}
-                        />
-                    )}
-                    {process.env.REACT_APP_ENABLE_BLACKJACK && (
-                        <Route path="/blackjack" element={<BlackjackGame />} />
-                    )}
-                    {process.env.REACT_APP_ENABLE_LIFE && (
-                        <Route path="/life" element={<LifeGame />} />
-                    )}
-                    {process.env.REACT_APP_ENABLE_AVILA && (
-                        <Route path="/avila" element={<AvilaGame />} />
-                    )}
-                    {process.env.REACT_APP_AVILA_TILE_TEST && (
-                        <Route
-                            path="/avila-tile-test"
-                            element={<TileTester />}
-                        />
-                    )}
-                </Routes>
-            </div>
-        </BrowserRouter>
-    );
+  return (
+    <BrowserRouter>
+      <div className="App">
+        <NavBar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          {process.env.REACT_APP_ENABLE_TICTACTOE && (
+            <Route path="/tic-tac-toe" element={<TicTacToeGame />} />
+          )}
+          {process.env.REACT_APP_ENABLE_CONNECTFOUR && (
+            <Route path="/connect-four" element={<ConnectFourGame />} />
+          )}
+          {process.env.REACT_APP_ENABLE_BLACKJACK && (
+            <Route path="/blackjack" element={<BlackjackGame />} />
+          )}
+          {process.env.REACT_APP_ENABLE_LIFE && (
+            <Route path="/life" element={<LifeGame />} />
+          )}
+          {process.env.REACT_APP_ENABLE_AVILA && (
+            <Route path="/avila" element={<AvilaGame />} />
+          )}
+          {process.env.REACT_APP_AVILA_TILE_TEST && (
+            <Route path="/avila-tile-test" element={<TileTester />} />
+          )}
+        </Routes>
+      </div>
+    </BrowserRouter>
+  );
 }
 
 export default App;

@@ -1,41 +1,41 @@
 $rowGap: 10px;
 
 .settingsWrapper {
-    display: inline-block;
-    margin-top: 100px;
+  display: inline-block;
+  margin-top: 100px;
 
-    & > div {
-        border: 2px solid black;
-        border-radius: 1rem;
-        box-shadow: 0 0 6px 4px #ccc;
-        padding: 1rem;
-        margin: 0 auto;
-    }
+  & > div {
+    border: 2px solid black;
+    border-radius: 1rem;
+    box-shadow: 0 0 6px 4px #ccc;
+    padding: 1rem;
+    margin: 0 auto;
+  }
 
-    & > div > * {
-        margin-bottom: $rowGap;
-    }
+  & > div > * {
+    margin-bottom: $rowGap;
+  }
 }
 
 .labelGap {
-    padding-right: 5px;
+  padding-right: 5px;
 }
 
 .radioRow {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .radioRowEnabled {
-    & > div:hover {
-        cursor: pointer;
+  & > div:hover {
+    cursor: pointer;
 
-        & * {
-            cursor: pointer; // cursor needs to be applied to child elements
-        }
-
-        & > label {
-            text-decoration: underline;
-        }
+    & * {
+      cursor: pointer; // cursor needs to be applied to child elements
     }
+
+    & > label {
+      text-decoration: underline;
+    }
+  }
 }
