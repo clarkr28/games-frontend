@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {
-  AvilaBoard,
-  AvilaPlayerColor,
-  IAvilaTile,
-} from "../../../assets/avila/Resources";
+import { AvilaBoard, AvilaPlayerColor, IAvilaTile } from "../../../assets/avila/Resources";
 import { createTiles } from "../../../assets/avila/TileResources";
 import { AvilaGrid } from "../AvilaGrid/AvilaGrid";
 import { ImageTile } from "../ImageTile/ImageTile";
 import styles from "./TileTester.module.scss";
 
 const USE_RIVER = true;
-const TILES = createTiles(false, USE_RIVER);
+const USE_FLIER = true;
+const TILES = createTiles(false, USE_RIVER, USE_FLIER);
 
 export const TileTester: React.FC<{}> = () => {
   const [grid, setGrid] = useState<AvilaBoard>([]);

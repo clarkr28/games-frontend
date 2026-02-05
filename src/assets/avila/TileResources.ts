@@ -136,9 +136,7 @@ export const F_R_F_R: IAvilaTile = {
   rotation: 0,
   imageFile: `${IMAGE_PATH_BASE}F_R*_F_R*-0-0.svg`,
 };
-STANDARD_TILES.push(
-  ...[F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R],
-);
+STANDARD_TILES.push(...[F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R]);
 
 STANDARD_TILES.push(tileGenerator("F_R_R_R"));
 STANDARD_TILES.push(tileGenerator("F_R_R_R"));
@@ -208,6 +206,64 @@ export function getRiverTiles(shuffle: boolean): IAvilaTile[] {
  */
 
 /**
+ * FLIER TILES
+ */
+
+const FLIER_TILES: IAvilaTile[] = [];
+FLIER_TILES.push(tileGenerator("F_F_F_F", false, false, undefined, 270));
+FLIER_TILES.push(tileGenerator("F_F_F_F", false, false, undefined, 315));
+FLIER_TILES.push(tileGenerator("RR_F_F", false, false, undefined, 0));
+FLIER_TILES.push(tileGenerator("RR_F_F", false, false, undefined, 90));
+FLIER_TILES.push(tileGenerator("RR_F_F", false, false, undefined, 225));
+const flierWithStraightRoad: IAvilaTile = {
+  edges: [
+    {
+      type: AvilaFeature.River,
+    },
+    {
+      type: AvilaFeature.Road,
+      connectedEdges: [3],
+    },
+    {
+      type: AvilaFeature.River,
+    },
+    {
+      type: AvilaFeature.Road,
+      connectedEdges: [1],
+    },
+  ],
+  rotation: 0,
+  imageFile: `${IMAGE_PATH_BASE}F_R*_F_R*-0-0-0.svg`,
+  hasFlier: true,
+  flierDirection: 0,
+};
+FLIER_TILES.push(flierWithStraightRoad);
+FLIER_TILES.push({
+  ...structuredClone(flierWithStraightRoad),
+  imageFile: `${IMAGE_PATH_BASE}F_R*_F_R*-0-0-270.svg`,
+  hasFlier: true,
+  flierDirection: 270,
+});
+FLIER_TILES.push({
+  ...structuredClone(flierWithStraightRoad),
+  imageFile: `${IMAGE_PATH_BASE}F_R*_F_R*-0-0-315.svg`,
+  hasFlier: true,
+  flierDirection: 315,
+});
+
+/**
+ * Get the flier tiles
+ * @returns a copy of the flier tiles
+ */
+export function getFlierTiles() {
+  return structuredClone(FLIER_TILES);
+}
+
+/**
+ * END OF FLIER TILES
+ */
+
+/**
  * shuffles a list of tiles by reference
  * @param tiles the tiles to shuffle
  */
@@ -224,12 +280,10 @@ export function shuffleTiles(tiles: IAvilaTile[]): void {
  * create a deck of tiles
  * @param shuffle true if tiles should be shuffled
  * @param addRiver true if river expansion cards should be added
+ * @param addFlier true if flier expansion cards should be added
  * @returns the generated tiles
  */
-export function createTiles(
-  shuffle: boolean,
-  addRiver?: boolean,
-): IAvilaTile[] {
+export function createTiles(shuffle: boolean, addRiver?: boolean, addFlier?: boolean): IAvilaTile[] {
   let tiles: IAvilaTile[] = [];
 
   // add river tiles
@@ -237,16 +291,19 @@ export function createTiles(
     tiles.push(...getRiverTiles(shuffle));
   }
 
-  let regularTiles = structuredClone(STANDARD_TILES);
+  let remainingTiles = structuredClone(STANDARD_TILES);
+  if (addFlier) {
+    remainingTiles.push(...getFlierTiles());
+  }
 
   // add regular tiles
   if (shuffle) {
-    shuffleTiles(regularTiles);
+    shuffleTiles(remainingTiles);
     if (!addRiver) {
-      regularTiles = [{ ...C_R_F_R }, ...regularTiles]; // insert the standard starting tile
+      remainingTiles = [{ ...C_R_F_R }, ...remainingTiles]; // insert the standard starting tile
     }
   }
-  tiles.push(...regularTiles);
+  tiles.push(...remainingTiles);
   tiles.reverse();
 
   return tiles;
@@ -262,6 +319,7 @@ export function createTiles(
  * @param shield true if the tile has a shield
  * @param monestary true if the tile is a monestary
  * @param fileOverride override filename to use (do not include path)
+ * @param flierDirection (optional) the direction of the flier for this tile
  * @returns the generated tile
  */
 export function tileGenerator(
@@ -269,6 +327,7 @@ export function tileGenerator(
   shield?: boolean,
   monestary?: boolean,
   fileOverride?: string,
+  flierDirection?: number
 ): IAvilaTile {
   const edges: IAvilaEdge[] = [];
   const nodes = descriptor.split("_");
@@ -280,10 +339,7 @@ export function tileGenerator(
       edges.push({ type: charToEdgeType(node) });
     } else {
       const startIndex = edges.length;
-      const nodeInds = Array.from(
-        { length: node.length },
-        (_, i) => i + startIndex,
-      );
+      const nodeInds = Array.from({ length: node.length }, (_, i) => i + startIndex);
       for (let i = startIndex; i < startIndex + node.length; i++) {
         edges.push({
           type: charToEdgeType(node[0]),
@@ -294,13 +350,10 @@ export function tileGenerator(
   });
 
   if (edges.length !== 4) {
-    throw new Error(
-      `tile with descriptor ${descriptor} doesn't have 4 edges. Edges: ${JSON.stringify(edges)}`,
-    );
+    throw new Error(`tile with descriptor ${descriptor} doesn't have 4 edges. Edges: ${JSON.stringify(edges)}`);
   }
 
-  const fileName =
-    fileOverride ?? generateImageName(descriptor, shield, monestary);
+  const fileName = fileOverride ?? generateImageName(descriptor, shield, monestary, flierDirection);
   const fullFileName = fileName ? `${IMAGE_PATH_BASE}${fileName}` : undefined;
 
   return {
@@ -309,6 +362,8 @@ export function tileGenerator(
     monestary: monestary,
     rotation: 0,
     imageFile: fullFileName,
+    hasFlier: flierDirection !== undefined,
+    flierDirection: flierDirection,
   };
 }
 
@@ -342,6 +397,7 @@ function generateImageName(
   descriptor: string,
   shield?: boolean,
   monestary?: boolean,
+  flierDirection?: number
 ): string | undefined {
-  return `${descriptor}-${shield ? "1" : "0"}-${monestary ? "1" : "0"}.svg`;
+  return `${descriptor}-${shield ? "1" : "0"}-${monestary ? "1" : "0"}${flierDirection !== undefined ? "-" + flierDirection : ""}.svg`;
 }
