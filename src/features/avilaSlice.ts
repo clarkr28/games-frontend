@@ -111,8 +111,8 @@ export const avilaSlice = createSlice({
         // see if it's even possible to place a meeple on the tile that was just placed
         if (nextGameStatus === AvilaGameStatus.PlacingMeeple) {
           state.placeableMeepleLocations = getPlaceableMeepleLocations(state.board, state.lastTilePlaced);
-          if (!isMeeplePlaceable(state.placeableMeepleLocations)) {
-            // a meeple can't be placed on this tile, so finish the move
+          if (!isMeeplePlaceable(state.placeableMeepleLocations) && !state.currentTile?.hasFlier) {
+            // a meeple can't be placed on this tile and it's not a flier, so finish the move
             nextGameStatus = AvilaGameStatus.TriggerFinishMove;
           }
         }
