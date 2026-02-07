@@ -199,7 +199,7 @@ export const avilaSlice = createSlice({
     startGame: (state, action: PayloadAction<IGameOptions>) => {
       state.status = AvilaGameStatus.PlacingTile;
       // create the shuffled tiles and set the current tiles
-      const tiles = createTiles(true, action.payload.river);
+      const tiles = createTiles(true, action.payload.river, action.payload.flier);
       state.currentTile = tiles.pop();
       state.remainingTiles = tiles;
 

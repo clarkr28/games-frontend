@@ -7,6 +7,7 @@ export enum AvilaGameStatus {
   PlacingMeeple,
   TriggerFinishMove,
   Done,
+  HandlingFlier,
 }
 
 /* Have field be the assumed default value. Instead of discretely keeping track

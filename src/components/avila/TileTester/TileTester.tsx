@@ -48,12 +48,12 @@ export const TileTester: React.FC<{}> = () => {
       />
       <div className={styles.putMeepleWrapper}>
         <ImageTile
-          tile={TILES[46]}
+          tile={TILES[54]}
           placeMeepleColor={AvilaPlayerColor.Blue}
           placeableMeepleLocations={{ monestary: true }}
         />
         <ImageTile
-          tile={TILES[47]}
+          tile={TILES[30]}
           placeMeepleColor={AvilaPlayerColor.Green}
           placeableMeepleLocations={{
             monestary: true,
@@ -61,7 +61,7 @@ export const TileTester: React.FC<{}> = () => {
           }}
         />
         <ImageTile
-          tile={TILES[TILES.length - 1]}
+          tile={TILES[9]}
           placeMeepleColor={AvilaPlayerColor.Orange}
           placeableMeepleLocations={{
             topEdge: true,
@@ -71,7 +71,7 @@ export const TileTester: React.FC<{}> = () => {
           }}
         />
         <ImageTile
-          tile={TILES[19]}
+          tile={TILES[47]}
           placeMeepleColor={AvilaPlayerColor.Purple}
           placeableMeepleLocations={{
             topEdge: true,
@@ -79,11 +79,11 @@ export const TileTester: React.FC<{}> = () => {
           }}
         />
         <ImageTile
-          tile={TILES[33]}
+          tile={TILES[41]}
           placeMeepleColor={AvilaPlayerColor.Red}
           placeableMeepleLocations={{
             topEdge: true,
-            bottomEdge: true,
+            leftEdge: true,
           }}
         />
       </div>

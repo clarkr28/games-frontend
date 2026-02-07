@@ -15,6 +15,8 @@ export interface IAvilaPlayerCardProps {
   placingMeeple: boolean;
   skipMeepleCallback: () => void;
   numRemainingTiles: number;
+  showFlierButton: boolean;
+  useFlierCallback: () => void;
 }
 
 export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
@@ -27,34 +29,21 @@ export const AvilaPlayerCard: React.FC<IAvilaPlayerCardProps> = (props) => {
     placingMeeple,
     skipMeepleCallback,
     numRemainingTiles,
+    showFlierButton,
+    useFlierCallback,
   } = props;
 
   return (
     <div className={styles.playerCard}>
-      <p
-        className={`${styles.playerName} ${
-          styles[playerData.color.toString()]
-        }`}
-      >
+      <p className={`${styles.playerName} ${styles[playerData.color.toString()]}`}>
         <strong>{playerName}</strong>
       </p>
       {tile && <p>{`${numRemainingTiles} tiles left`}</p>}
-      <div className={tile ? styles.tileWrapper : ""}>
-        {tile && <ImageTile tile={tile} />}
-      </div>
-      {showRotateButton && (
-        <IconButton
-          displayText="Rotate"
-          icon={solid("rotate")}
-          clickCallback={rotateCallback}
-        />
-      )}
-      {placingMeeple && (
-        <IconButton
-          displayText="Skip Meeple"
-          icon={solid("ban")}
-          clickCallback={skipMeepleCallback}
-        />
+      <div className={tile ? styles.tileWrapper : ""}>{tile && <ImageTile tile={tile} />}</div>
+      {showRotateButton && <IconButton displayText="Rotate" icon={solid("rotate")} clickCallback={rotateCallback} />}
+      {placingMeeple && <IconButton displayText="End Turn" icon={solid("ban")} clickCallback={skipMeepleCallback} />}
+      {showFlierButton && (
+        <IconButton displayText="Use Flier" icon={solid("paper-plane")} clickCallback={useFlierCallback} />
       )}
       <p>{`Meeple: ${playerData.availableMeeple}`}</p>
       <LabeledValue label="Score" value={playerData.score} animateChanges />

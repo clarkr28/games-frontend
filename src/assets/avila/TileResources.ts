@@ -218,14 +218,14 @@ FLIER_TILES.push(tileGenerator("RR_F_F", false, false, undefined, 225));
 const flierWithStraightRoad: IAvilaTile = {
   edges: [
     {
-      type: AvilaFeature.River,
+      type: AvilaFeature.Field,
     },
     {
       type: AvilaFeature.Road,
       connectedEdges: [3],
     },
     {
-      type: AvilaFeature.River,
+      type: AvilaFeature.Field,
     },
     {
       type: AvilaFeature.Road,
@@ -293,6 +293,10 @@ export function createTiles(shuffle: boolean, addRiver?: boolean, addFlier?: boo
 
   let remainingTiles = structuredClone(STANDARD_TILES);
   if (addFlier) {
+    remainingTiles.push(...getFlierTiles());
+    remainingTiles.push(...getFlierTiles());
+    remainingTiles.push(...getFlierTiles());
+    remainingTiles.push(...getFlierTiles());
     remainingTiles.push(...getFlierTiles());
   }
 

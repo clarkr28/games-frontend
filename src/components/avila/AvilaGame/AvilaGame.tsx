@@ -21,12 +21,7 @@ import {
 } from "../../../features/avilaSlice";
 import { AvilaSettings } from "../AvilaSettings/AvilaSettings";
 import { AvilaGameStatus } from "../../../assets/avila/Resources";
-import {
-  CommWrapper,
-  IEndTurnData,
-  IPlacedTileData,
-  IStartGameData,
-} from "../../../assets/avila/CommWrapper";
+import { CommWrapper, IEndTurnData, IPlacedTileData, IStartGameData } from "../../../assets/avila/CommWrapper";
 
 export const AvilaGame: React.FC<{}> = () => {
   const dispatch = useAppDispatch();
@@ -35,9 +30,7 @@ export const AvilaGame: React.FC<{}> = () => {
   const lastTilePlaced = useAppSelector(selectAvilaLastTilePlaced);
   const playerData = useAppSelector(selectAvilaPlayerData);
   const playerTurn = useAppSelector(selectAvilaCurrentTurn);
-  const placeableMeepleLocations = useAppSelector(
-    selectAvilaPlaceableMeepleLocations,
-  );
+  const placeableMeepleLocations = useAppSelector(selectAvilaPlaceableMeepleLocations);
 
   // trigger the end of a move
   useEffect(() => {
@@ -55,16 +48,11 @@ export const AvilaGame: React.FC<{}> = () => {
 
   // link callbacks from the server communication handler to action dispatches
   useEffect(() => {
-    CommWrapper.startGameCallback = (data: IStartGameData) =>
-      dispatch(hostStartedGame(data));
-    CommWrapper.joinedRoomPlayerCallback = (index: number) =>
-      dispatch(setMyPlayerIndex(index));
-    CommWrapper.opponentPlacedTileCallback = (data: IPlacedTileData) =>
-      dispatch(applyOpponentPlacedTile(data));
-    CommWrapper.opponentEndTurnCallback = (data: IEndTurnData) =>
-      dispatch(applyOpponentEndTurn(data));
-    CommWrapper.serverConnectedCallback = (isConnected: boolean) =>
-      dispatch(setIsServerConnected(isConnected));
+    CommWrapper.startGameCallback = (data: IStartGameData) => dispatch(hostStartedGame(data));
+    CommWrapper.joinedRoomPlayerCallback = (index: number) => dispatch(setMyPlayerIndex(index));
+    CommWrapper.opponentPlacedTileCallback = (data: IPlacedTileData) => dispatch(applyOpponentPlacedTile(data));
+    CommWrapper.opponentEndTurnCallback = (data: IEndTurnData) => dispatch(applyOpponentEndTurn(data));
+    CommWrapper.serverConnectedCallback = (isConnected: boolean) => dispatch(setIsServerConnected(isConnected));
   }, [dispatch]);
 
   return (
@@ -79,13 +67,10 @@ export const AvilaGame: React.FC<{}> = () => {
             lastTilePlaced={lastTilePlaced}
             placingMeeple={gameStatus === AvilaGameStatus.PlacingMeeple}
             playerTurnColor={playerData[playerTurn].color}
-            placeMeepleCallback={(data: PlaceMeepleData) =>
-              dispatch(placeMeeple(data))
-            }
+            placeMeepleCallback={(data: PlaceMeepleData) => dispatch(placeMeeple(data))}
             placeableMeepleLocations={placeableMeepleLocations}
             danceLastPlaced={
-              gameStatus === AvilaGameStatus.PlacingTile ||
-              gameStatus === AvilaGameStatus.WaitingForTurn
+              gameStatus === AvilaGameStatus.PlacingTile || gameStatus === AvilaGameStatus.WaitingForTurn
             }
           />
         )}

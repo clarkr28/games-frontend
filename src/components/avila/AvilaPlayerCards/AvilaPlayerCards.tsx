@@ -26,29 +26,29 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
 
   return (
     <div>
-      {players.map((player, index) => (
-        <AvilaPlayerCard
-          key={index}
-          playerData={player}
-          playerName={player.name}
-          tile={
-            turnIndex === index &&
-            (gameStatus === AvilaGameStatus.PlacingTile ||
-              gameStatus === AvilaGameStatus.WaitingForTurn)
-              ? currentTile
-              : undefined
-          }
-          rotateCallback={() => dispatch(rotateCurrentTile())}
-          placingMeeple={
-            turnIndex === index && gameStatus === AvilaGameStatus.PlacingMeeple
-          }
-          skipMeepleCallback={() => dispatch(finishMove())}
-          numRemainingTiles={numRemainingTiles}
-          showRotateButton={
-            turnIndex === index && gameStatus === AvilaGameStatus.PlacingTile
-          }
-        />
-      ))}
+      {players.map((player, index) => {
+        const myTurn = turnIndex === index;
+        const myTurnPlacingMeeple = turnIndex === index && gameStatus === AvilaGameStatus.PlacingMeeple;
+        return (
+          <AvilaPlayerCard
+            key={index}
+            playerData={player}
+            playerName={player.name}
+            tile={
+              myTurn && (gameStatus === AvilaGameStatus.PlacingTile || gameStatus === AvilaGameStatus.WaitingForTurn)
+                ? currentTile
+                : undefined
+            }
+            rotateCallback={() => dispatch(rotateCurrentTile())}
+            placingMeeple={myTurnPlacingMeeple}
+            skipMeepleCallback={() => dispatch(finishMove())}
+            numRemainingTiles={numRemainingTiles}
+            showRotateButton={myTurn && gameStatus === AvilaGameStatus.PlacingTile}
+            showFlierButton={myTurnPlacingMeeple && !!currentTile?.hasFlier}
+            useFlierCallback={() => {}}
+          />
+        );
+      })}
     </div>
   );
 };
