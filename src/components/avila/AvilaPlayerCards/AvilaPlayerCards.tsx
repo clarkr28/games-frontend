@@ -45,7 +45,6 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
             numRemainingTiles={numRemainingTiles}
             showRotateButton={myTurn && gameStatus === AvilaGameStatus.PlacingTile}
             showFlierButton={myTurnPlacingMeeple && !!currentTile?.hasFlier}
-            useFlierCallback={() => {}}
           />
         );
       })}

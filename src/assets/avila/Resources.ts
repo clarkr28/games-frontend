@@ -7,7 +7,7 @@ export enum AvilaGameStatus {
   PlacingMeeple,
   TriggerFinishMove,
   Done,
-  HandlingFlier,
+  PlacingMeepleFromFlier, // this state should allow placing a meeple on spots that already have a meeple
 }
 
 /* Have field be the assumed default value. Instead of discretely keeping track
@@ -77,6 +77,10 @@ export function rotateTile(tile: IAvilaTile): IAvilaTile {
 
   // update the rotation degree
   newTile.rotation = (tile.rotation + 90) % 360;
+  if (tile.hasFlier && tile.flierDirection !== undefined) {
+    newTile.hasFlier = true;
+    newTile.flierDirection = (tile.flierDirection + 90) % 360;
+  }
 
   return newTile;
 }
@@ -806,6 +810,63 @@ export function monestaryNeedsScoring(board: AvilaBoard, loc: Point): boolean {
   return MonestaryOffsets.every((offset) => {
     return board[loc.Y + offset.Y][loc.X + offset.X]; // evaluates to true if it exists
   });
+}
+
+/**
+ * convert a degree to coordinate directions
+ * @param degree the degree to convert to coordinate directions
+ * @returns the coordinate directions that point in the same direction as the degree.
+ */
+export function directionDegreeToPoint(degree: number): Point {
+  switch (degree) {
+    case 0:
+      return { X: 0, Y: -1 };
+    case 45:
+      return { X: 1, Y: -1 };
+    case 90:
+      return { X: 1, Y: 0 };
+    case 135:
+      return { X: 1, Y: 1 };
+    case 180:
+      return { X: 0, Y: 1 };
+    case 225:
+      return { X: -1, Y: 1 };
+    case 270:
+      return { X: -1, Y: 0 };
+    case 315:
+      return { X: -1, Y: -1 };
+  }
+  throw Error(`degree value ${degree} is not valid`);
+}
+
+/**
+ * Compute the tile a meeple should be placed on with the flier expansion
+ * @param board the game board
+ * @param flierLocation the location of the flier tile
+ * @param flierDirection the direction the flier is pointed
+ * @param stepsRolled the number of steps the flier should move
+ * @returns the point the meeple should land on and the corresponding tile
+ */
+export function computeFlierTargetTile(
+  board: AvilaBoard,
+  flierLocation: Point,
+  flierDirection: number,
+  stepsRolled: number
+): [Point, IAvilaTile | undefined] {
+  // calculate the point of the target tile
+  const coordianteDirection = directionDegreeToPoint(flierDirection);
+  const targetPoint = {
+    X: flierLocation.X + coordianteDirection.X * stepsRolled,
+    Y: flierLocation.Y + coordianteDirection.Y * stepsRolled,
+  };
+
+  const valid = isLocationValid(targetPoint, board);
+  if (!valid) {
+    return [targetPoint, undefined];
+  }
+
+  const targetTile = board[targetPoint.Y][targetPoint.X];
+  return [targetPoint, targetTile];
 }
 
 /**
