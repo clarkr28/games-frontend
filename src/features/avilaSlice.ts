@@ -37,6 +37,7 @@ export interface AvilaState {
   isServerConnected: boolean; // true if the client is successfully connected to the server
   placeableMeepleLocations?: IPlaceableMeepleLocations; // where meeples can be placed on the most recent tile
   riverDirection?: number; // defined if the river expansion is being used
+  tileMeepleIsFlyingTo?: Point; // the tile a flier card is sending a meeple to
 }
 
 const initialState: AvilaState = {
@@ -67,6 +68,11 @@ export interface AddPlayerData {
 export interface IGameOptions {
   river: boolean;
   flier: boolean;
+}
+
+export interface ISetFlierMeeplePlacingData {
+  tileLoc: Point;
+  placeableMeepleLocations: IPlaceableMeepleLocations;
 }
 
 export const avilaSlice = createSlice({
@@ -129,8 +135,15 @@ export const avilaSlice = createSlice({
       }
     },
     placeMeeple: (state, action: PayloadAction<PlaceMeepleData>) => {
-      if (state.lastTilePlaced) {
-        const { X, Y } = state.lastTilePlaced;
+      let meeplePlacementLoc: Point | undefined = undefined;
+      if (state.status === AvilaGameStatus.PlacingMeeple) {
+        meeplePlacementLoc = state.lastTilePlaced;
+      } else if (state.status === AvilaGameStatus.PlacingMeepleFromFlier) {
+        meeplePlacementLoc = state.tileMeepleIsFlyingTo;
+      }
+
+      if (meeplePlacementLoc) {
+        const { X, Y } = meeplePlacementLoc;
         let meeplePlaced = false;
         if (action.payload.onMonestary) {
           // the last tile placed was a monestary, we can assume the monestary is unoccupied
@@ -141,10 +154,7 @@ export const avilaSlice = createSlice({
             edgeIndex: action.payload.edgeIndex,
             onMonestary: action.payload.onMonestary,
           };
-        } else if (
-          action.payload.edgeIndex !== undefined &&
-          !isFeatureOccupied(state.board, state.lastTilePlaced, action.payload.edgeIndex)
-        ) {
+        } else if (action.payload.edgeIndex !== undefined) {
           meeplePlaced = true;
           state.board[Y][X]!.meeple = {
             playerIndex: state.currentTurn,
@@ -255,6 +265,12 @@ export const avilaSlice = createSlice({
     setIsServerConnected: (state, action: PayloadAction<boolean>) => {
       state.isServerConnected = action.payload.valueOf();
     },
+    setFlierMeeplePlacing: (state, action: PayloadAction<ISetFlierMeeplePlacingData>) => {
+      // call this to allow a meeple to be placed that was launched from a flier tile
+      state.tileMeepleIsFlyingTo = action.payload.tileLoc;
+      state.placeableMeepleLocations = action.payload.placeableMeepleLocations;
+      state.status = AvilaGameStatus.PlacingMeepleFromFlier;
+    },
   },
 });
 
@@ -271,6 +287,7 @@ export const {
   applyOpponentEndTurn,
   setMyPlayerIndex,
   setIsServerConnected,
+  setFlierMeeplePlacing,
 } = avilaSlice.actions;
 
 export const selectAvilaBoard = (state: RootState) => state.avila.board;
@@ -283,5 +300,6 @@ export const selectAvilaRoomCreated = (state: RootState) => state.avila.roomCrea
 export const selectAvilaRemainingTilesCount = (state: RootState) => state.avila.remainingTiles.length;
 export const selectAvilaIsServerConnnected = (state: RootState) => state.avila.isServerConnected;
 export const selectAvilaPlaceableMeepleLocations = (state: RootState) => state.avila.placeableMeepleLocations;
+export const selectAvilaTileMeepleIsFlyingTo = (state: RootState) => state.avila.tileMeepleIsFlyingTo;
 
 export default avilaSlice.reducer;

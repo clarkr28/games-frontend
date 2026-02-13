@@ -870,6 +870,73 @@ export function computeFlierTargetTile(
 }
 
 /**
+ * Determine where a meeple from the flier expansion can be placed. They can only
+ * be placed on incomplete features, and it does not matter if the feature is
+ * already occuiped
+ * @param board the game board
+ * @param tileLoc the location where a meeple from the flier expansion is trying
+ * to be placed
+ * @returns the places where a flier meeple can be placed on the tile
+ */
+export function getPlaceableFlierMeepleLocations(board: AvilaBoard, tileLoc: Point): IPlaceableMeepleLocations {
+  const placeableLocations: IPlaceableMeepleLocations = {};
+
+  // make sure the location is on the board
+  if (!isLocationValid(tileLoc, board)) {
+    return placeableLocations;
+  }
+
+  // make sure the tile isn't empty
+  const tile = board[tileLoc.Y][tileLoc.X];
+  if (!tile) {
+    return placeableLocations;
+  }
+
+  // handle monestary
+  if (tile.monestary && !monestaryNeedsScoring(board, tileLoc)) {
+    placeableLocations.monestary = true;
+  }
+
+  // handle each edge
+  const edgeCache = new Map<string, number>();
+  edgeCache.set("CurrentFeature", 0);
+  for (let i = 0; i < 4; i++) {
+    if (tile.edges[i].type === AvilaFeature.Field || tile.edges[i].type === AvilaFeature.River) {
+      continue; // fields and rivers are not placeable
+    }
+
+    // edges connected to earlier edges don't need to be processed
+    if (tile.edges[i].connectedEdges?.some((ind) => ind < i)) {
+      continue;
+    }
+
+    // points will be 0 if the feature is not complete
+    const points = recurseCompletedFeature(
+      board,
+      tileLoc,
+      i,
+      new Map<number, Point[]>(),
+      edgeCache,
+      new Map<string, boolean>(),
+      true
+    );
+    if (points === 0 || points === -1) {
+      if (i === 0) {
+        placeableLocations.topEdge = true;
+      } else if (i === 1) {
+        placeableLocations.rightEdge = true;
+      } else if (i === 2) {
+        placeableLocations.bottomEdge = true;
+      } else if (i === 3) {
+        placeableLocations.leftEdge = true;
+      }
+    }
+  }
+
+  return placeableLocations;
+}
+
+/**
  *
  * Player Resources
  *

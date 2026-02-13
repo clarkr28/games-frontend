@@ -16,6 +16,7 @@ import {
   selectAvilaPlaceableMeepleLocations,
   selectAvilaPlayerData,
   selectAvilaStatus,
+  selectAvilaTileMeepleIsFlyingTo,
   setIsServerConnected,
   setMyPlayerIndex,
 } from "../../../features/avilaSlice";
@@ -31,6 +32,7 @@ export const AvilaGame: React.FC<{}> = () => {
   const playerData = useAppSelector(selectAvilaPlayerData);
   const playerTurn = useAppSelector(selectAvilaCurrentTurn);
   const placeableMeepleLocations = useAppSelector(selectAvilaPlaceableMeepleLocations);
+  const tileMeepleIsFlyingTo = useAppSelector(selectAvilaTileMeepleIsFlyingTo);
 
   // trigger the end of a move
   useEffect(() => {
@@ -64,8 +66,12 @@ export const AvilaGame: React.FC<{}> = () => {
           <AvilaGrid
             gridData={gridData}
             placingTile={gameStatus === AvilaGameStatus.PlacingTile}
-            lastTilePlaced={lastTilePlaced}
-            placingMeeple={gameStatus === AvilaGameStatus.PlacingMeeple}
+            lastTilePlaced={
+              gameStatus === AvilaGameStatus.PlacingMeepleFromFlier ? tileMeepleIsFlyingTo : lastTilePlaced
+            }
+            placingMeeple={
+              gameStatus === AvilaGameStatus.PlacingMeeple || gameStatus === AvilaGameStatus.PlacingMeepleFromFlier
+            }
             playerTurnColor={playerData[playerTurn].color}
             placeMeepleCallback={(data: PlaceMeepleData) => dispatch(placeMeeple(data))}
             placeableMeepleLocations={placeableMeepleLocations}

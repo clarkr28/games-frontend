@@ -2,10 +2,22 @@ import { useState } from "react";
 import { IconButton } from "../../common/IconButton/IconButton";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { useSelector } from "react-redux";
-import { selectAvilaBoard, selectAvilaCurrentTile, selectAvilaLastTilePlaced } from "../../../features/avilaSlice";
-import { computeFlierTargetTile, IAvilaTile } from "../../../assets/avila/Resources";
+import {
+  selectAvilaBoard,
+  selectAvilaCurrentTile,
+  selectAvilaLastTilePlaced,
+  setFlierMeeplePlacing,
+} from "../../../features/avilaSlice";
+import {
+  computeFlierTargetTile,
+  getPlaceableFlierMeepleLocations,
+  IAvilaTile,
+  isMeeplePlaceable,
+} from "../../../assets/avila/Resources";
+import { useAppDispatch } from "../../../app/hooks";
 
 export const AvilaFlierButton: React.FC<{}> = () => {
+  const dispatch = useAppDispatch();
   const [spacesToMove, setSpacesToMove] = useState(0); // will be > 0 if use flier button was clicked
   const [targetTile, setTargetTile] = useState<IAvilaTile | undefined>(undefined);
   const board = useSelector(selectAvilaBoard);
@@ -24,6 +36,16 @@ export const AvilaFlierButton: React.FC<{}> = () => {
         stepsRolled
       );
       setTargetTile(targetTile);
+
+      // either the user should be able to place a meeple, or have to end their turn
+      const placeableLocations = getPlaceableFlierMeepleLocations(board, targetPoint);
+      const isPlaceable = isMeeplePlaceable(placeableLocations);
+      // if not placeable, we can do nothing, and their only option is clicking End Turn
+      console.log(`isPlaceable: ${isPlaceable}`);
+      console.log(placeableLocations);
+      if (isPlaceable) {
+        dispatch(setFlierMeeplePlacing({ placeableMeepleLocations: placeableLocations, tileLoc: targetPoint }));
+      }
     }
   };
 
@@ -36,7 +58,7 @@ export const AvilaFlierButton: React.FC<{}> = () => {
       <p>
         You rolled a <strong>{spacesToMove}</strong>
       </p>
-      <p>Target tile is {targetTile === undefined ? "invalid" : "valid"}</p>
+      <p>Target tile is {targetTile ? "valid" : "invalid"}</p>
     </div>
   );
 };
