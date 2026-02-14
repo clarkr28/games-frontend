@@ -23,6 +23,7 @@ import { Point } from "../assets/ConnectFourResources";
 import { RootState } from "../app/store";
 import { createTiles } from "../assets/avila/TileResources";
 import { CommWrapper, IEndTurnData, IPlacedTileData, IStartGameData } from "../assets/avila/CommWrapper";
+import { v4 } from "uuid";
 
 export interface AvilaState {
   board: AvilaBoard; // board[y][x]
@@ -144,24 +145,33 @@ export const avilaSlice = createSlice({
 
       if (meeplePlacementLoc) {
         const { X, Y } = meeplePlacementLoc;
+        const tile = state.board[Y][X];
         let meeplePlaced = false;
-        if (action.payload.onMonestary) {
-          // the last tile placed was a monestary, we can assume the monestary is unoccupied
-          meeplePlaced = true;
-          state.board[Y][X]!.meeple = {
-            playerIndex: state.currentTurn,
-            playerColor: state.playerData[state.currentTurn].color,
-            edgeIndex: action.payload.edgeIndex,
-            onMonestary: action.payload.onMonestary,
-          };
-        } else if (action.payload.edgeIndex !== undefined) {
-          meeplePlaced = true;
-          state.board[Y][X]!.meeple = {
-            playerIndex: state.currentTurn,
-            playerColor: state.playerData[state.currentTurn].color,
-            edgeIndex: action.payload.edgeIndex,
-            onMonestary: action.payload.onMonestary,
-          };
+        if (tile) {
+          if (tile.meeples === undefined) {
+            tile.meeples = [];
+          }
+
+          if (action.payload.onMonestary) {
+            // the last tile placed was a monestary, we can assume the monestary is unoccupied
+            meeplePlaced = true;
+            tile.meeples.push({
+              guid: v4(),
+              playerIndex: state.currentTurn,
+              playerColor: state.playerData[state.currentTurn].color,
+              edgeIndex: action.payload.edgeIndex,
+              onMonestary: action.payload.onMonestary,
+            });
+          } else if (action.payload.edgeIndex !== undefined) {
+            meeplePlaced = true;
+            tile.meeples.push({
+              guid: v4(),
+              playerIndex: state.currentTurn,
+              playerColor: state.playerData[state.currentTurn].color,
+              edgeIndex: action.payload.edgeIndex,
+              onMonestary: action.payload.onMonestary,
+            });
+          }
         }
 
         if (meeplePlaced) {
