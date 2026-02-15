@@ -40,14 +40,6 @@ $placeMeepleBorder: 2px;
   animation: wiggle 4s infinite;
 }
 
-.placedMeeple {
-  width: $meepleContainer;
-  height: $meepleContainer;
-  border-radius: calc($meepleContainer / 2);
-  background-color: #fff;
-  font-size: 18px;
-}
-
 .placeMeeple {
   width: calc($meepleContainer - $placeMeepleBorder * 2);
   height: calc($meepleContainer - $placeMeepleBorder * 2);
@@ -65,21 +57,9 @@ $placeMeepleBorder: 2px;
   }
 }
 
-.topMeeple {
-  position: absolute;
-  top: 1px;
-  left: calc(($tileWidth - $meepleContainer) / 2);
-}
-
 .placeTop {
   position: absolute;
   top: 1px;
-  left: calc(($tileWidth - $meepleContainer) / 2);
-}
-
-.bottomMeeple {
-  position: absolute;
-  top: calc($tileHeight - $meepleContainer - 1px);
   left: calc(($tileWidth - $meepleContainer) / 2);
 }
 
@@ -89,34 +69,16 @@ $placeMeepleBorder: 2px;
   left: calc(($tileWidth - $meepleContainer) / 2);
 }
 
-.rightMeeple {
-  position: absolute;
-  top: calc((($tileWidth - $meepleContainer) / 2));
-  left: calc($tileWidth - $meepleContainer);
-}
-
 .placeRight {
   position: absolute;
   top: calc((($tileWidth - $meepleContainer) / 2));
   right: 2px;
 }
 
-.leftMeeple {
-  position: absolute;
-  top: calc((($tileWidth - $meepleContainer) / 2));
-  left: 2px;
-}
-
 .placeLeft {
   position: absolute;
   top: calc((($tileWidth - $meepleContainer) / 2));
   left: 2px;
-}
-
-.monestaryMeeple {
-  position: absolute;
-  top: calc((($tileWidth - $meepleContainer) / 2));
-  left: calc(($tileWidth - $meepleContainer) / 2);
 }
 
 .placeMonestary {

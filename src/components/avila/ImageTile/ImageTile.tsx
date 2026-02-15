@@ -1,14 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  AvilaPlayerColor,
-  IAvilaTile,
-  IMeeplePlacement,
-  IPlaceableMeepleLocations,
-} from "../../../assets/avila/Resources";
+import { AvilaPlayerColor, IAvilaTile, IPlaceableMeepleLocations } from "../../../assets/avila/Resources";
 import { IconTile } from "../IconTile/IconTile";
 import styles from "./ImageTile.module.scss";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { PlaceMeepleData } from "../../../features/avilaSlice";
+import { AvilaMeeples } from "../AvilaMeeples/AvilaMeeples";
 
 export interface IImageTileProps {
   tile: IAvilaTile;
@@ -28,7 +24,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
   const Meeples = (
     <>
       {tile.meeples?.map((meeple, index) => (
-        <div key={index} className={`${styles.placedMeeple} ${meeplePlacement(meeple)} ${meepleColor(meeple)}`}>
+        <div key={index}>
           <FontAwesomeIcon icon={solid("person")} />
         </div>
       ))}
@@ -44,6 +40,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
         alt="avila game tile"
       />
       {tile.meeples?.length && Meeples}
+      <AvilaMeeples meeples={tile.meeples} />
       {placeableMeepleLocations?.topEdge && (
         <div
           className={`${styles.placeMeeple} ${styles.placeTop}`}
@@ -87,35 +84,3 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
     </div>
   );
 };
-
-function meeplePlacement(meeple: IMeeplePlacement): string {
-  if (meeple.onMonestary) {
-    return styles.monestaryMeeple;
-  }
-  switch (meeple.edgeIndex) {
-    case 0:
-      return styles.topMeeple;
-    case 1:
-      return styles.rightMeeple;
-    case 2:
-      return styles.bottomMeeple;
-    case 3:
-      return styles.leftMeeple;
-  }
-  return "";
-}
-
-function meepleColor(meeple: IMeeplePlacement): string {
-  switch (meeple.playerColor) {
-    case AvilaPlayerColor.Blue:
-      return styles.blue;
-    case AvilaPlayerColor.Green:
-      return styles.green;
-    case AvilaPlayerColor.Orange:
-      return styles.orange;
-    case AvilaPlayerColor.Purple:
-      return styles.purple;
-    case AvilaPlayerColor.Red:
-      return styles.red;
-  }
-}

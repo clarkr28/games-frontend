@@ -1,0 +1,42 @@
+@import "../IconTile/IconTile.module.scss";
+
+$meepleContainer: 22px;
+$placeMeepleBorder: 2px;
+
+.placedMeeple {
+  width: $meepleContainer;
+  height: $meepleContainer;
+  border-radius: calc($meepleContainer / 2);
+  background-color: #fff;
+  font-size: 18px;
+}
+
+.topMeeple {
+  position: absolute;
+  top: 1px;
+  left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.bottomMeeple {
+  position: absolute;
+  top: calc($tileHeight - $meepleContainer - 1px);
+  left: calc(($tileWidth - $meepleContainer) / 2);
+}
+
+.rightMeeple {
+  position: absolute;
+  top: calc((($tileWidth - $meepleContainer) / 2));
+  left: calc($tileWidth - $meepleContainer);
+}
+
+.leftMeeple {
+  position: absolute;
+  top: calc((($tileWidth - $meepleContainer) / 2));
+  left: 2px;
+}
+
+.monestaryMeeple {
+  position: absolute;
+  top: calc((($tileWidth - $meepleContainer) / 2));
+  left: calc(($tileWidth - $meepleContainer) / 2);
+}

@@ -98,19 +98,49 @@ function indexPicker(baseIndex: number, useRiver: boolean): number {
 }
 
 function customizeTiles(tiles: IAvilaTile[]): void {
-  tiles[indexPicker(40, USE_RIVER)].meeples = [
+  tiles[indexPicker(28, USE_RIVER)].meeples = [
     {
       playerColor: AvilaPlayerColor.Blue,
       playerIndex: 0, // doesn't matter for this test
-      edgeIndex: 3,
+      edgeIndex: 0,
       guid: v4(),
     },
-  ];
-  tiles[indexPicker(16, USE_RIVER)].meeples = [
     {
       playerColor: AvilaPlayerColor.Green,
       playerIndex: 0, // doesn't matter for this test
       edgeIndex: 0,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Orange,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 1,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Purple,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 1,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(29, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Red,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Blue,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
       guid: v4(),
     },
   ];
