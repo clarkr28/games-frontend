@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  AvilaBoard,
-  AvilaPlayerColor,
-  IAvilaTile,
-} from "../../../assets/avila/Resources";
+import { AvilaBoard, AvilaPlayerColor, IAvilaTile } from "../../../assets/avila/Resources";
 import { createTiles } from "../../../assets/avila/TileResources";
 import { AvilaGrid } from "../AvilaGrid/AvilaGrid";
 import { ImageTile } from "../ImageTile/ImageTile";
 import styles from "./TileTester.module.scss";
+import { v4 } from "uuid";
 
 const USE_RIVER = true;
-const TILES = createTiles(false, USE_RIVER);
+const USE_FLIER = true;
+const TILES = createTiles(false, USE_RIVER, USE_FLIER);
 
 export const TileTester: React.FC<{}> = () => {
   const [grid, setGrid] = useState<AvilaBoard>([]);
@@ -51,12 +49,12 @@ export const TileTester: React.FC<{}> = () => {
       />
       <div className={styles.putMeepleWrapper}>
         <ImageTile
-          tile={TILES[46]}
+          tile={TILES[54]}
           placeMeepleColor={AvilaPlayerColor.Blue}
           placeableMeepleLocations={{ monestary: true }}
         />
         <ImageTile
-          tile={TILES[47]}
+          tile={TILES[30]}
           placeMeepleColor={AvilaPlayerColor.Green}
           placeableMeepleLocations={{
             monestary: true,
@@ -64,7 +62,7 @@ export const TileTester: React.FC<{}> = () => {
           }}
         />
         <ImageTile
-          tile={TILES[TILES.length - 1]}
+          tile={TILES[9]}
           placeMeepleColor={AvilaPlayerColor.Orange}
           placeableMeepleLocations={{
             topEdge: true,
@@ -74,7 +72,7 @@ export const TileTester: React.FC<{}> = () => {
           }}
         />
         <ImageTile
-          tile={TILES[19]}
+          tile={TILES[47]}
           placeMeepleColor={AvilaPlayerColor.Purple}
           placeableMeepleLocations={{
             topEdge: true,
@@ -82,11 +80,11 @@ export const TileTester: React.FC<{}> = () => {
           }}
         />
         <ImageTile
-          tile={TILES[33]}
+          tile={TILES[41]}
           placeMeepleColor={AvilaPlayerColor.Red}
           placeableMeepleLocations={{
             topEdge: true,
-            bottomEdge: true,
+            leftEdge: true,
           }}
         />
       </div>
@@ -100,29 +98,120 @@ function indexPicker(baseIndex: number, useRiver: boolean): number {
 }
 
 function customizeTiles(tiles: IAvilaTile[]): void {
-  tiles[indexPicker(40, USE_RIVER)].meeple = {
-    playerColor: AvilaPlayerColor.Blue,
-    playerIndex: 0, // doesn't matter for this test
-    edgeIndex: 3,
-  };
-  tiles[indexPicker(16, USE_RIVER)].meeple = {
-    playerColor: AvilaPlayerColor.Green,
-    playerIndex: 0, // doesn't matter for this test
-    edgeIndex: 0,
-  };
-  tiles[indexPicker(17, USE_RIVER)].meeple = {
-    playerColor: AvilaPlayerColor.Orange,
-    playerIndex: 0, // doesn't matter for this test
-    edgeIndex: 1,
-  };
-  tiles[indexPicker(41, USE_RIVER)].meeple = {
-    playerColor: AvilaPlayerColor.Purple,
-    playerIndex: 0, // doesn't matter for this test
-    edgeIndex: 2,
-  };
-  tiles[indexPicker(45, USE_RIVER)].meeple = {
-    playerColor: AvilaPlayerColor.Red,
-    playerIndex: 0, // doesn't matter for this test
-    onMonestary: true,
-  };
+  tiles[indexPicker(28, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Blue,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 0,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 0,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Orange,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 1,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Purple,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 1,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(29, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Red,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Blue,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(30, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Red,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Blue,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Purple,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(31, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 3,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 3,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(17, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Orange,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 1,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(41, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Purple,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(51, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Red,
+      playerIndex: 0, // doesn't matter for this test
+      onMonestary: true,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 0, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+  ];
 }

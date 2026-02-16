@@ -27,36 +27,26 @@ export const IconTile: React.FC<IIconTileProps> = (props) => {
   const canPlaceMeepleRight = placeMeepleColor !== undefined;
   const canPlaceMeepleBottom = placeMeepleColor !== undefined;
   const canPlaceMeepleLeft = placeMeepleColor !== undefined;
-  const canPlaceMeepleMonestary =
-    placeMeepleColor !== undefined && tile.monestary;
+  const canPlaceMeepleMonestary = placeMeepleColor !== undefined && tile.monestary;
 
-  const possibleMiddleCells = [
-    getAdjacencyType(tile, 0, 2),
-    getAdjacencyType(tile, 1, 3),
-  ];
-  const middleCell = possibleMiddleCells.filter(
-    (val) => val !== AvilaFeature.Field,
-  );
+  const possibleMiddleCells = [getAdjacencyType(tile, 0, 2), getAdjacencyType(tile, 1, 3)];
+  const middleCell = possibleMiddleCells.filter((val) => val !== AvilaFeature.Field);
 
   const placeMeepleClasses = placeMeepleColor
     ? `${styles.canPlace} ${styles[placeMeepleColor.toString() + "Hover"]} `
     : "";
 
+  if (tile.meeples?.length ?? 0 > 1) {
+    return <div>Update to handle multiple meeples</div>;
+  }
+
   return (
-    <div
-      className={`${styles.tileContainer} ${
-        tile.shield ? styles.hasShield : ""
-      }`}
-    >
+    <div className={`${styles.tileContainer} ${tile.shield ? styles.hasShield : ""}`}>
       <div
         className={`${placeMeepleClasses} ${
-          tile.meeple?.edgeIndex === 0
-            ? styles[tile.meeple.playerColor.toString()]
-            : ""
+          tile.meeples?.[0]?.edgeIndex === 0 ? styles[tile.meeples[0].playerColor.toString()] : ""
         }`}
-        onClick={() =>
-          canPlaceMeepleTop && dispatch(placeMeeple({ edgeIndex: 0 }))
-        }
+        onClick={() => canPlaceMeepleTop && dispatch(placeMeeple({ edgeIndex: 0 }))}
       >
         {getEdgeDisplayIcon(getEdgeType(tile, 0))}
       </div>
@@ -67,42 +57,25 @@ export const IconTile: React.FC<IIconTileProps> = (props) => {
       <div className={styles.middleRow}>
         <div
           className={`${placeMeepleClasses} ${
-            tile.meeple?.edgeIndex === 3
-              ? styles[tile.meeple.playerColor.toString()]
-              : ""
+            tile.meeples?.[0]?.edgeIndex === 3 ? styles[tile.meeples[0].playerColor.toString()] : ""
           }`}
-          onClick={() =>
-            canPlaceMeepleLeft && dispatch(placeMeeple({ edgeIndex: 3 }))
-          }
+          onClick={() => canPlaceMeepleLeft && dispatch(placeMeeple({ edgeIndex: 3 }))}
         >
           {getEdgeDisplayIcon(getEdgeType(tile, 3))}
         </div>
         <div
           className={`${tile.monestary ? placeMeepleClasses : ""} ${
-            tile.meeple?.onMonestary
-              ? styles[tile.meeple.playerColor.toString()]
-              : ""
+            tile.meeples?.[0]?.onMonestary ? styles[tile.meeples[0].playerColor.toString()] : ""
           }`}
-          onClick={() =>
-            canPlaceMeepleMonestary &&
-            dispatch(placeMeeple({ onMonestary: true }))
-          }
+          onClick={() => canPlaceMeepleMonestary && dispatch(placeMeeple({ onMonestary: true }))}
         >
-          {tile.monestary
-            ? Monestary
-            : middleCell.length
-              ? getEdgeDisplayIcon(middleCell[0])
-              : null}
+          {tile.monestary ? Monestary : middleCell.length ? getEdgeDisplayIcon(middleCell[0]) : null}
         </div>
         <div
           className={`${placeMeepleClasses} ${
-            tile.meeple?.edgeIndex === 1
-              ? styles[tile.meeple.playerColor.toString()]
-              : ""
+            tile.meeples?.[0]?.edgeIndex === 1 ? styles[tile.meeples[0].playerColor.toString()] : ""
           }`}
-          onClick={() =>
-            canPlaceMeepleRight && dispatch(placeMeeple({ edgeIndex: 1 }))
-          }
+          onClick={() => canPlaceMeepleRight && dispatch(placeMeeple({ edgeIndex: 1 }))}
         >
           {getEdgeDisplayIcon(getEdgeType(tile, 1))}
         </div>
@@ -113,13 +86,9 @@ export const IconTile: React.FC<IIconTileProps> = (props) => {
       </div>
       <div
         className={`${placeMeepleClasses} ${
-          tile.meeple?.edgeIndex === 2
-            ? styles[tile.meeple.playerColor.toString()]
-            : ""
+          tile.meeples?.[0]?.edgeIndex === 2 ? styles[tile.meeples[0].playerColor.toString()] : ""
         }`}
-        onClick={() =>
-          canPlaceMeepleBottom && dispatch(placeMeeple({ edgeIndex: 2 }))
-        }
+        onClick={() => canPlaceMeepleBottom && dispatch(placeMeeple({ edgeIndex: 2 }))}
       >
         {getEdgeDisplayIcon(getEdgeType(tile, 2))}
       </div>

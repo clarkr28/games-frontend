@@ -1,13 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  AvilaPlayerColor,
-  IAvilaTile,
-  IPlaceableMeepleLocations,
-} from "../../../assets/avila/Resources";
+import { AvilaPlayerColor, IAvilaTile, IPlaceableMeepleLocations } from "../../../assets/avila/Resources";
 import { IconTile } from "../IconTile/IconTile";
 import styles from "./ImageTile.module.scss";
 import { solid } from "@fortawesome/fontawesome-svg-core/import.macro";
 import { PlaceMeepleData } from "../../../features/avilaSlice";
+import { AvilaMeeples } from "../AvilaMeeples/AvilaMeeples";
 
 export interface IImageTileProps {
   tile: IAvilaTile;
@@ -18,27 +15,11 @@ export interface IImageTileProps {
 }
 
 export const ImageTile: React.FC<IImageTileProps> = (props) => {
-  const {
-    tile,
-    placeMeepleColor,
-    placeMeepleCallback,
-    placeableMeepleLocations,
-    dance,
-  } = props;
+  const { tile, placeMeepleColor, placeMeepleCallback, placeableMeepleLocations, dance } = props;
 
   if (!tile.imageFile) {
     return <IconTile tile={tile} placeMeepleColor={placeMeepleColor} />;
   }
-
-  const Meeple = (
-    <div
-      className={`${styles.placedMeeple} ${meeplePlacement(
-        tile,
-      )} ${meepleColor(tile)}`}
-    >
-      <FontAwesomeIcon icon={solid("person")} />
-    </div>
-  );
 
   return (
     <div className={`${styles.wrapper} ${dance ? styles.dance : ""}`}>
@@ -48,7 +29,7 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
         src={tile.imageFile}
         alt="avila game tile"
       />
-      {tile.meeple && Meeple}
+      <AvilaMeeples meeples={tile.meeples} />
       {placeableMeepleLocations?.topEdge && (
         <div
           className={`${styles.placeMeeple} ${styles.placeTop}`}
@@ -92,41 +73,3 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
     </div>
   );
 };
-
-function meeplePlacement(tile: IAvilaTile): string {
-  if (!tile.meeple) {
-    return "";
-  }
-  if (tile.meeple.onMonestary) {
-    return styles.monestaryMeeple;
-  }
-  switch (tile.meeple.edgeIndex) {
-    case 0:
-      return styles.topMeeple;
-    case 1:
-      return styles.rightMeeple;
-    case 2:
-      return styles.bottomMeeple;
-    case 3:
-      return styles.leftMeeple;
-  }
-  return "";
-}
-
-function meepleColor(tile: IAvilaTile): string {
-  if (!tile.meeple) {
-    return "";
-  }
-  switch (tile.meeple.playerColor) {
-    case AvilaPlayerColor.Blue:
-      return styles.blue;
-    case AvilaPlayerColor.Green:
-      return styles.green;
-    case AvilaPlayerColor.Orange:
-      return styles.orange;
-    case AvilaPlayerColor.Purple:
-      return styles.purple;
-    case AvilaPlayerColor.Red:
-      return styles.red;
-  }
-}

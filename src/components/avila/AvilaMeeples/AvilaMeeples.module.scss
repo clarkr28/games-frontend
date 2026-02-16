@@ -1,0 +1,42 @@
+@import "../IconTile/IconTile.module.scss";
+
+$meepleContainerHeight: 22px;
+$placeMeepleBorder: 2px;
+
+.placedMeeple {
+  // width is set in react
+  height: $meepleContainerHeight;
+  border-radius: calc($meepleContainerHeight / 2);
+  background-color: #fff;
+  font-size: 18px;
+}
+
+.topMeeple {
+  position: absolute;
+  top: 1px;
+  // left position is set in react
+}
+
+.bottomMeeple {
+  position: absolute;
+  top: calc($tileHeight - $meepleContainerHeight - 1px);
+  // left position is set in react
+}
+
+.rightMeeple {
+  position: absolute;
+  top: calc((($tileWidth - $meepleContainerHeight) / 2));
+  // left position is set in react
+}
+
+.leftMeeple {
+  position: absolute;
+  top: calc((($tileWidth - $meepleContainerHeight) / 2));
+  // left position is set in react
+}
+
+.monestaryMeeple {
+  position: absolute;
+  top: calc((($tileWidth - $meepleContainerHeight) / 2));
+  // left position is set in react
+}

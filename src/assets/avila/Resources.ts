@@ -7,6 +7,7 @@ export enum AvilaGameStatus {
   PlacingMeeple,
   TriggerFinishMove,
   Done,
+  PlacingMeepleFromFlier, // this state should allow placing a meeple on spots that already have a meeple
 }
 
 /* Have field be the assumed default value. Instead of discretely keeping track
@@ -29,12 +30,19 @@ export interface IAvilaEdge {
 }
 
 export interface IMeeplePlacement {
+  guid: string;
   playerIndex: number;
   playerColor: AvilaPlayerColor;
   // optional when placed on monestary
   edgeIndex?: number;
   // monestaries don't be belong to an edge
   onMonestary?: boolean;
+}
+
+export interface IPointWithGuid {
+  X: number;
+  Y: number;
+  guid: string;
 }
 
 /**
@@ -49,9 +57,11 @@ export interface IAvilaTile {
   edges: IAvilaEdge[];
   shield?: boolean;
   monestary?: boolean;
-  meeple?: IMeeplePlacement;
+  meeples?: IMeeplePlacement[];
   rotation: number;
   imageFile?: string;
+  flierDirection?: number;
+  hasFlier?: boolean;
 }
 
 /**
@@ -67,13 +77,17 @@ export function rotateTile(tile: IAvilaTile): IAvilaTile {
 
   // rotate the edge connections
   for (let edgeIndex = 0; edgeIndex < 4; edgeIndex++) {
-    newTile.edges[edgeIndex].connectedEdges = newTile.edges[
-      edgeIndex
-    ].connectedEdges?.map((connection) => (connection + 1) % 4);
+    newTile.edges[edgeIndex].connectedEdges = newTile.edges[edgeIndex].connectedEdges?.map(
+      (connection) => (connection + 1) % 4
+    );
   }
 
   // update the rotation degree
   newTile.rotation = (tile.rotation + 90) % 360;
+  if (tile.hasFlier && tile.flierDirection !== undefined) {
+    newTile.hasFlier = true;
+    newTile.flierDirection = (tile.flierDirection + 90) % 360;
+  }
 
   return newTile;
 }
@@ -105,18 +119,12 @@ export function getLeftEdge(tile: IAvilaTile): AvilaFeature {
  * @param secondEdge the second edge of the tile to compare against
  * @returns the type of connection between the two edges
  */
-export function getAdjacencyType(
-  tile: IAvilaTile,
-  firstEdge: number,
-  secondEdge: number,
-): AvilaFeature {
+export function getAdjacencyType(tile: IAvilaTile, firstEdge: number, secondEdge: number): AvilaFeature {
   if (tile.edges[firstEdge].type === AvilaFeature.Field) {
     return AvilaFeature.Field; // field doesn't have any adjacencies
   }
 
-  return tile.edges[firstEdge].connectedEdges?.some(
-    (edge) => edge === secondEdge,
-  )
+  return tile.edges[firstEdge].connectedEdges?.some((edge) => edge === secondEdge)
     ? tile.edges[firstEdge].type
     : AvilaFeature.Field;
 }
@@ -138,10 +146,7 @@ export function createEmptyBoard(width: number, height: number): AvilaBoard {
  * @param placedTileLocation the point where the last tile was placed
  * @returns the board with its edges potentially expanded
  */
-export function expandBoard(
-  board: AvilaBoard,
-  placedTileLocation: Point,
-): AvilaBoard {
+export function expandBoard(board: AvilaBoard, placedTileLocation: Point): AvilaBoard {
   // reminder: board[Y][X]
   if (placedTileLocation.X + 1 === board[0].length) {
     // expand board to the right
@@ -151,9 +156,7 @@ export function expandBoard(
   }
   if (placedTileLocation.Y + 1 === board.length) {
     // expand board down
-    board.push(
-      new Array<IAvilaTile | undefined>(board[0].length).fill(undefined),
-    );
+    board.push(new Array<IAvilaTile | undefined>(board[0].length).fill(undefined));
   }
   if (placedTileLocation.X === 0) {
     // expand board to the left
@@ -163,24 +166,15 @@ export function expandBoard(
   }
   if (placedTileLocation.Y === 0) {
     // expand board up
-    board.unshift(
-      new Array<IAvilaTile | undefined>(board[0].length).fill(undefined),
-    );
+    board.unshift(new Array<IAvilaTile | undefined>(board[0].length).fill(undefined));
   }
 
   return board;
 }
 
-export function canPlaceTile(
-  board: AvilaBoard,
-  tileLocation: Point,
-  newTile: IAvilaTile,
-): boolean {
+export function canPlaceTile(board: AvilaBoard, tileLocation: Point, newTile: IAvilaTile): boolean {
   // don't place a tile if there's already a tile there
-  if (
-    board[tileLocation.Y][tileLocation.X] !== undefined &&
-    board[tileLocation.Y][tileLocation.X] !== null
-  ) {
+  if (board[tileLocation.Y][tileLocation.X] !== undefined && board[tileLocation.Y][tileLocation.X] !== null) {
     return false;
   }
 
@@ -192,8 +186,7 @@ export function canPlaceTile(
   let hasAdjacentTile = false;
 
   // check up
-  const adjacentUp =
-    board[tileLocation.Y - 1] && board[tileLocation.Y - 1][tileLocation.X];
+  const adjacentUp = board[tileLocation.Y - 1] && board[tileLocation.Y - 1][tileLocation.X];
   if (tileLocation.Y > 0 && adjacentUp) {
     hasAdjacentTile = true;
     // check edge compatibility
@@ -203,8 +196,7 @@ export function canPlaceTile(
   }
 
   // check down
-  const adjacentDown =
-    board[tileLocation.Y + 1] && board[tileLocation.Y + 1][tileLocation.X];
+  const adjacentDown = board[tileLocation.Y + 1] && board[tileLocation.Y + 1][tileLocation.X];
   if (tileLocation.Y < board.length - 1 && adjacentDown) {
     hasAdjacentTile = true;
     if (getBottomEdge(newTile) !== getTopEdge(adjacentDown)) {
@@ -246,14 +238,10 @@ export interface IPlaceableMeepleLocations {
  * @param options meeple placement options
  * @returns true if a meeple can be placed somewhere
  */
-export function isMeeplePlaceable(options: IPlaceableMeepleLocations): boolean {
+export function isMeeplePlaceable(options: IPlaceableMeepleLocations | undefined): boolean {
   return (
-    options.topEdge ||
-    options.rightEdge ||
-    options.bottomEdge ||
-    options.leftEdge ||
-    options.monestary ||
-    false
+    options !== undefined &&
+    (options.topEdge || options.rightEdge || options.bottomEdge || options.leftEdge || options.monestary || false)
   );
 }
 
@@ -263,10 +251,7 @@ export function isMeeplePlaceable(options: IPlaceableMeepleLocations): boolean {
  * @param tileLoc the location of the tile to compute placeable meeple locations
  * @returns the places where a meeple can be placed on this tile
  */
-export function getPlaceableMeepleLocations(
-  board: AvilaBoard,
-  tileLoc: Point,
-): IPlaceableMeepleLocations {
+export function getPlaceableMeepleLocations(board: AvilaBoard, tileLoc: Point): IPlaceableMeepleLocations {
   const placeableMeepleLocations: IPlaceableMeepleLocations = {};
 
   // make sure the tile location is valid
@@ -281,7 +266,7 @@ export function getPlaceableMeepleLocations(
   }
 
   // make sure the tile doesn't have a meeple on it
-  if (tile.meeple) {
+  if (tile.meeples?.length) {
     return placeableMeepleLocations;
   }
 
@@ -365,7 +350,7 @@ export function isRiverDirectionValid(
   board: AvilaBoard,
   newTile: IAvilaTile,
   newTileLocation: Point,
-  riverDirection: number,
+  riverDirection: number
 ): boolean {
   let riverInEdge = -1;
   let riverOutEdge = -1;
@@ -422,24 +407,14 @@ export function isRiverDirectionValid(
  * @param edgeIndex the edge of the tileLocation to check if the feature is free
  * @returns true if the feature is occupied
  */
-export function isFeatureOccupied(
-  board: AvilaBoard,
-  tileLocation: Point,
-  edgeIndex: number,
-): boolean {
+export function isFeatureOccupied(board: AvilaBoard, tileLocation: Point, edgeIndex: number): boolean {
   // when implementing, give careful consideration to cyclical pieces. A cache will have to be kept of visited tiles.
-  return searchFeatureForOccupation(
-    board,
-    tileLocation,
-    edgeIndex,
-    new Map<string, boolean>(),
-  );
+  return searchFeatureForOccupation(board, tileLocation, edgeIndex, new Map<string, boolean>());
 }
 
 const encodeLocation = (location: Point) => `${location.X},${location.Y}`;
 
-const encodeEdge = (location: Point, edge: number) =>
-  `${location.X},${location.Y},${edge}`;
+const encodeEdge = (location: Point, edge: number) => `${location.X},${location.Y},${edge}`;
 
 /**
  * validate that a point is on the board
@@ -448,12 +423,7 @@ const encodeEdge = (location: Point, edge: number) =>
  * @returns true if the locaiton is valid on the board (the location can still be undefined though)
  */
 function isLocationValid(location: Point, board: AvilaBoard): boolean {
-  return (
-    location.X >= 0 &&
-    location.Y >= 0 &&
-    location.Y < board.length &&
-    location.X < board[0].length
-  );
+  return location.X >= 0 && location.Y >= 0 && location.Y < board.length && location.X < board[0].length;
 }
 
 /**
@@ -468,7 +438,7 @@ function searchFeatureForOccupation(
   board: AvilaBoard,
   tileLoc: Point,
   entryEdge: number,
-  pastTiles: Map<string, boolean>,
+  pastTiles: Map<string, boolean>
 ): boolean {
   // make sure the tile location is valid
   if (!isLocationValid(tileLoc, board)) {
@@ -491,14 +461,16 @@ function searchFeatureForOccupation(
   pastTiles.set(encodedLocation, true);
 
   // see if the feature on this tile is occupied
-  if (tile.meeple?.edgeIndex !== undefined && tile.meeple?.edgeIndex !== null) {
-    if (
-      tile.meeple.edgeIndex === entryEdge ||
-      (tile.edges[entryEdge].connectedEdges?.indexOf(tile.meeple.edgeIndex) ??
-        -1) !== -1
-    ) {
-      return true;
+  let meepleFound = false;
+  tile.meeples?.forEach((meeple) => {
+    if (meeple.edgeIndex !== undefined && meeple.edgeIndex !== null) {
+      if (meeple.edgeIndex === entryEdge || tile.edges[entryEdge].connectedEdges?.includes(meeple.edgeIndex)) {
+        meepleFound = true;
+      }
     }
+  });
+  if (meepleFound) {
+    return true;
   }
 
   if (isFirstCall && searchAdjacentTile(board, entryEdge, tileLoc, pastTiles)) {
@@ -507,9 +479,8 @@ function searchFeatureForOccupation(
 
   // search adjacent tiles that aren't from the edge we got here from
   return (
-    tile.edges[entryEdge].connectedEdges?.some((conEdge) =>
-      searchAdjacentTile(board, conEdge, tileLoc, pastTiles),
-    ) || false
+    tile.edges[entryEdge].connectedEdges?.some((conEdge) => searchAdjacentTile(board, conEdge, tileLoc, pastTiles)) ||
+    false
   );
 }
 
@@ -525,7 +496,7 @@ function searchAdjacentTile(
   board: AvilaBoard,
   conEdge: number,
   originalLocation: Point,
-  pastTiles: Map<string, boolean>,
+  pastTiles: Map<string, boolean>
 ): boolean {
   const newLocation: Point = { X: originalLocation.X, Y: originalLocation.Y };
   let newEntryEdge = 0;
@@ -542,12 +513,7 @@ function searchAdjacentTile(
     newLocation.X--;
     newEntryEdge = 1; // entering from the right
   }
-  return searchFeatureForOccupation(
-    board,
-    newLocation,
-    newEntryEdge,
-    pastTiles,
-  );
+  return searchFeatureForOccupation(board, newLocation, newEntryEdge, pastTiles);
 }
 
 export interface ICompletedFeatureResult {
@@ -556,7 +522,7 @@ export interface ICompletedFeatureResult {
 }
 
 export interface ICompleteEdgeData {
-  meepleMap: Map<number, Point[]>;
+  meepleMap: Map<number, IPointWithGuid[]>;
   points: number;
 }
 
@@ -571,7 +537,7 @@ export interface ICompleteEdgeData {
 export function completedFeatureSearch(
   board: AvilaBoard,
   tileLoc: Point,
-  playerData: IAvilaPlayer[],
+  playerData: IAvilaPlayer[]
 ): ICompletedFeatureResult | undefined {
   // validate location and make sure tile is defined
   if (!isLocationValid(tileLoc, board)) {
@@ -596,21 +562,13 @@ export function completedFeatureSearch(
       continue;
     }
 
-    const meeples = new Map<number, Point[]>();
-    const points = recurseCompletedFeature(
-      board,
-      tileLoc,
-      i,
-      meeples,
-      edgeCache,
-      new Map<string, boolean>(),
-      true,
-    );
+    const meepleMap = new Map<number, IPointWithGuid[]>();
+    const points = recurseCompletedFeature(board, tileLoc, i, meepleMap, edgeCache, new Map<string, boolean>(), true);
     edgeCache.set("CurrentFeature", (edgeCache.get("CurrentFeature") ?? 0) + 1);
-    if (points > -1 && meeples.size) {
+    if (points > -1 && meepleMap.size) {
       featureResults.push({
         points: points,
-        meepleMap: meeples,
+        meepleMap: meepleMap,
       });
     }
   }
@@ -619,21 +577,24 @@ export function completedFeatureSearch(
   const affectedMonestaries = findAffectedMonestaries(board, tileLoc);
   affectedMonestaries.forEach((monPoint) => {
     if (monestaryNeedsScoring(board, monPoint)) {
-      const meepleMap: Map<number, Point[]> = new Map();
-      meepleMap.set(board[monPoint.Y][monPoint.X]!.meeple!.playerIndex, [
-        monPoint,
-      ]);
-      featureResults.push({
-        points: 9,
-        meepleMap: meepleMap,
+      const meepleMap: Map<number, IPointWithGuid[]> = new Map();
+      const tile = board[monPoint.Y][monPoint.X];
+      tile?.meeples?.forEach((meeple) => {
+        if (meeple.onMonestary) {
+          meepleMap.set(meeple.playerIndex, [{ ...monPoint, guid: meeple.guid }]);
+          featureResults.push({
+            points: 9,
+            meepleMap: meepleMap,
+          });
+        }
       });
     }
   });
 
   // for any completed features, remove meeples from the board and update point totals
   featureResults.forEach((result) => {
-    // who should get the points?
-    let playerIndexes: number[] = [];
+    // who should get the points? i.e., handle if a feature has 1 meeple from Bob and 2 meeples from Janet
+    let playerIndexes: number[] = []; // the player indexes of the players who should actually get points
     let meepleCount = 0;
     for (let [index, points] of Array.from(result.meepleMap.entries())) {
       if (points.length > meepleCount) {
@@ -644,29 +605,26 @@ export function completedFeatureSearch(
       }
     }
     // assign the points
-    playerIndexes.forEach(
-      (playerIndex) => (playerData[playerIndex].score += result.points),
-    );
+    playerIndexes.forEach((playerIndex) => (playerData[playerIndex].score += result.points));
     // remove meeples and give them back to the player
-    for (let [playerIndex, meeplePoints] of Array.from(
-      result.meepleMap.entries(),
-    )) {
+    for (let [playerIndex, meeplePoints] of Array.from(result.meepleMap.entries())) {
       meeplePoints.forEach((meeplePoint) => {
         const tile = board[meeplePoint.Y][meeplePoint.X];
         if (tile === undefined || tile === null) {
           // this shouldn't occur, so log a message for troubleshooting if it does
           console.log(
-            `error: removing meeple from undefined tile. X: ${meeplePoint.X}, Y: ${meeplePoint.Y}, playerIndex: ${playerIndex}`,
+            `error: removing meeple from undefined tile. X: ${meeplePoint.X}, Y: ${meeplePoint.Y}, playerIndex: ${playerIndex}`
           );
           return;
         }
-        if (tile.meeple) {
-          if (tile.meeple.playerIndex !== playerIndex) {
+        if (tile.meeples?.length) {
+          const meepleIndex = tile.meeples.findIndex((m) => m.guid === meeplePoint.guid);
+          if (meepleIndex === -1) {
             console.log(
-              `error: trying to remove meeple assigned to wrong player. X: ${meeplePoint.X}, Y: ${meeplePoint.Y}`,
+              `error: trying to remove meeple. X: ${meeplePoint.X}, Y: ${meeplePoint.Y}, guid: ${meeplePoint.guid}`
             );
           }
-          tile.meeple = undefined;
+          tile.meeples.splice(meepleIndex, 1);
           playerData[playerIndex].availableMeeple++;
         }
       });
@@ -684,7 +642,7 @@ export function completedFeatureSearch(
  * @param board the game board
  * @param tileLoc the tile to score
  * @param entryEdge the edge the tile is being entered from (think graph traversal)
- * @param meeples a map to keep track of the meeples on this feature
+ * @param meeples a map to keep track of the meeples on this feature. Key: playerIndex, Value: meepleLocation
  * @param edgeCache a map of the edges that have been visited
  * @param tileCache a map of the tiles that have been visited
  * @param firstCall true if this is a root-level call to the recursive function
@@ -694,10 +652,10 @@ function recurseCompletedFeature(
   board: AvilaBoard,
   tileLoc: Point,
   entryEdge: number,
-  meeples: Map<number, Point[]>,
+  meeples: Map<number, IPointWithGuid[]>,
   edgeCache: Map<string, number>,
   tileCache: Map<string, boolean>,
-  firstCall?: boolean,
+  firstCall?: boolean
 ): number {
   // make sure the tile location is valid
   if (!isLocationValid(tileLoc, board)) {
@@ -726,21 +684,19 @@ function recurseCompletedFeature(
   edgeCache.set(encodedEdge, currFeatureIndex);
 
   // see if the feature on this tile is occupied
-  if (tile.meeple?.edgeIndex !== undefined && tile.meeple?.edgeIndex !== null) {
-    // make sure the meeple is placed on the feature currently being processed
-    if (
-      tile.meeple.edgeIndex === entryEdge ||
-      (tile.edges[entryEdge].connectedEdges?.indexOf(tile.meeple.edgeIndex) ??
-        -1) !== -1
-    ) {
-      const meeplesForPlayer = meeples.get(tile.meeple.playerIndex);
-      if (meeplesForPlayer === undefined) {
-        meeples.set(tile.meeple.playerIndex, [tileLoc]);
-      } else {
-        meeplesForPlayer.push(tileLoc);
+  tile.meeples?.forEach((meeple) => {
+    if (meeple.edgeIndex !== undefined && meeple.edgeIndex !== null) {
+      // make sure the meeple is placed on the feature currently being processed
+      if (meeple.edgeIndex === entryEdge || tile.edges[entryEdge].connectedEdges?.includes(meeple.edgeIndex)) {
+        const meeplesForPlayer = meeples.get(meeple.playerIndex);
+        if (meeplesForPlayer === undefined) {
+          meeples.set(meeple.playerIndex, [{ ...tileLoc, guid: meeple.guid }]);
+        } else {
+          meeplesForPlayer.push({ ...tileLoc, guid: meeple.guid });
+        }
       }
     }
-  }
+  });
 
   let connectivityTotal = 0;
 
@@ -758,14 +714,7 @@ function recurseCompletedFeature(
     // the edge is valid and unprocessed, store it in the map
     edgeCache.set(encodedEdge, currFeatureIndex);
 
-    const edgeValue = recurseCompletedFeatureHelper(
-      board,
-      conEdge,
-      tileLoc,
-      meeples,
-      edgeCache,
-      tileCache,
-    );
+    const edgeValue = recurseCompletedFeatureHelper(board, conEdge, tileLoc, meeples, edgeCache, tileCache);
     if (edgeValue === -1) {
       return -1;
     }
@@ -774,14 +723,7 @@ function recurseCompletedFeature(
 
   // search edge we came from if it's the first time
   if (firstCall) {
-    const firstEdgeValue = recurseCompletedFeatureHelper(
-      board,
-      entryEdge,
-      tileLoc,
-      meeples,
-      edgeCache,
-      tileCache,
-    );
+    const firstEdgeValue = recurseCompletedFeatureHelper(board, entryEdge, tileLoc, meeples, edgeCache, tileCache);
     if (firstEdgeValue === -1) {
       return -1;
     }
@@ -817,9 +759,9 @@ function recurseCompletedFeatureHelper(
   board: AvilaBoard,
   conEdge: number,
   originalLocation: Point,
-  meeples: Map<number, Point[]>,
+  meeples: Map<number, IPointWithGuid[]>,
   edgeCache: Map<string, number>,
-  tileCache: Map<string, boolean>,
+  tileCache: Map<string, boolean>
 ): number {
   const newLocation: Point = { X: originalLocation.X, Y: originalLocation.Y };
   let newEntryEdge = 0;
@@ -836,14 +778,7 @@ function recurseCompletedFeatureHelper(
     newLocation.X--;
     newEntryEdge = 1; // entering from the right
   }
-  return recurseCompletedFeature(
-    board,
-    newLocation,
-    newEntryEdge,
-    meeples,
-    edgeCache,
-    tileCache,
-  );
+  return recurseCompletedFeature(board, newLocation, newEntryEdge, meeples, edgeCache, tileCache);
 }
 
 const MonestaryOffsets: Point[] = [
@@ -864,16 +799,13 @@ const MonestaryOffsets: Point[] = [
  * @param startPoint the point to search around
  * @returns points around the starting point that are monestaries and have meeples, including the starting point
  */
-export function findAffectedMonestaries(
-  board: AvilaBoard,
-  startPoint: Point,
-): Point[] {
+export function findAffectedMonestaries(board: AvilaBoard, startPoint: Point): Point[] {
   const monestaries: Point[] = [];
   MonestaryOffsets.forEach((offset) => {
     const x = startPoint.X + offset.X;
     const y = startPoint.Y + offset.Y;
     const tile = board[y][x];
-    if (tile && tile.monestary && tile.meeple?.onMonestary) {
+    if (tile && tile.monestary && tile.meeples?.some((m) => m.onMonestary)) {
       monestaries.push({ Y: y, X: x });
     }
   });
@@ -888,14 +820,141 @@ export function findAffectedMonestaries(
  */
 export function monestaryNeedsScoring(board: AvilaBoard, loc: Point): boolean {
   const tile = board[loc.Y][loc.X];
-  // false if the tile isn't a monestary or the tile isn't occupied
-  if (!tile || !tile.monestary || !tile.meeple) {
+  // false if the tile isn't a monestary or the tile's monestary isn't occupied
+  if (!tile || !tile.monestary || tile.meeples?.every((m) => !m.onMonestary)) {
     return false;
   }
 
-  return MonestaryOffsets.every((offset) => {
-    return board[loc.Y + offset.Y][loc.X + offset.X]; // evaluates to true if it exists
-  });
+  return surroundingTilesOccupied(board, loc);
+}
+
+/**
+ * Check if every tile that surrounds a point is occupied
+ * @param board the game board
+ * @param loc the location on the board to check if every surrounding tile is occupied
+ * @returns true if every tile surrounding @param loc is occupied
+ */
+export function surroundingTilesOccupied(board: AvilaBoard, loc: Point): boolean {
+  return MonestaryOffsets.every((offset) => board[loc.Y + offset.Y][loc.X + offset.X]);
+}
+
+/**
+ * convert a degree to coordinate directions
+ * @param degree the degree to convert to coordinate directions
+ * @returns the coordinate directions that point in the same direction as the degree.
+ */
+export function directionDegreeToPoint(degree: number): Point {
+  switch (degree) {
+    case 0:
+      return { X: 0, Y: -1 };
+    case 45:
+      return { X: 1, Y: -1 };
+    case 90:
+      return { X: 1, Y: 0 };
+    case 135:
+      return { X: 1, Y: 1 };
+    case 180:
+      return { X: 0, Y: 1 };
+    case 225:
+      return { X: -1, Y: 1 };
+    case 270:
+      return { X: -1, Y: 0 };
+    case 315:
+      return { X: -1, Y: -1 };
+  }
+  throw Error(`degree value ${degree} is not valid`);
+}
+
+/**
+ * Compute the tile a meeple should be placed on with the flier expansion
+ * @param board the game board
+ * @param flierLocation the location of the flier tile
+ * @param flierDirection the direction the flier is pointed
+ * @param stepsRolled the number of steps the flier should move
+ * @returns the point the meeple should land on and the corresponding tile
+ */
+export function computeFlierTargetTile(
+  board: AvilaBoard,
+  flierLocation: Point,
+  flierDirection: number,
+  stepsRolled: number
+): Point {
+  // calculate the point of the target tile
+  const coordianteDirection = directionDegreeToPoint(flierDirection);
+  const targetPoint = {
+    X: flierLocation.X + coordianteDirection.X * stepsRolled,
+    Y: flierLocation.Y + coordianteDirection.Y * stepsRolled,
+  };
+
+  return targetPoint;
+}
+
+/**
+ * Determine where a meeple from the flier expansion can be placed. They can only
+ * be placed on incomplete features, and it does not matter if the feature is
+ * already occuiped
+ * @param board the game board
+ * @param tileLoc the location where a meeple from the flier expansion is trying
+ * to be placed
+ * @returns the places where a flier meeple can be placed on the tile
+ */
+export function getPlaceableFlierMeepleLocations(board: AvilaBoard, tileLoc: Point): IPlaceableMeepleLocations {
+  const placeableLocations: IPlaceableMeepleLocations = {};
+
+  // make sure the location is on the board
+  if (!isLocationValid(tileLoc, board)) {
+    return placeableLocations;
+  }
+
+  // make sure the tile isn't empty
+  const tile = board[tileLoc.Y][tileLoc.X];
+  if (!tile) {
+    return placeableLocations;
+  }
+
+  // handle monestary
+  // should be able to place on monestary if EITHER meeple is occupied or meeple is not fully surrounded
+  if (tile.monestary && (tile.meeples?.some((m) => m.onMonestary) || !surroundingTilesOccupied(board, tileLoc))) {
+    placeableLocations.monestary = true;
+  }
+
+  // handle each edge
+  const edgeCache = new Map<string, number>();
+  edgeCache.set("CurrentFeature", 0);
+  for (let i = 0; i < 4; i++) {
+    if (tile.edges[i].type === AvilaFeature.Field || tile.edges[i].type === AvilaFeature.River) {
+      continue; // fields and rivers are not placeable
+    }
+
+    // edges connected to earlier edges don't need to be processed
+    if (tile.edges[i].connectedEdges?.some((ind) => ind < i)) {
+      continue;
+    }
+
+    // points will be 0 if the feature is not complete
+    const points = recurseCompletedFeature(
+      board,
+      tileLoc,
+      i,
+      new Map<number, IPointWithGuid[]>(),
+      edgeCache,
+      new Map<string, boolean>(),
+      true
+    );
+    if (points === 0 || points === -1) {
+      if (i === 0) {
+        placeableLocations.topEdge = true;
+      } else if (i === 1) {
+        placeableLocations.rightEdge = true;
+      } else if (i === 2) {
+        placeableLocations.bottomEdge = true;
+      } else if (i === 3) {
+        placeableLocations.leftEdge = true;
+      }
+    }
+  }
+
+  return placeableLocations;
 }
 
 /**
@@ -919,10 +978,7 @@ export enum AvilaPlayerColor {
   Purple = "purple",
 }
 
-export function createPlayer(
-  name: string,
-  color: AvilaPlayerColor,
-): IAvilaPlayer {
+export function createPlayer(name: string, color: AvilaPlayerColor): IAvilaPlayer {
   return {
     score: 0,
     availableMeeple: 6,
@@ -939,16 +995,9 @@ export function createPlayer(
  * @returns a new array of players containing the new player. Returns the same
  * array if all colors have been used (meaning the player wasn't added).
  */
-export function addPlayer(
-  existingPlayers: IAvilaPlayer[],
-  name: string,
-  color?: AvilaPlayerColor,
-): IAvilaPlayer[] {
+export function addPlayer(existingPlayers: IAvilaPlayer[], name: string, color?: AvilaPlayerColor): IAvilaPlayer[] {
   let colorToUse: AvilaPlayerColor | undefined;
-  if (
-    color !== undefined &&
-    existingPlayers.every((player) => player.color !== color)
-  ) {
+  if (color !== undefined && existingPlayers.every((player) => player.color !== color)) {
     colorToUse = color;
   }
 

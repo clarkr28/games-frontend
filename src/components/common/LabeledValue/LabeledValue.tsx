@@ -33,7 +33,9 @@ export const LabeledValue: React.FC<ILabeledValue> = (props) => {
 
   return (
     <div className={styles.wrapper}>
-      <p>{`${label}: ${value}`}</p>
+      <p>
+        {label}: <strong>{value}</strong>
+      </p>
       {animateChanges && valueChange > 0 && (
         <p className={scoreChangeClasses.join(" ")}>
           <strong>{`+${valueChange}`}</strong>
