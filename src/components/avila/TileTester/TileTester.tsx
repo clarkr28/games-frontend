@@ -144,6 +144,46 @@ function customizeTiles(tiles: IAvilaTile[]): void {
       guid: v4(),
     },
   ];
+  tiles[indexPicker(30, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Red,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Blue,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Purple,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 2,
+      guid: v4(),
+    },
+  ];
+  tiles[indexPicker(31, USE_RIVER)].meeples = [
+    {
+      playerColor: AvilaPlayerColor.Green,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 3,
+      guid: v4(),
+    },
+    {
+      playerColor: AvilaPlayerColor.Red,
+      playerIndex: 2, // doesn't matter for this test
+      edgeIndex: 3,
+      guid: v4(),
+    },
+  ];
   tiles[indexPicker(17, USE_RIVER)].meeples = [
     {
       playerColor: AvilaPlayerColor.Orange,
@@ -160,7 +200,7 @@ function customizeTiles(tiles: IAvilaTile[]): void {
       guid: v4(),
     },
   ];
-  tiles[indexPicker(45, USE_RIVER)].meeples = [
+  tiles[indexPicker(51, USE_RIVER)].meeples = [
     {
       playerColor: AvilaPlayerColor.Red,
       playerIndex: 0, // doesn't matter for this test
@@ -170,7 +210,7 @@ function customizeTiles(tiles: IAvilaTile[]): void {
     {
       playerColor: AvilaPlayerColor.Green,
       playerIndex: 0, // doesn't matter for this test
-      edgeIndex: 0,
+      edgeIndex: 2,
       guid: v4(),
     },
   ];

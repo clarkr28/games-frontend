@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import { Point } from "../ConnectFourResources";
 
 export enum AvilaGameStatus {
@@ -824,9 +823,17 @@ export function monestaryNeedsScoring(board: AvilaBoard, loc: Point): boolean {
     return false;
   }
 
-  return MonestaryOffsets.every((offset) => {
-    return board[loc.Y + offset.Y][loc.X + offset.X]; // evaluates to true if it exists
-  });
+  return surroundingTilesOccupied(board, loc);
+}
+
+/**
+ * Check if every tile that surrounds a point is occupied
+ * @param board the game board
+ * @param loc the location on the board to check if every surrounding tile is occupied
+ * @returns true if every tile surrounding @param loc is occupied
+ */
+export function surroundingTilesOccupied(board: AvilaBoard, loc: Point): boolean {
+  return MonestaryOffsets.every((offset) => board[loc.Y + offset.Y][loc.X + offset.X]);
 }
 
 /**
@@ -910,7 +917,8 @@ export function getPlaceableFlierMeepleLocations(board: AvilaBoard, tileLoc: Poi
   }
 
   // handle monestary
-  if (tile.monestary && !monestaryNeedsScoring(board, tileLoc)) {
+  // should be able to place on monestary if EITHER meeple is occupied or meeple is not fully surrounded
+  if (tile.monestary && (tile.meeples?.some((m) => m.onMonestary) || !surroundingTilesOccupied(board, tileLoc))) {
     placeableLocations.monestary = true;
   }
 

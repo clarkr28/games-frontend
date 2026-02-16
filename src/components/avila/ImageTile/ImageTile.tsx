@@ -21,16 +21,6 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
     return <IconTile tile={tile} placeMeepleColor={placeMeepleColor} />;
   }
 
-  const Meeples = (
-    <>
-      {tile.meeples?.map((meeple, index) => (
-        <div key={index}>
-          <FontAwesomeIcon icon={solid("person")} />
-        </div>
-      ))}
-    </>
-  );
-
   return (
     <div className={`${styles.wrapper} ${dance ? styles.dance : ""}`}>
       <img
@@ -39,7 +29,6 @@ export const ImageTile: React.FC<IImageTileProps> = (props) => {
         src={tile.imageFile}
         alt="avila game tile"
       />
-      {tile.meeples?.length && Meeples}
       <AvilaMeeples meeples={tile.meeples} />
       {placeableMeepleLocations?.topEdge && (
         <div

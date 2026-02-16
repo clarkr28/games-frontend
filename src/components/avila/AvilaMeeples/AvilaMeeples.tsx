@@ -37,7 +37,42 @@ export const AvilaMeeples: React.FC<IAvilaMeeplesProps> = ({ meeples }) => {
 };
 
 const BaseWidthPx = 22;
-const AdditionalWidthPx = 6;
+const AdditionalWidthPx = 7;
+const tileWidthPx = 66;
+
+/**
+ * calculate the CSS width in pixels of a meeple group
+ * @param meeples a group of meeples placed on the same edge/monestary
+ * @returns the width of the meeple group as a number, units are pixels
+ */
+function meepleGroupWidth(meeples: IMeeplePlacement[]): number {
+  if (meeples.length === 0) {
+    return 0;
+  }
+  return meeples.length === 1 ? BaseWidthPx : BaseWidthPx + AdditionalWidthPx * meeples.length - 1;
+}
+
+/**
+ * calculate the CSS position to use for a group of meeples on the same edge/monestary
+ * @param meeples a group of meeples placed on the same edge/monestary
+ * @returns the left position placement in pixels, with 'px' appended to the end
+ */
+function leftPosition(meeples: IMeeplePlacement[]): string {
+  let pixels = 0;
+  if (meeples.length) {
+    // handle the ones that are centered
+    if (meeples[0].onMonestary || meeples[0].edgeIndex === 0 || meeples[0].edgeIndex === 2) {
+      pixels = (tileWidthPx - meepleGroupWidth(meeples)) / 2;
+    } else if (meeples[0].edgeIndex === 1) {
+      // right edge
+      pixels = tileWidthPx - meepleGroupWidth(meeples);
+    } else if (meeples[0].edgeIndex === 3) {
+      pixels = 2;
+    }
+  }
+
+  return `${pixels}px`;
+}
 
 interface IMeepleGroupProps {
   meeples: IMeeplePlacement[];
@@ -48,10 +83,13 @@ const MeepleGroup: React.FC<IMeepleGroupProps> = ({ meeples }) => {
     return null;
   }
 
-  const width = meeples.length === 1 ? BaseWidthPx : BaseWidthPx + AdditionalWidthPx * meeples.length - 1;
+  const width = meepleGroupWidth(meeples);
 
   return (
-    <div className={`${styles.placedMeeple} ${meeplePlacement(meeples[0])}`} style={{ width: `${width}px` }}>
+    <div
+      className={`${styles.placedMeeple} ${meeplePlacement(meeples[0])}`}
+      style={{ width: `${width}px`, left: leftPosition(meeples) }}
+    >
       {meeples.map((m, i) => (
         <FontAwesomeIcon key={i} className={meepleColor(m)} icon={solid("person")} />
       ))}

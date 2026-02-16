@@ -256,7 +256,12 @@ FLIER_TILES.push({
  * @returns a copy of the flier tiles
  */
 export function getFlierTiles() {
-  return structuredClone(FLIER_TILES);
+  let tiles = [...structuredClone(FLIER_TILES)];
+  tiles.push(...structuredClone(FLIER_TILES));
+  tiles.push(...structuredClone(FLIER_TILES));
+  tiles.push(...structuredClone(FLIER_TILES));
+  tiles.push(...structuredClone(FLIER_TILES));
+  return tiles;
 }
 
 /**
@@ -293,10 +298,6 @@ export function createTiles(shuffle: boolean, addRiver?: boolean, addFlier?: boo
 
   let remainingTiles = structuredClone(STANDARD_TILES);
   if (addFlier) {
-    remainingTiles.push(...getFlierTiles());
-    remainingTiles.push(...getFlierTiles());
-    remainingTiles.push(...getFlierTiles());
-    remainingTiles.push(...getFlierTiles());
     remainingTiles.push(...getFlierTiles());
   }
 

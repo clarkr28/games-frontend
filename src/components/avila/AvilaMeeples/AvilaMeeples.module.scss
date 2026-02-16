@@ -1,12 +1,12 @@
 @import "../IconTile/IconTile.module.scss";
 
-$meepleContainer: 22px;
+$meepleContainerHeight: 22px;
 $placeMeepleBorder: 2px;
 
 .placedMeeple {
-  width: $meepleContainer;
-  height: $meepleContainer;
-  border-radius: calc($meepleContainer / 2);
+  // width is set in react
+  height: $meepleContainerHeight;
+  border-radius: calc($meepleContainerHeight / 2);
   background-color: #fff;
   font-size: 18px;
 }
@@ -14,29 +14,29 @@ $placeMeepleBorder: 2px;
 .topMeeple {
   position: absolute;
   top: 1px;
-  left: calc(($tileWidth - $meepleContainer) / 2);
+  // left position is set in react
 }
 
 .bottomMeeple {
   position: absolute;
-  top: calc($tileHeight - $meepleContainer - 1px);
-  left: calc(($tileWidth - $meepleContainer) / 2);
+  top: calc($tileHeight - $meepleContainerHeight - 1px);
+  // left position is set in react
 }
 
 .rightMeeple {
   position: absolute;
-  top: calc((($tileWidth - $meepleContainer) / 2));
-  left: calc($tileWidth - $meepleContainer);
+  top: calc((($tileWidth - $meepleContainerHeight) / 2));
+  // left position is set in react
 }
 
 .leftMeeple {
   position: absolute;
-  top: calc((($tileWidth - $meepleContainer) / 2));
-  left: 2px;
+  top: calc((($tileWidth - $meepleContainerHeight) / 2));
+  // left position is set in react
 }
 
 .monestaryMeeple {
   position: absolute;
-  top: calc((($tileWidth - $meepleContainer) / 2));
-  left: calc(($tileWidth - $meepleContainer) / 2);
+  top: calc((($tileWidth - $meepleContainerHeight) / 2));
+  // left position is set in react
 }
