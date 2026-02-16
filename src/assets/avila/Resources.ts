@@ -238,8 +238,11 @@ export interface IPlaceableMeepleLocations {
  * @param options meeple placement options
  * @returns true if a meeple can be placed somewhere
  */
-export function isMeeplePlaceable(options: IPlaceableMeepleLocations): boolean {
-  return options.topEdge || options.rightEdge || options.bottomEdge || options.leftEdge || options.monestary || false;
+export function isMeeplePlaceable(options: IPlaceableMeepleLocations | undefined): boolean {
+  return (
+    options !== undefined &&
+    (options.topEdge || options.rightEdge || options.bottomEdge || options.leftEdge || options.monestary || false)
+  );
 }
 
 /**
@@ -876,7 +879,7 @@ export function computeFlierTargetTile(
   flierLocation: Point,
   flierDirection: number,
   stepsRolled: number
-): [Point, IAvilaTile | undefined] {
+): Point {
   // calculate the point of the target tile
   const coordianteDirection = directionDegreeToPoint(flierDirection);
   const targetPoint = {
@@ -884,13 +887,7 @@ export function computeFlierTargetTile(
     Y: flierLocation.Y + coordianteDirection.Y * stepsRolled,
   };
 
-  const valid = isLocationValid(targetPoint, board);
-  if (!valid) {
-    return [targetPoint, undefined];
-  }
-
-  const targetTile = board[targetPoint.Y][targetPoint.X];
-  return [targetPoint, targetTile];
+  return targetPoint;
 }
 
 /**

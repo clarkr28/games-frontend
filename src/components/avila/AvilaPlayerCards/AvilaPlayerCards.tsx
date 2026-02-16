@@ -5,11 +5,12 @@ import {
   rotateCurrentTile,
   selectAvilaCurrentTile,
   selectAvilaCurrentTurn,
+  selectAvilaPlaceableMeepleLocations,
   selectAvilaPlayerData,
   selectAvilaRemainingTilesCount,
 } from "../../../features/avilaSlice";
 import { AvilaPlayerCard } from "../AvilaPlayerCard/AvilaPlayerCard";
-import { AvilaGameStatus } from "../../../assets/avila/Resources";
+import { AvilaGameStatus, isMeeplePlaceable } from "../../../assets/avila/Resources";
 
 export interface IAvilaPlayerCardsProps {
   gameStatus: AvilaGameStatus;
@@ -22,6 +23,7 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
   const turnIndex = useAppSelector(selectAvilaCurrentTurn);
   const currentTile = useAppSelector(selectAvilaCurrentTile);
   const numRemainingTiles = useAppSelector(selectAvilaRemainingTilesCount);
+  const placeableMeepleLocations = useAppSelector(selectAvilaPlaceableMeepleLocations);
   const dispatch = useAppDispatch();
 
   return (
@@ -29,6 +31,9 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
       {players.map((player, index) => {
         const myTurn = turnIndex === index;
         const myTurnPlacingMeeple = turnIndex === index && gameStatus === AvilaGameStatus.PlacingMeeple;
+        const flierCannotPlace =
+          gameStatus === AvilaGameStatus.PlacingMeepleFromFlier && !isMeeplePlaceable(placeableMeepleLocations);
+        const myTurnPlacingFlier = myTurn && gameStatus === AvilaGameStatus.PlacingMeepleFromFlier;
         return (
           <AvilaPlayerCard
             key={index}
@@ -40,11 +45,11 @@ export const AvilaPlayerCards: React.FC<IAvilaPlayerCardsProps> = (props) => {
                 : undefined
             }
             rotateCallback={() => dispatch(rotateCurrentTile())}
-            placingMeeple={myTurnPlacingMeeple}
+            showEndTurn={myTurnPlacingMeeple || (myTurn && flierCannotPlace)}
             skipMeepleCallback={() => dispatch(finishMove())}
             numRemainingTiles={numRemainingTiles}
             showRotateButton={myTurn && gameStatus === AvilaGameStatus.PlacingTile}
-            showFlierButton={myTurnPlacingMeeple && !!currentTile?.hasFlier}
+            showFlierButton={(myTurnPlacingMeeple && !!currentTile?.hasFlier) || myTurnPlacingFlier}
           />
         );
       })}
