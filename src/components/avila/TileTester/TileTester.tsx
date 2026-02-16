@@ -178,7 +178,7 @@ function customizeTiles(tiles: IAvilaTile[]): void {
       guid: v4(),
     },
     {
-      playerColor: AvilaPlayerColor.Red,
+      playerColor: AvilaPlayerColor.Green,
       playerIndex: 2, // doesn't matter for this test
       edgeIndex: 3,
       guid: v4(),

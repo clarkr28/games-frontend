@@ -13,7 +13,6 @@ import {
   createEmptyBoard,
   expandBoard,
   getPlaceableMeepleLocations,
-  isFeatureOccupied,
   isMeeplePlaceable,
   isRiverDirectionValid,
   isRiverTile,

@@ -591,7 +591,6 @@ export function completedFeatureSearch(
     }
   });
 
-  // TODO: update this with guid
   // for any completed features, remove meeples from the board and update point totals
   featureResults.forEach((result) => {
     // who should get the points? i.e., handle if a feature has 1 meeple from Bob and 2 meeples from Janet

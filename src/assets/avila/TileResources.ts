@@ -92,7 +92,9 @@ export const C_R_F_R: IAvilaTile = {
   rotation: 0,
   imageFile: `${IMAGE_PATH_BASE}C_R*_F_R*-0-0.svg`,
 };
-STANDARD_TILES.push(...[C_R_F_R, C_R_F_R, C_R_F_R]);
+STANDARD_TILES.push(structuredClone(C_R_F_R));
+STANDARD_TILES.push(structuredClone(C_R_F_R));
+STANDARD_TILES.push(structuredClone(C_R_F_R));
 
 STANDARD_TILES.push(tileGenerator("RR_F_C"));
 STANDARD_TILES.push(tileGenerator("RR_F_C"));
@@ -136,7 +138,14 @@ export const F_R_F_R: IAvilaTile = {
   rotation: 0,
   imageFile: `${IMAGE_PATH_BASE}F_R*_F_R*-0-0.svg`,
 };
-STANDARD_TILES.push(...[F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R, F_R_F_R]);
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
+STANDARD_TILES.push(structuredClone(F_R_F_R));
 
 STANDARD_TILES.push(tileGenerator("F_R_R_R"));
 STANDARD_TILES.push(tileGenerator("F_R_R_R"));
@@ -257,10 +266,6 @@ FLIER_TILES.push({
  */
 export function getFlierTiles() {
   let tiles = [...structuredClone(FLIER_TILES)];
-  tiles.push(...structuredClone(FLIER_TILES));
-  tiles.push(...structuredClone(FLIER_TILES));
-  tiles.push(...structuredClone(FLIER_TILES));
-  tiles.push(...structuredClone(FLIER_TILES));
   return tiles;
 }
 
